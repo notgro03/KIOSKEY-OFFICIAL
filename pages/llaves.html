@@ -14,10 +14,11 @@
       const brandSelect = document.getElementById('brandSelect');
       const modelSelect = document.getElementById('modelSelect');
 
-      // Obtener marcas de la base de datos
+      // Obtener marcas únicas de la tabla llaves
       const { data: brands, error: brandsError } = await supabase
-        .from('brands')
-        .select('*');
+        .from('llaves')
+        .select('brand')
+        .distinct();
 
       if (brandsError) {
         console.error('Error fetching brands:', brandsError);
@@ -27,8 +28,8 @@
       // Llenar select de marcas
       brands.forEach(brand => {
         const option = document.createElement('option');
-        option.value = brand.name;
-        option.textContent = brand.name;
+        option.value = brand.brand;
+        option.textContent = brand.brand;
         brandSelect.appendChild(option);
       });
 
@@ -40,11 +41,12 @@
         if (brand) {
           modelSelect.disabled = false;
 
-          // Obtener modelos de la base de datos
+          // Obtener modelos basados en la marca seleccionada
           const { data: models, error: modelsError } = await supabase
-            .from('models')
-            .select('*')
-            .eq('brand', brand);
+            .from('llaves')
+            .select('model')
+            .eq('brand', brand)
+            .distinct();
 
           if (modelsError) {
             console.error('Error fetching models:', modelsError);
@@ -54,8 +56,8 @@
           // Llenar select de modelos
           models.forEach(model => {
             const option = document.createElement('option');
-            option.value = model.name;
-            option.textContent = model.name;
+            option.value = model.model;
+            option.textContent = model.model;
             modelSelect.appendChild(option);
           });
         } else {
