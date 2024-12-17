@@ -25,6 +25,8 @@
         return;
       }
 
+      console.log('Brands:', brands); // Depuración: Verificar datos obtenidos
+
       // Llenar select de marcas
       brands.forEach(brand => {
         const option = document.createElement('option');
@@ -52,6 +54,8 @@
             console.error('Error fetching models:', modelsError);
             return;
           }
+
+          console.log('Models:', models); // Depuración: Verificar datos obtenidos
 
           // Llenar select de modelos
           models.forEach(model => {
