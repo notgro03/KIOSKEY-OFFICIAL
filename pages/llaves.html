@@ -47,21 +47,21 @@
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
             .select('model')
-            .eq('brand', brand)
-            .distinct();
+            .eq('brand', brand);
 
           if (modelsError) {
             console.error('Error fetching models:', modelsError);
             return;
           }
 
-          console.log('Models:', models); // Depuración: Verificar datos obtenidos
+          // Filtrar modelos únicos
+          const uniqueModels = [...new Set(models.map(item => item.model))];
 
           // Llenar select de modelos
-          models.forEach(model => {
+          uniqueModels.forEach(model => {
             const option = document.createElement('option');
-            option.value = model.model;
-            option.textContent = model.model;
+            option.value = model;
+            option.textContent = model;
             modelSelect.appendChild(option);
           });
         } else {
