@@ -14,24 +14,24 @@
       const brandSelect = document.getElementById('brandSelect');
       const modelSelect = document.getElementById('modelSelect');
 
-      // Obtener marcas únicas de la tabla llaves
+      // Obtener marcas de la tabla llaves
       const { data: brands, error: brandsError } = await supabase
         .from('llaves')
-        .select('brand')
-        .distinct();
+        .select('brand');
 
       if (brandsError) {
         console.error('Error fetching brands:', brandsError);
         return;
       }
 
-      console.log('Brands:', brands); // Depuración: Verificar datos obtenidos
+      // Filtrar marcas únicas
+      const uniqueBrands = [...new Set(brands.map(item => item.brand))];
 
       // Llenar select de marcas
-      brands.forEach(brand => {
+      uniqueBrands.forEach(brand => {
         const option = document.createElement('option');
-        option.value = brand.brand;
-        option.textContent = brand.brand;
+        option.value = brand;
+        option.textContent = brand;
         brandSelect.appendChild(option);
       });
 
