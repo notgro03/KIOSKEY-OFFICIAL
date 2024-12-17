@@ -36,6 +36,7 @@ export class SearchForm {
         <div class="result-info">
           <h3>${item.displayName}</h3>
           <p>${item.description}</p>
+          <p><strong>Marca:</strong> ${item.brand}</p>
           <div class="result-features">
             ${item.features.map(feature => `
               <span class="result-feature">
