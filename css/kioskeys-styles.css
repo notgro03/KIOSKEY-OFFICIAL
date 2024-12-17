@@ -111,3 +111,453 @@
     padding: 0 16px;
   }
 }
+/* Plans Section Styles */
+.plans-section {
+  padding: 64px 0;
+  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.plans-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(45deg, rgba(0, 59, 142, 0.03) 0%, rgba(0, 163, 255, 0.03) 100%);
+  transform: skewY(-6deg);
+  transform-origin: top left;
+}
+
+.plans-container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  position: relative;
+}
+
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin: 32px 0;
+}
+
+.plan-card {
+  background: white;
+  border-radius: 24px;
+  overflow: hidden;
+  color: var(--text-color);
+  position: relative;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+  border: 1px solid rgba(0, 59, 142, 0.1);
+  transform: translateY(0);
+}
+
+.plan-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 59, 142, 0.15);
+}
+
+.plan-header {
+  background: var(--card-gradient);
+  color: white;
+  padding: 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 50%);
+  transform: translate(0, 0);
+  animation: shine 10s infinite linear;
+}
+
+.plan-icon {
+  font-size: 32px;
+  margin-bottom: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.plan-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.plan-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  position: relative;
+  z-index: 1;
+}
+
+.plan-price {
+  text-align: center;
+  padding: 32px 24px;
+  background: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+  position: relative;
+}
+
+.plan-price::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 1px;
+  background: var(--card-gradient);
+}
+
+.plan-price-amount {
+  font-size: 42px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.plan-price-period {
+  font-size: 16px;
+  opacity: 0.7;
+  font-weight: normal;
+}
+
+.plan-content {
+  padding: 32px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.plan-features li {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+  transition: all 0.3s ease;
+}
+
+.plan-features li:hover {
+  background: rgba(0, 59, 142, 0.02);
+  transform: translateX(5px);
+}
+
+.plan-features li:last-child {
+  border-bottom: none;
+}
+
+.feature-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.feature-name {
+  font-weight: 500;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.feature-name::before {
+  content: '✓';
+  color: var(--primary-blue);
+  font-weight: bold;
+}
+
+.feature-value {
+  font-weight: 600;
+  padding: 4px 12px;
+  background: var(--card-gradient);
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.feature-description {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+  padding-left: 24px;
+}
+
+.plan-button {
+  display: inline-block;
+  width: 100%;
+  padding: 16px 32px;
+  background: var(--card-gradient);
+  color: white;
+  text-decoration: none;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 24px;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.plan-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 50%);
+  transform: translate(-100%, -100%);
+  transition: all 0.5s ease;
+}
+
+.plan-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 59, 142, 0.2);
+}
+
+.plan-button:hover::before {
+  transform: translate(0, 0);
+}
+
+.plan-badge {
+  position: absolute;
+  top: 16px;
+  right: -32px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #000;
+  padding: 8px 40px;
+  transform: rotate(45deg);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+
+.plan-most-popular {
+  transform: scale(1.05);
+  border: 2px solid var(--primary-blue);
+  z-index: 2;
+}
+
+.plan-most-popular:hover {
+  transform: scale(1.05) translateY(-10px);
+}
+
+/* Benefits Section */
+.benefits-section {
+  padding: 64px 0;
+  background: var(--card-gradient);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefits-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+}
+
+.benefit-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.benefit-icon {
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+.benefit-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.benefit-description {
+  font-size: 15px;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+/* FAQ Section */
+.faq-section {
+  padding: 64px 0;
+  background: #f8f9fa;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.faq-item {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 59, 142, 0.1);
+}
+
+.faq-item h3 {
+  color: var(--primary-blue);
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+
+.faq-item p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 64px 0;
+  text-align: center;
+  background: white;
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.cta-button {
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cta-button.primary {
+  background: var(--card-gradient);
+  color: white;
+}
+
+.cta-button.secondary {
+  background: white;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 59, 142, 0.2);
+}
+
+/* Animations */
+@keyframes shine {
+  from {
+    transform: translate(-100%, -100%);
+  }
+  to {
+    transform: translate(100%, 100%);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .plan-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+  }
+
+  .plan-most-popular {
+    transform: scale(1);
+  }
+
+  .plan-most-popular:hover {
+    transform: translateY(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .benefits-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+  }
+
+  .plan-card {
+    margin: 0 16px;
+  }
+
+  .plan-header {
+    padding: 24px;
+  }
+
+  .plan-content {
+    padding: 24px;
+  }
+}
