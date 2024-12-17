@@ -4,14 +4,268 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planes - Kioskeys</title>
-  <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <!-- Add type="module" to the script tag -->
+  <style>
+    .plans-container {
+      max-width: var(--max-content-width);
+      margin: 0 auto;
+      padding: 0 var(--content-padding);
+    }
+
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      margin: 32px 0;
+    }
+
+    .plan-card {
+      background: white;
+      border-radius: 24px;
+      padding: 0;
+      color: var(--text-color);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+      border: 1px solid rgba(0, 59, 142, 0.1);
+    }
+
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 59, 142, 0.15);
+    }
+
+    .plan-header {
+      background: var(--card-gradient);
+      color: white;
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .plan-header::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: white;
+      border-radius: 50% 50% 0 0;
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: 16px;
+      right: -32px;
+      background: #FFD700;
+      color: #000;
+      padding: 8px 40px;
+      transform: rotate(45deg);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .plan-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.2);
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+    }
+
+    .plan-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .plan-subtitle {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .plan-price {
+      text-align: center;
+      padding: 24px;
+      background: #f8f9fa;
+      border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+    }
+
+    .plan-price-amount {
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .plan-price-period {
+      font-size: 16px;
+      opacity: 0.7;
+      font-weight: normal;
+    }
+
+    .plan-content {
+      padding: 32px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plan-features {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .plan-features li {
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+    }
+
+    .plan-features li:last-child {
+      border-bottom: none;
+    }
+
+    .feature-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .feature-name {
+      font-weight: 500;
+      color: var(--text-color);
+    }
+
+    .feature-value {
+      font-weight: 600;
+      padding: 4px 12px;
+      background: var(--card-gradient);
+      color: white;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .feature-description {
+      font-size: 14px;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .plan-button {
+      display: inline-block;
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--card-gradient);
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      margin-top: 24px;
+      border: none;
+    }
+
+    .plan-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 59, 142, 0.2);
+    }
+
+    .plan-button i {
+      margin-right: 8px;
+    }
+
+    .plan-info {
+      background: white;
+      border-radius: 24px;
+      padding: 48px;
+      margin: 48px 0;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+      text-align: center;
+    }
+
+    .plan-info h2 {
+      color: var(--primary-blue);
+      margin-bottom: 32px;
+      font-size: 28px;
+    }
+
+    .payment-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+    }
+
+    .payment-method {
+      padding: 24px;
+      background: #f8f9fa;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .payment-method:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 59, 142, 0.1);
+    }
+
+    .payment-method i {
+      font-size: 32px;
+      color: var(--primary-blue);
+      margin-bottom: 16px;
+    }
+
+    .payment-method h3 {
+      margin-bottom: 8px;
+      color: var(--primary-blue);
+    }
+
+    .payment-method p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .plan-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .plans-container {
+        padding: 0 16px;
+      }
+
+      .plan-info {
+        padding: 32px 24px;
+      }
+    }
+  </style>
+  <script async type="module" crossorigin src="/assets/planes-BJQ4JB6n.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/style-BmSs68CU.css">
+  <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
+  <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
 </head>
 <body>
+  <!-- Navigation remains the same -->
   <nav>
     <div class="logo">
-      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+      <a href="/"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjgwMCIgdmlld0JveD0iMCAwIDgwMCA4MDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPCEtLSBLIFN5bWJvbCAtLT4KICA8cGF0aCBkPSJNMjAwIDIwMCBMNDAwIDQwMCBMMjAwIDYwMCIgc3Ryb2tlPSIjMDAzQjhFIiBzdHJva2Utd2lkdGg9IjgwIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8cGF0aCBkPSJNNjAwIDIwMCBMNDAwIDQwMCBMNjAwIDYwMCIgc3Ryb2tlPSIjMDBBM0ZGIiBzdHJva2Utd2lkdGg9IjgwIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICAKICA8IS0tIFRleHQgIktJT1NLRVlTIiAtLT4KICA8dGV4dCB4PSI0MDAiIHk9IjcwMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjEyMCIgZm9udC13ZWlnaHQ9ImJvbGQiPgogICAgPHRzcGFuIGZpbGw9IiMwMDNCOEUiPktJT1M8L3RzcGFuPjx0c3BhbiBmaWxsPSIjMDBBM0ZGIj5LRVlTPC90c3Bhbj4KICA8L3RleHQ+CiAgCiAgPCEtLSBUZXh0ICJDT1BZIEtFWVMiIC0tPgogIDx0ZXh0IHg9IjQwMCIgeT0iNzgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iNjAiIGZpbGw9IiM2NjY2NjYiPgogICAgQ09QWSBLRVlTCiAgPC90ZXh0Pgo8L3N2Zz4=" alt="Kioskeys"></a>
     </div>
     <div class="nav-links">
       <a href="/">Inicio</a>
@@ -155,8 +409,71 @@
                   <span class="feature-description">Descuento en programación</span>
                 </li>
               </ul>
-              <a href="https://mpago.la/family" target="_blank" class="plan-button">
+              <a href="https://mpago.la/1QPEA1K" target="_blank" class="plan-button">
                 <i class="fas fa-users"></i> Elegir Plan Familiar
+              </a>
+            </div>
+          </div>
+
+          <!-- Plan Premium -->
+          <div class="plan-card">
+            <div class="plan-header">
+              <i class="fas fa-crown plan-icon"></i>
+              <h3 class="plan-title">Plan Premium</h3>
+              <p class="plan-subtitle">Máximos beneficios y cobertura total</p>
+            </div>
+            <div class="plan-price">
+              <div class="plan-price-amount">
+                $10.000<span class="plan-price-period">/mes</span>
+              </div>
+            </div>
+            <div class="plan-content">
+              <ul class="plan-features">
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Guarda Virtual Llave</span>
+                    <span class="feature-value">ILIMITADO</span>
+                  </div>
+                  <span class="feature-description">Sin límite de llaves</span>
+                </li>
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Guarda del Transponder</span>
+                    <span class="feature-value">GRATIS</span>
+                  </div>
+                  <span class="feature-description">Para todos los vehículos</span>
+                </li>
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Derivación Prioritaria</span>
+                    <span class="feature-value">24/7</span>
+                  </div>
+                  <span class="feature-description">Atención preferencial</span>
+                </li>
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Descuentos Premium</span>
+                    <span class="feature-value">HASTA 30%</span>
+                  </div>
+                  <span class="feature-description">En todos los servicios</span>
+                </li>
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Llaves de Emergencia</span>
+                    <span class="feature-value">GRATIS</span>
+                  </div>
+                  <span class="feature-description">Incluye programación</span>
+                </li>
+                <li>
+                  <div class="feature-header">
+                    <span class="feature-name">Soporte VIP</span>
+                    <span class="feature-value">24/7</span>
+                  </div>
+                  <span class="feature-description">Línea directa premium</span>
+                </li>
+              </ul>
+              <a href="https://mpago.la/2pD5PjF" target="_blank" class="plan-button">
+                <i class="fas fa-crown"></i> Elegir Premium
               </a>
             </div>
           </div>
@@ -211,7 +528,7 @@
                   <span class="feature-description">Ejecutivo de cuenta</span>
                 </li>
               </ul>
-              <a href="/pages/contacto.html" class="plan-button">
+              <a href="https://wa.me/541157237390" class="plan-button">
                 <i class="fas fa-building"></i> Solicitar Propuesta
               </a>
             </div>
@@ -248,5 +565,8 @@
   </main>
 
   <script src="/main.js"></script>
+  <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
+  <script nomodule crossorigin id="vite-legacy-polyfill" src="/assets/polyfills-legacy-BV0ZLmyS.js"></script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="/assets/planes-legacy-Cb9C5e-K.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
 </body>
 </html>
