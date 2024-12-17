@@ -16,6 +16,7 @@
     "@types/node": "^20.11.17"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.3",
     "sweetalert2": "^11.10.5",
     "compressorjs": "^1.2.1",
     "@uploadcare/upload-client": "^6.12.0",
