@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor de Logos - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>UPLOADCARE_PUBLIC_KEY = '1985ca48f4d597426e30';</script>
+  <style>
+    .admin-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo-editor {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .logo-preview {
+      max-width: 300px;
+      height: auto;
+      margin: 20px auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 16px;
+      background: #f8f9fa;
+    }
+
+    .logo-preview img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      margin: 8px;
+    }
+
+    .button-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .button-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .button-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 16px 0;
+      display: none;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 16px 0;
+      display: none;
+    }
+
+    .current-logo {
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .current-logo h3 {
+      margin-bottom: 16px;
+      color: var(--primary-blue);
+    }
+
+    .uploadcare--widget {
+      display: inline-block;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys" id="navLogo"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin/kioskeys-admin-x7k9y2.html">Panel Admin</a>
+      <a href="/pages/admin/logos.html" class="active">Editor de Logos</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Editor de Logos</h1>
+        <p>Gestiona el logo principal del sitio</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="admin-container">
+        <div class="logo-editor">
+          <div class="current-logo">
+            <h3>Logo Actual</h3>
+            <div class="logo-preview">
+              <img id="currentLogo" src="/logo.svg" alt="Logo actual">
+            </div>
+          </div>
+
+          <div class="upload-section">
+            <h3>Subir Nuevo Logo</h3>
+            <input type="hidden" role="uploadcare-uploader" 
+                   data-images-only="true"
+                   data-crop="free"
+                   data-preview-step="true"
+                   id="logoUploader">
+            
+            <div class="logo-preview">
+              <img id="newLogoPreview" src="" alt="Vista previa del nuevo logo" style="display: none;">
+            </div>
+
+            <button id="saveButton" class="button button-primary" style="display: none;" onclick="saveLogo()">
+              <i class="fas fa-save"></i> Guardar Cambios
+            </button>
+          </div>
+
+          <div id="successMessage" class="success-message"></div>
+          <div id="errorMessage" class="error-message"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let newLogoUrl = '';
+    
+    // Inicializar widget de Uploadcare
+    const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+    
+    widget.onUploadComplete((fileInfo) => {
+      // Guardar URL del nuevo logo
+      newLogoUrl = fileInfo.cdnUrl;
+      
+      // Mostrar vista previa
+      const preview = document.getElementById('newLogoPreview');
+      preview.src = newLogoUrl;
+      preview.style.display = 'block';
+      
+      // Mostrar botón de guardar
+      document.getElementById('saveButton').style.display = 'inline-block';
+    });
+
+    // Función para guardar el logo
+    function saveLogo() {
+      if (!newLogoUrl) {
+        showError('Por favor, sube un nuevo logo primero');
+        return;
+      }
+
+      // Confirmar cambio
+      Swal.fire({
+        title: '¿Guardar nuevo logo?',
+        text: 'Esta acción actualizará el logo en todo el sitio',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, guardar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Guardar URL en localStorage
+          localStorage.setItem('kioskeys_logo', newLogoUrl);
+          
+          // Actualizar logos en la página
+          updateLogos(newLogoUrl);
+          
+          // Mostrar mensaje de éxito
+          Swal.fire({
+            title: '¡Logo actualizado!',
+            text: 'El logo se ha actualizado correctamente',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      });
+    }
+
+    // Función para actualizar logos en la página
+    function updateLogos(url) {
+      // Actualizar logo actual
+      document.getElementById('currentLogo').src = url;
+      
+      // Actualizar logo en la navegación
+      document.getElementById('navLogo').src = url;
+      
+      // Limpiar vista previa y ocultar botón
+      document.getElementById('newLogoPreview').style.display = 'none';
+      document.getElementById('saveButton').style.display = 'none';
+      
+      // Resetear widget
+      widget.value(null);
+    }
+
+    // Función para mostrar error
+    function showError(message) {
+      const errorMsg = document.getElementById('errorMessage');
+      errorMsg.textContent = message;
+      errorMsg.style.display = 'block';
+      setTimeout(() => errorMsg.style.display = 'none', 3000);
+    }
+
+    // Cargar logo guardado al iniciar
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedLogo = localStorage.getItem('kioskeys_logo');
+      if (savedLogo) {
+        updateLogos(savedLogo);
+      }
+    });
+  </script>
+</body>
+</html>

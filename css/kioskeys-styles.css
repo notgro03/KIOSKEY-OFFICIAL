@@ -1,0 +1,113 @@
+:root {
+  --primary-blue: #003B8E;
+  --secondary-blue: #00A3FF;
+  --background: #ffffff;
+  --text-color: #1d1d1f;
+  --nav-height: 44px;
+  --card-gradient: linear-gradient(135deg, #003B8E, #00A3FF);
+  --content-padding: 24px;
+  --max-content-width: 1200px;
+}
+
+/* Hero Section */
+.hero {
+  padding-top: calc(var(--nav-height) + 50px);
+  text-align: center;
+  background: var(--background);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+
+.hero-content {
+  transform: translateY(0);
+  transition: transform 0.5s ease;
+  opacity: 1;
+}
+
+.hero.scrolled .hero-content {
+  transform: translateY(-20px);
+  opacity: 0.8;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 600;
+  letter-spacing: -0.003em;
+  margin-bottom: 8px;
+  color: var(--primary-blue);
+}
+
+.hero p {
+  font-size: 24px;
+  color: #6e6e73;
+  margin-bottom: 32px;
+}
+
+/* Content Container */
+.content-container {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+}
+
+/* Steps */
+.step-card {
+  background: var(--card-gradient);
+  border-radius: 18px;
+  padding: 32px;
+  color: white;
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.step-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.step-number {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* Benefits */
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.benefit-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 4px 6px rgba(0, 59, 142, 0.1);
+  border: 1px solid rgba(0, 59, 142, 0.1);
+}
+
+.benefit-icon {
+  font-size: 32px;
+  color: var(--primary-blue);
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 32px;
+  }
+  
+  .hero p {
+    font-size: 19px;
+  }
+  
+  .content-container {
+    padding: 0 16px;
+  }
+}

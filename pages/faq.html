@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Preguntas Frecuentes - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .faq-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-category {
+      margin-bottom: 32px;
+    }
+
+    .category-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-blue);
+      margin-bottom: 16px;
+    }
+
+    .faq-item {
+      background: white;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0, 59, 142, 0.1);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .faq-question:hover {
+      background: rgba(0, 59, 142, 0.05);
+    }
+
+    .faq-answer {
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-answer.active {
+      padding: 20px;
+      max-height: 500px;
+      border-top: 1px solid rgba(0, 59, 142, 0.1);
+    }
+
+    .faq-icon {
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item.active .faq-icon {
+      transform: rotate(180deg);
+    }
+
+    .search-box {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 48px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 59, 142, 0.1);
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 59, 142, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6e6e73;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/red-servicios.html">Red de Servicios</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Preguntas Frecuentes</h1>
+        <p>Encuentra respuestas a tus dudas</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="faq-container">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Buscar preguntas..." id="faqSearch">
+          </div>
+
+          <div class="faq-category">
+            <h2 class="category-title">Servicios Generales</h2>
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Cómo funciona el servicio de duplicado de llaves?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                Nuestro servicio de duplicado es rápido y seguro. Solo necesitas presentar la llave original y una identificación válida en cualquiera de nuestros puntos de servicio. El proceso toma aproximadamente 15-20 minutos.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Qué tipos de llaves pueden duplicar?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                Duplicamos todo tipo de llaves: residenciales, comerciales, automotrices, de alta seguridad y codificadas. También trabajamos con llaves especiales y sistemas de control de acceso.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-category">
+            <h2 class="category-title">Telemandos y Programación</h2>
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Cuánto tiempo toma programar un telemando?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                La programación de un telemando generalmente toma entre 30-45 minutos, dependiendo del modelo y marca del vehículo. Algunos casos especiales pueden requerir más tiempo.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Los telemandos son originales?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                Ofrecemos tanto telemandos originales como alternativos de alta calidad. Los alternativos son más económicos pero mantienen la misma funcionalidad y garantía que los originales.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-category">
+            <h2 class="category-title">Planes y Pagos</h2>
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Qué métodos de pago aceptan?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                Aceptamos todas las tarjetas de crédito y débito, transferencias bancarias, efectivo y pagos digitales como Mercado Pago. Los planes mensuales se pueden pagar con tarjeta de crédito o débito automático.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question">
+                ¿Puedo cambiar de plan en cualquier momento?
+                <i class="fas fa-chevron-down faq-icon"></i>
+              </div>
+              <div class="faq-answer">
+                Sí, puedes actualizar o cambiar tu plan en cualquier momento. Los cambios se aplican al inicio del siguiente período de facturación y se ajustan los beneficios proporcionalmente.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Manejar acordeón de preguntas
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.parentElement;
+        const answer = question.nextElementSibling;
+        
+        // Cerrar otras respuestas
+        document.querySelectorAll('.faq-item').forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+            otherItem.querySelector('.faq-answer').classList.remove('active');
+          }
+        });
+        
+        // Alternar estado actual
+        item.classList.toggle('active');
+        answer.classList.toggle('active');
+      });
+    });
+
+    // Búsqueda en tiempo real
+    document.getElementById('faqSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      document.querySelectorAll('.faq-item').forEach(item => {
+        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+        
+        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+  <script src="/main.js" type="module"></script>
+
+</body>
+</html>

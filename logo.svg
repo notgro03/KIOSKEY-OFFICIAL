@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="800" viewBox="0 0 800 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- K Symbol -->
+  <path d="M200 200 L400 400 L200 600" stroke="#003B8E" stroke-width="80" stroke-linecap="round"/>
+  <path d="M600 200 L400 400 L600 600" stroke="#00A3FF" stroke-width="80" stroke-linecap="round"/>
+  
+  <!-- Text "KIOSKEYS" -->
+  <text x="400" y="700" text-anchor="middle" font-family="Arial, sans-serif" font-size="120" font-weight="bold">
+    <tspan fill="#003B8E">KIOS</tspan><tspan fill="#00A3FF">KEYS</tspan>
+  </text>
+  
+  <!-- Text "COPY KEYS" -->
+  <text x="400" y="780" text-anchor="middle" font-family="Arial, sans-serif" font-size="60" fill="#666666">
+    COPY KEYS
+  </text>
+</svg>

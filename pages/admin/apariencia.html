@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personalizar Apariencia - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Widget de Uploadcare -->
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script>UPLOADCARE_PUBLIC_KEY = '1985ca48f4d597426e30';</script>
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .settings-section {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .color-picker {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .color-preview {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .logo-preview {
+      width: 200px;
+      height: auto;
+      margin: 16px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      padding: 8px;
+      background: white;
+    }
+
+    .button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .button-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .success-message {
+      padding: 12px;
+      background: #d4edda;
+      color: #155724;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .preview-section {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .preview-title {
+      color: var(--primary-blue);
+      margin-bottom: 16px;
+    }
+
+    #livePreview {
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 16px;
+    }
+
+    .upload-button {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 8px 16px;
+      background: var(--primary-blue);
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .upload-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .image-uploader {
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .uploadcare--widget {
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys" id="navLogo"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin/dashboard.html">Dashboard</a>
+      <a href="/pages/admin/productos.html">Productos</a>
+      <a href="/pages/admin/apariencia.html" class="active">Apariencia</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Personalizar Apariencia</h1>
+        <p>Configura los colores y elementos visuales del sitio</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="admin-container">
+        <div id="successMessage" class="success-message"></div>
+
+        <div class="settings-grid">
+          <div class="settings-section">
+            <h3>Logo del Sitio</h3>
+            
+            <div class="image-uploader">
+              <img id="logoPreview" class="logo-preview" src="/logo.svg" alt="Logo Preview">
+              <input type="hidden" role="uploadcare-uploader" data-images-only="true" data-crop="1:1">
+            </div>
+
+            <div style="text-align: center;">
+              <button class="button button-primary" onclick="saveLogo()">
+                <i class="fas fa-save"></i> Guardar Logo
+              </button>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h3>Colores del Sitio</h3>
+            
+            <div class="color-picker">
+              <label>Color Principal:</label>
+              <input type="color" id="primaryColor" value="#003B8E">
+              <div class="color-preview" id="primaryPreview"></div>
+            </div>
+
+            <div class="color-picker">
+              <label>Color Secundario:</label>
+              <input type="color" id="secondaryColor" value="#0072BC">
+              <div class="color-preview" id="secondaryPreview"></div>
+            </div>
+
+            <div class="color-picker">
+              <label>Color de Texto:</label>
+              <input type="color" id="textColor" value="#1d1d1f">
+              <div class="color-preview" id="textPreview"></div>
+            </div>
+
+            <button class="button button-primary" onclick="saveColors()">
+              <i class="fas fa-save"></i> Guardar Colores
+            </button>
+          </div>
+        </div>
+
+        <div class="preview-section">
+          <h3 class="preview-title">Vista Previa</h3>
+          <div id="livePreview">
+            <div style="padding: 20px; border-radius: 8px;">
+              <img id="previewLogo" src="/logo.svg" alt="Logo Preview" style="width: 200px; margin-bottom: 20px;">
+              <h4>Ejemplo de Contenido</h4>
+              <p>Este es un texto de ejemplo para ver cómo se ven los colores.</p>
+              <button class="button button-primary">Botón de Ejemplo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Inicializar widget de Uploadcare
+    const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+    
+    widget.onUploadComplete(function(info) {
+      // Actualizar previsualización
+      const logoPreview = document.getElementById('logoPreview');
+      const previewLogo = document.getElementById('previewLogo');
+      const navLogo = document.getElementById('navLogo');
+      
+      logoPreview.src = info.cdnUrl;
+      previewLogo.src = info.cdnUrl;
+      navLogo.src = info.cdnUrl;
+      
+      // Guardar URL del logo
+      localStorage.setItem('kioskeys_logo', info.cdnUrl);
+      showSuccess('Logo actualizado correctamente');
+    });
+
+    // Mostrar mensaje de éxito
+    function showSuccess(message) {
+      const successMsg = document.getElementById('successMessage');
+      successMsg.textContent = message;
+      successMsg.style.display = 'block';
+      setTimeout(() => successMsg.style.display = 'none', 3000);
+    }
+
+    // Actualizar previsualizaciones de color
+    function updateColorPreviews() {
+      document.getElementById('primaryPreview').style.backgroundColor = document.getElementById('primaryColor').value;
+      document.getElementById('secondaryPreview').style.backgroundColor = document.getElementById('secondaryColor').value;
+      document.getElementById('textPreview').style.backgroundColor = document.getElementById('textColor').value;
+      
+      updateLivePreview();
+    }
+
+    // Actualizar vista previa en vivo
+    function updateLivePreview() {
+      const primaryColor = document.getElementById('primaryColor').value;
+      const secondaryColor = document.getElementById('secondaryColor').value;
+      const textColor = document.getElementById('textColor').value;
+
+      const preview = document.getElementById('livePreview');
+      preview.style.background = `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`;
+      preview.style.color = textColor;
+    }
+
+    // Guardar colores
+    function saveColors() {
+      const colors = {
+        primary: document.getElementById('primaryColor').value,
+        secondary: document.getElementById('secondaryColor').value,
+        text: document.getElementById('textColor').value
+      };
+
+      localStorage.setItem('kioskeys_colors', JSON.stringify(colors));
+      showSuccess('Colores guardados correctamente');
+      
+      // Actualizar variables CSS
+      document.documentElement.style.setProperty('--primary-blue', colors.primary);
+      document.documentElement.style.setProperty('--secondary-blue', colors.secondary);
+      document.documentElement.style.setProperty('--text-color', colors.text);
+    }
+
+    // Guardar logo
+    function saveLogo() {
+      const logoUrl = document.getElementById('logoPreview').src;
+      if (logoUrl === '/logo.svg') {
+        alert('Por favor, sube un nuevo logo primero');
+        return;
+      }
+      
+      localStorage.setItem('kioskeys_logo', logoUrl);
+      showSuccess('Logo guardado correctamente');
+    }
+
+    // Cargar configuración guardada
+    function loadSavedSettings() {
+      // Cargar colores
+      const colors = JSON.parse(localStorage.getItem('kioskeys_colors'));
+      if (colors) {
+        document.getElementById('primaryColor').value = colors.primary;
+        document.getElementById('secondaryColor').value = colors.secondary;
+        document.getElementById('textColor').value = colors.text;
+        updateColorPreviews();
+      }
+
+      // Cargar logo
+      const logoUrl = localStorage.getItem('kioskeys_logo');
+      if (logoUrl) {
+        const logoPreview = document.getElementById('logoPreview');
+        const previewLogo = document.getElementById('previewLogo');
+        const navLogo = document.getElementById('navLogo');
+        
+        logoPreview.src = logoUrl;
+        previewLogo.src = logoUrl;
+        navLogo.src = logoUrl;
+      }
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+      loadSavedSettings();
+      
+      // Eventos para actualización en tiempo real
+      document.getElementById('primaryColor').addEventListener('input', updateColorPreviews);
+      document.getElementById('secondaryColor').addEventListener('input', updateColorPreviews);
+      document.getElementById('textColor').addEventListener('input', updateColorPreviews);
+    });
+  </script>
+</body>
+</html>

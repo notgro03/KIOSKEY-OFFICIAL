@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red de Servicios - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <style>
+    .map-container {
+      height: 400px;
+      margin-bottom: 32px;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+    #map {
+      height: 100%;
+      width: 100%;
+    }
+    .search-box {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .search-box input {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 59, 142, 0.1);
+      font-size: 16px;
+    }
+    .search-box button {
+      padding: 12px 24px;
+      border-radius: 12px;
+      background: var(--card-gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .region-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+    }
+    .region-button {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--card-gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .service-card {
+      background: var(--card-gradient);
+      border-radius: 18px;
+      padding: 32px;
+      color: white;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .service-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/red-servicios.html">Red de Servicios</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Red de Servicios</h1>
+        <p>La red más grande de cerrajeros certificados en Argentina</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="map-container">
+          <div id="map"></div>
+        </div>
+
+        <div class="search-box">
+          <input type="text" placeholder="Buscar por ubicación o código postal" id="location-search">
+          <button class="search-button">
+            <i class="fas fa-search"></i> Buscar
+          </button>
+        </div>
+
+        <div class="region-selector">
+          <button class="region-button" data-region="caba">CABA</button>
+          <button class="region-button" data-region="gba-norte">GBA Norte</button>
+          <button class="region-button" data-region="gba-sur">GBA Sur</button>
+          <button class="region-button" data-region="gba-oeste">GBA Oeste</button>
+          <button class="region-button" data-region="cordoba">Córdoba</button>
+          <button class="region-button" data-region="rosario">Rosario</button>
+          <button class="region-button" data-region="mendoza">Mendoza</button>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <i class="fas fa-store feature-icon"></i>
+            <h3>Locales Propios</h3>
+            <p>Más de 50 locales oficiales Kioskeys en todo el país con atención personalizada y servicio técnico especializado.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fas fa-handshake feature-icon"></i>
+            <h3>Cerrajeros Certificados</h3>
+            <p>Red de más de 200 profesionales certificados por Kioskeys, con capacitación continua y herramientas de última generación.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fas fa-clock feature-icon"></i>
+            <h3>Servicio 24/7</h3>
+            <p>Atención de emergencias las 24 horas, los 365 días del año. Tiempo de respuesta promedio: 30 minutos.</p>
+          </div>
+
+          <div class="service-card">
+            <i class="fas fa-certificate feature-icon"></i>
+            <h3>Garantía de Servicio</h3>
+            <p>Todos nuestros trabajos tienen garantía por escrito. Seguimiento post-servicio y soporte técnico incluido.</p>
+          </div>
+        </div>
+
+        <a href="/unirse-red" class="tutorial-button">
+          <i class="fas fa-user-plus"></i>
+          Únete a nuestra red de cerrajeros
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="/main.js" type="module"></script>
+
+  <script>
+    // Inicializar mapa y marcadores
+    const map = L.map('map').setView([-34.6037, -58.3816], 12);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    const cerrajeros = [
+      { lat: -34.6037, lng: -58.3816, name: "Local Central", type: "Local Propio", region: "caba" },
+      { lat: -34.5890, lng: -58.4000, name: "Cerrajería Norte", type: "Asociado", region: "gba-norte" },
+      { lat: -34.6200, lng: -58.3700, name: "Local Sur", type: "Local Propio", region: "gba-sur" },
+      { lat: -31.4201, lng: -64.1888, name: "Cerrajería Córdoba", type: "Asociado", region: "cordoba" },
+      { lat: -32.9468, lng: -60.6393, name: "Local Rosario", type: "Local Propio", region: "rosario" },
+      { lat: -32.8908, lng: -68.8272, name: "Cerrajería Mendoza", type: "Asociado", region: "mendoza" }
+    ];
+
+    const markers = {};
+    cerrajeros.forEach(loc => {
+      const marker = L.marker([loc.lat, loc.lng])
+        .bindPopup(`
+          <strong>${loc.name}</strong><br>
+          ${loc.type}<br>
+          <a href="tel:+541112345678">Llamar</a>
+        `)
+        .addTo(map);
+      
+      if (!markers[loc.region]) {
+        markers[loc.region] = [];
+      }
+      markers[loc.region].push(marker);
+    });
+
+    // Filtrar por región
+    document.querySelectorAll('.region-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const region = button.dataset.region;
+        
+        Object.values(markers).flat().forEach(marker => {
+          marker.setOpacity(0.3);
+        });
+
+        if (markers[region]) {
+          markers[region].forEach(marker => {
+            marker.setOpacity(1);
+            map.flyTo(marker.getLatLng(), 13);
+          });
+        }
+      });
+    });
+
+    // Búsqueda
+    const searchBox = document.getElementById('location-search');
+    const searchButton = document.querySelector('.search-button');
+
+    searchButton.addEventListener('click', () => {
+      const query = searchBox.value.toLowerCase();
+      cerrajeros.forEach(loc => {
+        if (loc.name.toLowerCase().includes(query)) {
+          map.flyTo([loc.lat, loc.lng], 15);
+          markers[loc.region].forEach(marker => {
+            if (marker.getLatLng().lat === loc.lat && marker.getLatLng().lng === loc.lng) {
+              marker.openPopup();
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

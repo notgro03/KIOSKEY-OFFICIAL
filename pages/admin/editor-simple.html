@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editor Simple - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .editor-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .brand-item {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .brand-logo {
+      width: 150px;
+      height: 100px;
+      object-fit: contain;
+      margin: 10px auto;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .edit-field {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .save-button {
+      background: var(--primary-blue);
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .save-button:hover {
+      opacity: 0.9;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 10px 0;
+      display: none;
+    }
+
+    .add-brand-button {
+      background: var(--primary-blue);
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 20px;
+      font-size: 16px;
+    }
+
+    .models-input {
+      height: 80px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin/editor-simple.html" class="active">Editor Simple</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Editor Simple</h1>
+        <p>Edita fácilmente el contenido de tu sitio</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="editor-container">
+        <button class="add-brand-button" onclick="addNewBrand()">
+          <i class="fas fa-plus"></i> Agregar Nueva Marca
+        </button>
+        
+        <div id="successMessage" class="success-message"></div>
+        <div class="brand-grid" id="brandGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Mostrar mensaje de éxito
+    function showSuccess(message) {
+      const successMsg = document.getElementById('successMessage');
+      successMsg.textContent = message;
+      successMsg.style.display = 'block';
+      setTimeout(() => successMsg.style.display = 'none', 3000);
+    }
+
+    // Agregar nueva marca
+    function addNewBrand() {
+      const brands = JSON.parse(localStorage.getItem('kioskeys_brands')) || [];
+      const newBrand = {
+        name: 'Nueva Marca',
+        type: 'car',
+        logo: 'https://via.placeholder.com/150x100?text=Nuevo+Logo',
+        models: ['Modelo 1', 'Modelo 2']
+      };
+      brands.push(newBrand);
+      localStorage.setItem('kioskeys_brands', JSON.stringify(brands));
+      renderBrands();
+      showSuccess('Nueva marca agregada');
+    }
+
+    // Guardar cambios de una marca
+    function saveBrand(index) {
+      const brands = JSON.parse(localStorage.getItem('kioskeys_brands')) || [];
+      
+      brands[index] = {
+        name: document.getElementById(`name-${index}`).value,
+        type: document.getElementById(`type-${index}`).value,
+        logo: document.getElementById(`logo-${index}`).value,
+        models: document.getElementById(`models-${index}`).value.split('\n').filter(m => m.trim())
+      };
+
+      localStorage.setItem('kioskeys_brands', JSON.stringify(brands));
+      showSuccess('Cambios guardados');
+      renderBrands();
+    }
+
+    // Eliminar marca
+    function deleteBrand(index) {
+      if (confirm('¿Estás seguro de que quieres eliminar esta marca?')) {
+        const brands = JSON.parse(localStorage.getItem('kioskeys_brands')) || [];
+        brands.splice(index, 1);
+        localStorage.setItem('kioskeys_brands', JSON.stringify(brands));
+        renderBrands();
+        showSuccess('Marca eliminada');
+      }
+    }
+
+    // Renderizar marcas
+    function renderBrands() {
+      const brands = JSON.parse(localStorage.getItem('kioskeys_brands')) || [];
+      const grid = document.getElementById('brandGrid');
+      grid.innerHTML = '';
+
+      brands.forEach((brand, index) => {
+        const brandElement = document.createElement('div');
+        brandElement.className = 'brand-item';
+        brandElement.innerHTML = `
+          <img src="${brand.logo}" alt="${brand.name}" class="brand-logo" onerror="this.src='https://via.placeholder.com/150x100?text=Error+Logo'">
+          
+          <input type="text" class="edit-field" id="name-${index}" 
+                 value="${brand.name}" placeholder="Nombre de la marca">
+          
+          <input type="url" class="edit-field" id="logo-${index}" 
+                 value="${brand.logo}" placeholder="URL del logo">
+          
+          <select class="edit-field" id="type-${index}">
+            <option value="car" ${brand.type === 'car' ? 'selected' : ''}>Auto</option>
+            <option value="motorcycle" ${brand.type === 'motorcycle' ? 'selected' : ''}>Moto</option>
+            <option value="commercial" ${brand.type === 'commercial' ? 'selected' : ''}>Comercial</option>
+            <option value="luxury" ${brand.type === 'luxury' ? 'selected' : ''}>Lujo</option>
+            <option value="electric" ${brand.type === 'electric' ? 'selected' : ''}>Eléctrico</option>
+          </select>
+          
+          <textarea class="edit-field models-input" id="models-${index}" 
+                    placeholder="Modelos (uno por línea)">${brand.models.join('\n')}</textarea>
+          
+          <button class="save-button" onclick="saveBrand(${index})">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+          
+          <button class="save-button" onclick="deleteBrand(${index})" style="background: #dc3545; margin-top: 5px;">
+            <i class="fas fa-trash"></i> Eliminar
+          </button>
+        `;
+        grid.appendChild(brandElement);
+      });
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', renderBrands);
+  </script>
+</body>
+</html>

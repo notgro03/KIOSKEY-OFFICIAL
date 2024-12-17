@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /pages/admin/
+
+Sitemap: https://kioskeys.com/sitemap.xml

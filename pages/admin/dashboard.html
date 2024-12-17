@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .admin-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      backdrop-filter: blur(10px);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .admin-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+    }
+
+    .admin-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .admin-icon {
+      font-size: 32px;
+      color: var(--primary-blue);
+      margin-bottom: 16px;
+    }
+
+    .admin-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .admin-description {
+      font-size: 14px;
+      color: #6e6e73;
+      margin-bottom: 16px;
+    }
+
+    .admin-button {
+      display: inline-block;
+      padding: 8px 16px;
+      background: var(--primary-blue);
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .admin-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .quick-action {
+      background: var(--card-gradient);
+      color: white;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quick-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .quick-action i {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .stat-number {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #6e6e73;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin/dashboard.html" class="active">Panel Admin</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Panel de Administración</h1>
+        <p>Gestiona todo el contenido de tu sitio web</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="admin-container">
+          <!-- Estadísticas Rápidas -->
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="stat-number" id="totalBrands">0</div>
+              <div class="stat-label">Marcas</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="totalModels">0</div>
+              <div class="stat-label">Modelos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="totalCategories">0</div>
+              <div class="stat-label">Categorías</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="totalImages">0</div>
+              <div class="stat-label">Imágenes</div>
+            </div>
+          </div>
+
+          <!-- Acciones Rápidas -->
+          <div class="quick-actions">
+            <div class="quick-action" onclick="window.location.href='/pages/admin/logos.html'">
+              <i class="fas fa-images"></i>
+              <div>Gestionar Logos</div>
+            </div>
+            <div class="quick-action" onclick="window.location.href='/pages/admin/logos-simple.html'">
+              <i class="fas fa-upload"></i>
+              <div>Editor Simple</div>
+            </div>
+            <div class="quick-action" onclick="window.location.href='/pages/admin/backup.html'">
+              <i class="fas fa-download"></i>
+              <div>Backup Datos</div>
+            </div>
+          </div>
+
+          <!-- Módulos de Administración -->
+          <div class="admin-grid">
+            <div class="admin-card">
+              <i class="fas fa-car admin-icon"></i>
+              <div class="admin-title">Marcas y Modelos</div>
+              <p class="admin-description">Gestiona las marcas de vehículos y sus modelos</p>
+              <a href="/pages/admin/brands.html" class="admin-button">Administrar</a>
+            </div>
+
+            <div class="admin-card">
+              <i class="fas fa-key admin-icon"></i>
+              <div class="admin-title">Productos</div>
+              <p class="admin-description">Administra el catálogo de productos</p>
+              <a href="/pages/admin/products.html" class="admin-button">Administrar</a>
+            </div>
+
+            <div class="admin-card">
+              <i class="fas fa-map-marker-alt admin-icon"></i>
+              <div class="admin-title">Red de Servicios</div>
+              <p class="admin-description">Gestiona ubicaciones y cerrajeros</p>
+              <a href="/pages/admin/locations.html" class="admin-button">Administrar</a>
+            </div>
+
+            <div class="admin-card">
+              <i class="fas fa-tags admin-icon"></i>
+              <div class="admin-title">Planes y Precios</div>
+              <p class="admin-description">Configura planes y precios</p>
+              <a href="/pages/admin/plans.html" class="admin-button">Administrar</a>
+            </div>
+
+            <div class="admin-card">
+              <i class="fas fa-image admin-icon"></i>
+              <div class="admin-title">Galería de Imágenes</div>
+              <p class="admin-description">Gestiona todas las imágenes del sitio</p>
+              <a href="/pages/admin/gallery.html" class="admin-button">Administrar</a>
+            </div>
+
+            <div class="admin-card">
+              <i class="fas fa-paint-brush admin-icon"></i>
+              <div class="admin-title">Personalización</div>
+              <p class="admin-description">Cambia colores y estilos del sitio</p>
+              <a href="/pages/admin/customize.html" class="admin-button">Personalizar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Función para actualizar estadísticas
+    function updateStats() {
+      const brands = JSON.parse(localStorage.getItem('kioskeys_brands')) || [];
+      
+      // Actualizar contadores
+      document.getElementById('totalBrands').textContent = brands.length;
+      document.getElementById('totalModels').textContent = brands.reduce((total, brand) => total + brand.models.length, 0);
+      document.getElementById('totalCategories').textContent = [...new Set(brands.map(brand => brand.type))].length;
+      document.getElementById('totalImages').textContent = brands.length; // Logos
+    }
+
+    // Inicializar estadísticas
+    document.addEventListener('DOMContentLoaded', updateStats);
+
+    // Actualizar estadísticas cada vez que se vuelve a la página
+    window.addEventListener('focus', updateStats);
+  </script>
+</body>
+</html>

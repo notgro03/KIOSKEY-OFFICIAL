@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Administrar Productos - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>UPLOADCARE_PUBLIC_KEY = '1985ca48f4d597426e30';</script>
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .product-form {
+      background: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+    }
+
+    .image-preview {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 16px 0;
+      display: none;
+    }
+
+    .button {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .button-primary {
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .button-danger {
+      background: #dc3545;
+      color: white;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product-details {
+      padding: 16px;
+    }
+
+    .product-actions {
+      padding: 16px;
+      background: #f8f9fa;
+      border-top: 1px solid #eee;
+      display: flex;
+      gap: 8px;
+    }
+
+    .success-message,
+    .error-message {
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .uploadcare--widget {
+      display: inline-block;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin/kioskeys-admin-x7k9y2.html">Panel Admin</a>
+      <a href="/pages/admin/productos.html" class="active">Productos</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Administrar Productos</h1>
+        <p>Gestiona el catálogo de productos</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="admin-container">
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <div class="product-form">
+          <h3>Agregar/Editar Producto</h3>
+          <form id="productForm" onsubmit="handleSubmit(event)">
+            <input type="hidden" id="productId">
+            
+            <div class="form-group">
+              <label for="productName">Nombre del Producto</label>
+              <input type="text" id="productName" required>
+            </div>
+
+            <div class="form-group">
+              <label for="productCategory">Categoría</label>
+              <select id="productCategory" required>
+                <option value="llaves">Llaves</option>
+                <option value="carcasas">Carcasas</option>
+                <option value="telemandos">Telemandos</option>
+                <option value="accesorios">Accesorios</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Imagen del Producto</label>
+              <input type="hidden" role="uploadcare-uploader" 
+                     data-images-only="true"
+                     data-crop="free"
+                     data-preview-step="true"
+                     id="productImageUploader">
+              <img id="imagePreview" class="image-preview" alt="Vista previa">
+            </div>
+
+            <div class="form-group">
+              <label for="productDescription">Descripción</label>
+              <textarea id="productDescription" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="productPrice">Precio</label>
+              <input type="number" id="productPrice" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+              <label for="productFeatures">Características (una por línea)</label>
+              <textarea id="productFeatures" rows="4" placeholder="Característica 1&#10;Característica 2&#10;Característica 3"></textarea>
+            </div>
+
+            <button type="submit" class="button button-primary">
+              <i class="fas fa-save"></i> Guardar Producto
+            </button>
+          </form>
+        </div>
+
+        <div class="products-grid" id="productsGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let currentImageUrl = '';
+    
+    // Inicializar widget de Uploadcare
+    const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+    
+    widget.onUploadComplete((fileInfo) => {
+      currentImageUrl = fileInfo.cdnUrl;
+      const preview = document.getElementById('imagePreview');
+      preview.src = currentImageUrl;
+      preview.style.display = 'block';
+    });
+
+    // Mostrar mensaje
+    function showMessage(message, isError = false) {
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+      
+      if (isError) {
+        errorMsg.textContent = message;
+        errorMsg.style.display = 'block';
+        setTimeout(() => errorMsg.style.display = 'none', 3000);
+      } else {
+        successMsg.textContent = message;
+        successMsg.style.display = 'block';
+        setTimeout(() => successMsg.style.display = 'none', 3000);
+      }
+    }
+
+    // Manejar envío del formulario
+    function handleSubmit(event) {
+      event.preventDefault();
+      
+      if (!currentImageUrl) {
+        showMessage('Por favor, sube una imagen para el producto', true);
+        return;
+      }
+
+      const features = document.getElementById('productFeatures')
+        .value.split('\n')
+        .filter(feature => feature.trim());
+
+      const product = {
+        id: document.getElementById('productId').value || Date.now().toString(),
+        name: document.getElementById('productName').value,
+        category: document.getElementById('productCategory').value,
+        image: currentImageUrl,
+        description: document.getElementById('productDescription').value,
+        price: parseFloat(document.getElementById('productPrice').value),
+        features: features
+      };
+
+      let products = JSON.parse(localStorage.getItem('kioskeys_products')) || [];
+
+      if (product.id && products.some(p => p.id === product.id)) {
+        // Actualizar producto existente
+        products = products.map(p => p.id === product.id ? product : p);
+        showMessage('Producto actualizado correctamente');
+      } else {
+        // Agregar nuevo producto
+        products.push(product);
+        showMessage('Producto agregado correctamente');
+      }
+
+      localStorage.setItem('kioskeys_products', JSON.stringify(products));
+      
+      // Limpiar formulario
+      document.getElementById('productForm').reset();
+      document.getElementById('productId').value = '';
+      document.getElementById('imagePreview').style.display = 'none';
+      currentImageUrl = '';
+      widget.value(null);
+      
+      // Actualizar lista de productos
+      renderProducts();
+    }
+
+    // Editar producto
+    function editProduct(id) {
+      const products = JSON.parse(localStorage.getItem('kioskeys_products')) || [];
+      const product = products.find(p => p.id === id);
+      
+      if (product) {
+        document.getElementById('productId').value = product.id;
+        document.getElementById('productName').value = product.name;
+        document.getElementById('productCategory').value = product.category;
+        document.getElementById('productDescription').value = product.description;
+        document.getElementById('productPrice').value = product.price;
+        document.getElementById('productFeatures').value = product.features.join('\n');
+        
+        // Mostrar imagen actual
+        currentImageUrl = product.image;
+        const preview = document.getElementById('imagePreview');
+        preview.src = currentImageUrl;
+        preview.style.display = 'block';
+        
+        // Scroll al formulario
+        document.querySelector('.product-form').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Eliminar producto
+    function deleteProduct(id) {
+      Swal.fire({
+        title: '¿Eliminar producto?',
+        text: "Esta acción no se puede deshacer",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let products = JSON.parse(localStorage.getItem('kioskeys_products')) || [];
+          products = products.filter(p => p.id !== id);
+          localStorage.setItem('kioskeys_products', JSON.stringify(products));
+          showMessage('Producto eliminado correctamente');
+          renderProducts();
+        }
+      });
+    }
+
+    // Renderizar productos
+    function renderProducts() {
+      const products = JSON.parse(localStorage.getItem('kioskeys_products')) || [];
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = '';
+
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}" class="product-image"
+               onerror="this.src='https://via.placeholder.com/300x200?text=Error+Imagen'">
+          <div class="product-details">
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <p><strong>Precio:</strong> $${product.price}</p>
+            <p><strong>Categoría:</strong> ${product.category}</p>
+            <div class="features">
+              <strong>Características:</strong>
+              <ul>
+                ${product.features.map(f => `<li>${f}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+          <div class="product-actions">
+            <button class="button button-primary" onclick="editProduct('${product.id}')">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="button button-danger" onclick="deleteProduct('${product.id}')">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', renderProducts);
+  </script>
+</body>
+</html>

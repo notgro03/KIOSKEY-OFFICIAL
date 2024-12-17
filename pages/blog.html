@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+      margin: 32px 0;
+    }
+
+    .blog-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 59, 142, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(0, 59, 142, 0.15);
+    }
+
+    .blog-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .blog-content {
+      padding: 24px;
+    }
+
+    .blog-date {
+      font-size: 14px;
+      color: #6e6e73;
+      margin-bottom: 8px;
+    }
+
+    .blog-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text-color);
+    }
+
+    .blog-excerpt {
+      font-size: 16px;
+      color: #6e6e73;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .blog-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .blog-tag {
+      background: rgba(0, 59, 142, 0.1);
+      color: var(--primary-blue);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+    }
+
+    .read-more {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .read-more i {
+      transition: transform 0.3s ease;
+    }
+
+    .read-more:hover i {
+      transform: translateX(4px);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/red-servicios.html">Red de Servicios</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/blog.html">Blog</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Blog</h1>
+        <p>Noticias, consejos y novedades del mundo de la cerrajería</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="blog-grid">
+          <article class="blog-card">
+            <img src="https://images.unsplash.com/photo-1586717799252-bd134ad00e26" alt="Seguridad" class="blog-image">
+            <div class="blog-content">
+              <div class="blog-date">15 de Marzo, 2024</div>
+              <h2 class="blog-title">Cómo elegir la cerradura adecuada para tu hogar</h2>
+              <p class="blog-excerpt">Descubre los diferentes tipos de cerraduras y cuál es la mejor opción para garantizar la seguridad de tu hogar.</p>
+              <div class="blog-tags">
+                <span class="blog-tag">Seguridad</span>
+                <span class="blog-tag">Hogar</span>
+                <span class="blog-tag">Consejos</span>
+              </div>
+              <a href="/blog/elegir-cerradura" class="read-more">
+                Leer más <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </article>
+
+          <article class="blog-card">
+            <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f" alt="Llaves" class="blog-image">
+            <div class="blog-content">
+              <div class="blog-date">10 de Marzo, 2024</div>
+              <h2 class="blog-title">Ventajas de las llaves codificadas</h2>
+              <p class="blog-excerpt">Las llaves codificadas ofrecen mayor seguridad y control. Conoce todas sus ventajas y por qué deberías considerarlas.</p>
+              <div class="blog-tags">
+                <span class="blog-tag">Tecnología</span>
+                <span class="blog-tag">Innovación</span>
+                <span class="blog-tag">Seguridad</span>
+              </div>
+              <a href="/blog/llaves-codificadas" class="read-more">
+                Leer más <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </article>
+
+          <article class="blog-card">
+            <img src="https://images.unsplash.com/photo-1581093458791-9d42e3c2fd45" alt="Telemando" class="blog-image">
+            <div class="blog-content">
+              <div class="blog-date">5 de Marzo, 2024</div>
+              <h2 class="blog-title">Guía completa de telemandos para vehículos</h2>
+              <p class="blog-excerpt">Todo lo que necesitas saber sobre telemandos: tipos, programación, mantenimiento y solución de problemas comunes.</p>
+              <div class="blog-tags">
+                <span class="blog-tag">Automóviles</span>
+                <span class="blog-tag">Guía</span>
+                <span class="blog-tag">Telemandos</span>
+              </div>
+              <a href="/blog/guia-telemandos" class="read-more">
+                Leer más <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/main.js" type="module"></script>
+
+</body>
+</html>

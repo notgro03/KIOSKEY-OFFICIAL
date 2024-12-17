@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos - Kioskeys</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .search-container {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 48px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 59, 142, 0.1);
+      font-size: 16px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 59, 142, 0.1);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6e6e73;
+    }
+
+    .category-filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-filter {
+      padding: 8px 16px;
+      border-radius: 20px;
+      background: var(--card-gradient);
+      color: white;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.3s ease;
+      opacity: 0.8;
+    }
+
+    .category-filter:hover,
+    .category-filter.active {
+      opacity: 1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
+    }
+
+    .product-card {
+      background: var(--card-gradient);
+      border-radius: 18px;
+      padding: 32px;
+      color: white;
+      text-decoration: none;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+      );
+      transition: 0.5s;
+    }
+
+    .product-card:hover::before {
+      left: 100%;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 59, 142, 0.2);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 16px;
+      right: -32px;
+      background: #FFD700;
+      color: #000;
+      padding: 8px 40px;
+      transform: rotate(45deg);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+    }
+
+    .product-card h3 {
+      font-size: 24px;
+      margin-bottom: 16px;
+      text-align: center;
+      color: white;
+    }
+
+    .product-description {
+      margin: 16px 0;
+      line-height: 1.6;
+      opacity: 0.9;
+      text-align: center;
+    }
+
+    .product-details {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .product-details li {
+      margin-bottom: 12px;
+      padding-left: 24px;
+      position: relative;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .product-details li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .learn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-weight: 500;
+      font-size: 14px;
+      opacity: 0.9;
+      transition: opacity 0.3s;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 16px;
+      border-radius: 20px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      color: white;
+    }
+
+    .learn-more:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .learn-more i {
+      font-size: 12px;
+      transition: transform 0.3s;
+    }
+
+    .product-card:hover .learn-more i {
+      transform: translateX(4px);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin: 32px 0;
+    }
+
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-filters {
+        padding-bottom: 8px;
+      }
+      
+      .product-card {
+        padding: 24px;
+      }
+      
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        font-size: 24px;
+      }
+
+      .product-card h3 {
+        font-size: 20px;
+      }
+
+      .product-description {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/red-servicios.html">Red de Servicios</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Nuestros Productos</h1>
+        <p>Todo lo que necesitas para tu seguridad</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Buscar productos..." id="productSearch">
+        </div>
+
+        <div class="category-filters">
+          <button class="category-filter active" data-category="all">Todos</button>
+          <button class="category-filter" data-category="telemandos">Telemandos</button>
+          <button class="category-filter" data-category="llaves">Llaves</button>
+          <button class="category-filter" data-category="carcasas">Carcasas</button>
+          <button class="category-filter" data-category="accesorios">Accesorios</button>
+        </div>
+
+        <div class="features-grid">
+          <a href="/pages/telemandos.html" class="product-card" data-category="telemandos">
+            <i class="fas fa-car feature-icon"></i>
+            <h3>Telemandos</h3>
+            <p class="product-description">Controles remotos originales y alternativos para todo tipo de vehículos. Programación profesional incluida.</p>
+            <ul class="product-details">
+              <li>Telemandos originales y alternativos</li>
+              <li>Más de 1000 modelos disponibles</li>
+              <li>Programación incluida</li>
+              <li>Garantía de funcionamiento</li>
+              <li>Servicio express disponible</li>
+            </ul>
+            <span class="learn-more">Ver catálogo completo <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/llaves.html" class="product-card" data-category="llaves">
+            <i class="fas fa-key feature-icon"></i>
+            <h3>Llaves</h3>
+            <p class="product-description">Amplia gama de llaves de seguridad y copias certificadas para todo tipo de cerraduras.</p>
+            <ul class="product-details">
+              <li>Llaves codificadas de alta seguridad</li>
+              <li>Llaves de puntos y multipuntos</li>
+              <li>Llaves magnéticas y de proximidad</li>
+              <li>Duplicados certificados</li>
+              <li>Servicio de emergencia 24/7</li>
+            </ul>
+            <span class="learn-more">Explorar llaves <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/carcasas.html" class="product-card" data-category="carcasas">
+            <i class="fas fa-shield-alt feature-icon"></i>
+            <h3>Carcasas</h3>
+            <p class="product-description">Carcasas de repuesto originales y alternativas para mandos de todas las marcas.</p>
+            <ul class="product-details">
+              <li>Carcasas originales de fábrica</li>
+              <li>Alternativas de alta calidad</li>
+              <li>Compatibles con todas las marcas</li>
+              <li>Instalación profesional</li>
+              <li>Amplio stock disponible</li>
+            </ul>
+            <span class="learn-more">Ver modelos <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/accesorios.html" class="product-card" data-category="accesorios">
+            <i class="fas fa-tools feature-icon"></i>
+            <h3>Accesorios</h3>
+            <p class="product-description">Complementos y accesorios profesionales para el cuidado y mantenimiento de tus llaves.</p>
+            <ul class="product-details">
+              <li>Fundas protectoras premium</li>
+              <li>Llaveros de seguridad</li>
+              <li>Baterías certificadas</li>
+              <li>Productos de mantenimiento</li>
+              <li>Accesorios de personalización</li>
+            </ul>
+            <span class="learn-more">Descubrir más <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Filtrado por categorías
+    document.querySelectorAll('.category-filter').forEach(button => {
+      button.addEventListener('click', () => {
+        // Actualizar estado activo de los botones
+        document.querySelectorAll('.category-filter').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        const category = button.dataset.category;
+        document.querySelectorAll('.product-card').forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Búsqueda en tiempo real
+    document.getElementById('productSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      document.querySelectorAll('.product-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('.product-description').textContent.toLowerCase();
+        const details = Array.from(card.querySelectorAll('.product-details li'))
+          .map(li => li.textContent.toLowerCase())
+          .join(' ');
+
+        if (title.includes(searchTerm) || description.includes(searchTerm) || details.includes(searchTerm)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
+
+  <script src="/main.js" type="module"></script>
+
+</body>
+</html>
