@@ -6,6 +6,7 @@
   <title>Productos - Kioskeys</title>
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module" src="/main.js"></script>
   <style>
     .search-container {
       margin-bottom: 32px;
@@ -199,13 +200,6 @@
       transform: translateX(4px);
     }
 
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-      margin: 32px 0;
-    }
-
     @media (max-width: 768px) {
       .features-grid {
         grid-template-columns: 1fr;
@@ -244,7 +238,7 @@
       <a href="/">Inicio</a>
       <a href="/pages/red-servicios.html">Red de Servicios</a>
       <a href="/pages/planes.html">Planes</a>
-      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/productos.html" class="active">Productos</a>
       <a href="/pages/contacto.html">Contacto</a>
     </div>
     <button class="menu-button">
@@ -277,6 +271,7 @@
 
         <div class="features-grid">
           <a href="/pages/telemandos.html" class="product-card" data-category="telemandos">
+            <div class="product-badge">MÁS VENDIDO</div>
             <i class="fas fa-car feature-icon"></i>
             <h3>Telemandos</h3>
             <p class="product-description">Controles remotos originales y alternativos para todo tipo de vehículos. Programación profesional incluida.</p>
@@ -336,7 +331,7 @@
     </section>
   </main>
 
-  <script>
+  <script type="module">
     // Filtrado por categorías
     document.querySelectorAll('.category-filter').forEach(button => {
       button.addEventListener('click', () => {
@@ -376,6 +371,5 @@
       });
     });
   </script>
-
 </body>
 </html>
