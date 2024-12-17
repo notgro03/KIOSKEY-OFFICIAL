@@ -23,7 +23,6 @@
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      overflow-x: auto;
     }
 
     .admin-nav a {
@@ -32,7 +31,6 @@
       color: var(--primary-blue);
       text-decoration: none;
       transition: all 0.3s ease;
-      white-space: nowrap;
     }
 
     .admin-nav a:hover,
@@ -46,11 +44,6 @@
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: none;
-    }
-
-    .admin-section.active {
-      display: block;
     }
 
     .form-group {
@@ -64,17 +57,11 @@
     }
 
     .form-group input,
-    .form-group select,
-    .form-group textarea {
+    .form-group select {
       width: 100%;
       padding: 8px;
       border: 1px solid #ddd;
       border-radius: 5px;
-    }
-
-    .form-group textarea {
-      min-height: 100px;
-      resize: vertical;
     }
 
     .btn {
@@ -102,74 +89,19 @@
       margin-top: 20px;
     }
 
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
     .preview-image {
       width: 100%;
       max-width: 200px;
       height: auto;
       margin: 10px 0;
       border-radius: 5px;
-    }
-
-    .filters {
-      margin-bottom: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .product-card,
-    .brand-card {
-      background: white;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-
-    .product-card:hover,
-    .brand-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .product-image,
-    .brand-logo {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .product-info,
-    .brand-info {
-      padding: 15px;
-    }
-
-    .product-actions,
-    .brand-actions {
-      padding: 10px;
-      border-top: 1px solid #eee;
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .edit-btn,
-    .delete-btn {
-      padding: 5px 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .edit-btn {
-      background: var(--primary-blue);
-      color: white;
-    }
-
-    .delete-btn {
-      background: #dc3545;
-      color: white;
     }
   </style>
 </head>
@@ -196,14 +128,11 @@
       <nav class="admin-nav">
         <a href="#brands" class="active">Marcas</a>
         <a href="#products">Productos</a>
-        <a href="#keys">Llaves</a>
-        <a href="#remotes">Telemandos</a>
-        <a href="#cases">Carcasas</a>
+        <a href="#categories">Categorías</a>
         <a href="#settings">Configuración</a>
       </nav>
 
-      <!-- Brands Section -->
-      <section id="brands" class="admin-section active">
+      <section id="brands" class="admin-section">
         <h2>Gestión de Marcas</h2>
         
         <form id="brandForm">
@@ -239,81 +168,11 @@
           <!-- Brands will be rendered here -->
         </div>
       </section>
-
-      <!-- Products Section -->
-      <section id="products" class="admin-section">
-        <h2>Gestión de Productos</h2>
-
-        <div class="filters">
-          <select id="typeFilter">
-            <option value="">Todos los tipos</option>
-            <option value="key">Llaves</option>
-            <option value="remote">Telemandos</option>
-            <option value="case">Carcasas</option>
-          </select>
-        </div>
-        
-        <form id="productForm">
-          <input type="hidden" name="id">
-          
-          <div class="form-group">
-            <label>Imagen del Producto</label>
-            <input type="hidden" role="uploadcare-uploader" data-images-only="true">
-            <input type="hidden" name="image" id="productImage">
-            <img id="imagePreview" src="/placeholder-product.png" class="preview-image">
-          </div>
-
-          <div class="form-group">
-            <label>Nombre del Producto</label>
-            <input type="text" name="name" required>
-          </div>
-
-          <div class="form-group">
-            <label>Tipo de Producto</label>
-            <select name="type" required>
-              <option value="key">Llave</option>
-              <option value="remote">Telemando</option>
-              <option value="case">Carcasa</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Marca</label>
-            <select name="brandId" id="productBrand" required>
-              <!-- Brands will be loaded here -->
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Precio</label>
-            <input type="number" name="price" step="0.01" required>
-          </div>
-
-          <div class="form-group">
-            <label>Descripción</label>
-            <textarea name="description" required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>Características (una por línea)</label>
-            <textarea name="features"></textarea>
-          </div>
-
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Guardar Producto
-          </button>
-        </form>
-
-        <div id="productsList" class="grid">
-          <!-- Products will be rendered here -->
-        </div>
-      </section>
     </div>
   </main>
 
   <script type="module">
     import { BrandsManager } from '@admin/js/brands.js';
-    import { ProductsManager } from '@admin/js/products.js';
     import { db } from '@admin/js/db.js';
 
     // Initialize database and managers
@@ -321,26 +180,6 @@
       try {
         await db.open();
         new BrandsManager();
-        new ProductsManager();
-
-        // Handle navigation
-        const navLinks = document.querySelectorAll('.admin-nav a');
-        navLinks.forEach(link => {
-          link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href').substring(1);
-            
-            // Update active states
-            navLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-            
-            // Show target section
-            document.querySelectorAll('.admin-section').forEach(section => {
-              section.classList.remove('active');
-            });
-            document.getElementById(targetId).classList.add('active');
-          });
-        });
       } catch (error) {
         console.error('Error initializing admin panel:', error);
       }
