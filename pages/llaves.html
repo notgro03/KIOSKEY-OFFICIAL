@@ -46,7 +46,7 @@
           // Obtener modelos basados en la marca seleccionada
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model')
+            .select('model, description')
             .eq('brand', brand);
 
           if (modelsError) {
@@ -64,11 +64,59 @@
             option.textContent = model;
             modelSelect.appendChild(option);
           });
+
+          // Guardar descripciones en un objeto para su uso posterior
+          const descriptions = models.reduce((acc, item) => {
+            acc[item.model] = item.description;
+            return acc;
+          }, {});
+
+          // Manejar cambio de modelo
+          modelSelect.addEventListener('change', () => {
+            const model = modelSelect.value;
+            const description = descriptions[model] || 'Descripción no disponible';
+            searchKeys(brand, model, description);
+          });
         } else {
           modelSelect.disabled = true;
         }
       });
     });
+
+    // Función de búsqueda
+    function searchKeys(brand, model, description) {
+      if (!brand || !model) {
+        alert('Por favor, selecciona marca y modelo');
+        return;
+      }
+
+      const results = document.getElementById('searchResults');
+      results.innerHTML = `
+        <div class="result-item">
+          <img src="https://via.placeholder.com/100x80?text=${brand}" 
+               alt="${brand}" class="result-logo">
+          <div class="result-info">
+            <h3>Llave Original ${brand}</h3>
+            <p>${description}</p>
+            <p>Compatible con ${brand} ${model}</p>
+            <div class="result-features">
+              <span class="result-feature">
+                <i class="fas fa-check-circle"></i> Original de fábrica
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-shield-alt"></i> Garantía 2 años
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-microchip"></i> Con chip
+              </span>
+            </div>
+          </div>
+          <a href="/pages/contacto.html" class="result-button">Consultar</a>
+        </div>
+      `;
+      
+      results.classList.add('active');
+    }
   </script>
   <style>
     .search-container {
@@ -435,10 +483,7 @@
 
   <script>
     // Función de búsqueda
-    function searchKeys() {
-      const brand = document.getElementById('brandSelect').value;
-      const model = document.getElementById('modelSelect').value;
-
+    function searchKeys(brand, model, description) {
       if (!brand || !model) {
         alert('Por favor, selecciona marca y modelo');
         return;
@@ -450,7 +495,8 @@
           <img src="https://via.placeholder.com/100x80?text=${brand}" 
                alt="${brand}" class="result-logo">
           <div class="result-info">
-            <h3>Llave ${brand}${description}</h3>
+            <h3>Llave Original ${brand}</h3>
+            <p>${description}</p>
             <p>Compatible con ${brand} ${model}</p>
             <div class="result-features">
               <span class="result-feature">
