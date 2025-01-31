@@ -14,7 +14,6 @@ export default defineConfig({
         'contacto': resolve(__dirname, 'pages/contacto.html'),
         'tutoriales': resolve(__dirname, 'pages/tutoriales.html'),
         'telemandos': resolve(__dirname, 'pages/telemandos.html'),
-        'blog': resolve(__dirname, 'pages/blog.html'),
         'faq': resolve(__dirname, 'pages/faq.html'),
         'privacidad': resolve(__dirname, 'pages/privacidad.html'),
         'terminos': resolve(__dirname, 'pages/terminos.html'),
