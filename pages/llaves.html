@@ -7,89 +7,78 @@
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="/main.js"></script>
+
   <script type="module">
     import { supabase } from '../src/config/supabase.js';
+
+    let currentDescriptions = {};
 
     document.addEventListener('DOMContentLoaded', async () => {
       const brandSelect = document.getElementById('brandSelect');
       const modelSelect = document.getElementById('modelSelect');
+      const searchButton = document.querySelector('.search-button');
 
-      // Obtener marcas de la tabla llaves
+      // Cargar marcas
       const { data: brands, error: brandsError } = await supabase
         .from('llaves')
         .select('brand');
 
-      if (brandsError) {
-        console.error('Error fetching brands:', brandsError);
-        return;
+      if (!brandsError) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
+        uniqueBrands.forEach(brand => {
+          const option = document.createElement('option');
+          option.value = brand;
+          option.textContent = brand;
+          brandSelect.appendChild(option);
+        });
       }
 
-      // Filtrar marcas únicas
-      const uniqueBrands = [...new Set(brands.map(item => item.brand))];
-
-      // Llenar select de marcas
-      uniqueBrands.forEach(brand => {
-        const option = document.createElement('option');
-        option.value = brand;
-        option.textContent = brand;
-        brandSelect.appendChild(option);
-      });
-
-      // Manejar cambio de marca
+      // Evento cambio de marca
       brandSelect.addEventListener('change', async () => {
         const brand = brandSelect.value;
         modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+        modelSelect.disabled = !brand;
+        currentDescriptions = {};
 
         if (brand) {
-          modelSelect.disabled = false;
-
-          // Obtener modelos basados en la marca seleccionada
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
             .select('model, description')
             .eq('brand', brand);
 
-          if (modelsError) {
-            console.error('Error fetching models:', modelsError);
-            return;
+          if (!modelsError) {
+            const uniqueModels = [...new Set(models.map(item => item.model))];
+            uniqueModels.forEach(model => {
+              const option = document.createElement('option');
+              option.value = model;
+              option.textContent = model;
+              modelSelect.appendChild(option);
+            });
+            
+            currentDescriptions = models.reduce((acc, item) => {
+              acc[item.model] = item.description;
+              return acc;
+            }, {});
           }
-
-          // Filtrar modelos únicos
-          const uniqueModels = [...new Set(models.map(item => item.model))];
-
-          // Llenar select de modelos
-          uniqueModels.forEach(model => {
-            const option = document.createElement('option');
-            option.value = model;
-            option.textContent = model;
-            modelSelect.appendChild(option);
-          });
-
-          // Guardar descripciones en un objeto para su uso posterior
-          const descriptions = models.reduce((acc, item) => {
-            acc[item.model] = item.description;
-            return acc;
-          }, {});
-
-          // Manejar cambio de modelo
-          modelSelect.addEventListener('change', () => {
-            const model = modelSelect.value;
-            const description = descriptions[model] || 'Descripción no disponible';
-            searchKeys(brand, model, description);
-          });
-        } else {
-          modelSelect.disabled = true;
         }
+      });
+
+      // Evento botón buscar
+      searchButton.addEventListener('click', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
+        
+        if (!brand || !model) {
+          alert('Selecciona marca y modelo');
+          return;
+        }
+        
+        const description = currentDescriptions[model] || 'Descripción no disponible';
+        showResults(brand, model, description);
       });
     });
 
-    // Función de búsqueda
-    function searchKeys(brand, model, description) {
-      if (!brand || !model) {
-        alert('Por favor, selecciona marca y modelo');
-        return;
-      }
-
+    function showResults(brand, model, description) {
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
@@ -114,7 +103,6 @@
           <a href="/pages/contacto.html" class="result-button">Consultar</a>
         </div>
       `;
-      
       results.classList.add('active');
     }
   </script>
@@ -439,7 +427,7 @@
                 </select>
               </div>
             </div>
-            <button class="search-button" onclick="searchKeys()">
+            <button class="search-button">
               <i class="fas fa-search"></i>
               Buscar Llaves Compatibles
             </button>
@@ -481,42 +469,5 @@
       </div>
     </section>
   </main>
-
-  <script>
-    // Función de búsqueda
-    function searchKeys(brand, model, description) {
-      if (!brand || !model) {
-        alert('Por favor, selecciona marca y modelo');
-        return;
-      }
-
-      const results = document.getElementById('searchResults');
-      results.innerHTML = `
-        <div class="result-item">
-          <img src="https://via.placeholder.com/100x80?text=${brand}" 
-               alt="${brand}" class="result-logo">
-          <div class="result-info">
-            <h3>Llave Original ${brand}</h3>
-            <p>${description}</p>
-            <p>Compatible con ${brand} ${model}</p>
-            <div class="result-features">
-              <span class="result-feature">
-                <i class="fas fa-check-circle"></i> Original de fábrica
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-shield-alt"></i> Garantía 2 años
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-microchip"></i> Con chip
-              </span>
-            </div>
-          </div>
-          <a href="/pages/contacto.html" class="result-button">Consultar</a>
-        </div>
-      `;
-      
-      results.classList.add('active');
-    }
-  </script>
 </body>
 </html>
