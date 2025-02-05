@@ -11,7 +11,7 @@
   <script type="module">
     import { supabase } from '../src/config/supabase.js';
 
-    let currentDescriptions = {};
+    let currentData = {};
 
     document.addEventListener('DOMContentLoaded', async () => {
       const brandSelect = document.getElementById('brandSelect');
@@ -25,13 +25,13 @@
 
       if (!brandsError) {
         const uniqueBrands = brands.reduce((acc, item) => {
-          if (!acc.has(item.brand)) {
-            acc.set(item.brand, item.image_url);
+          if (!acc[item.brand]) {
+            acc[item.brand] = item.image_url;
           }
           return acc;
-        }, new Map());
+        }, {});
 
-        uniqueBrands.forEach((imageUrl, brand) => {
+        Object.entries(uniqueBrands).forEach(([brand, imageUrl]) => {
           const option = document.createElement('option');
           option.value = brand;
           option.textContent = brand;
@@ -45,7 +45,7 @@
         const brand = brandSelect.value;
         modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
         modelSelect.disabled = !brand;
-        currentDescriptions = {};
+        currentData = {};
 
         if (brand) {
           const { data: models, error: modelsError } = await supabase
@@ -54,21 +54,16 @@
             .eq('brand', brand);
 
           if (!modelsError) {
-            const uniqueModels = [...new Set(models.map(item => item.model))];
-            uniqueModels.forEach(model => {
-              const option = document.createElement('option');
-              option.value = model;
-              option.textContent = model;
-              modelSelect.appendChild(option);
+            models.forEach(item => {
+              if (!currentData[item.model]) {
+                const option = document.createElement('option');
+                option.value = item.model;
+                option.textContent = item.model;
+                option.dataset.imageUrl = item.image_url;
+                modelSelect.appendChild(option);
+                currentData[item.model] = item.description;
+              }
             });
-            
-            currentDescriptions = models.reduce((acc, item) => {
-              acc[item.model] = {
-                description: item.description,
-                imageUrl: item.image_url
-              };
-              return acc;
-            }, {});
           }
         }
       });
@@ -84,9 +79,8 @@
         }
         
         const brandImage = brandSelect.options[brandSelect.selectedIndex].dataset.imageUrl;
-        const modelInfo = currentDescriptions[model] || {};
-        const description = modelInfo.description || 'Descripción no disponible';
-        const modelImage = modelInfo.imageUrl || 'https://via.placeholder.com/150';
+        const modelImage = modelSelect.options[modelSelect.selectedIndex].dataset.imageUrl;
+        const description = currentData[model] || 'Descripción no disponible';
         
         showResults(brand, model, description, brandImage, modelImage);
       });
@@ -123,6 +117,7 @@
     }
   </script>
   <style>
+    /* Estilos anteriores se mantienen igual */
     .search-container {
       max-width: 800px;
       margin: 0 auto 32px;
@@ -256,9 +251,8 @@
 
     .image-container {
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 150px;
+      gap: 15px;
+      align-items: center;
     }
 
     .brand-image {
@@ -400,6 +394,7 @@
       }
 
       .image-container {
+        flex-direction: column;
         align-items: center;
       }
 
@@ -411,6 +406,7 @@
   </style>
 </head>
 <body>
+  <!-- El resto del HTML se mantiene igual -->
   <nav>
     <div class="logo">
       <a href="/"><img src="../LOGO_KIOSKEYS.svg" alt="Kioskeys"></a>
