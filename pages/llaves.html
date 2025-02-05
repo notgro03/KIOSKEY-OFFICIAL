@@ -21,13 +21,14 @@
       // Cargar marcas
       const { data: brands, error: brandsError } = await supabase
         .from('llaves')
-        .select('brand');
+        .select('brand, image_url');
 
       if (!brandsError) {
         const uniqueBrands = [...new Set(brands.map(item => item.brand))];
         uniqueBrands.forEach(brand => {
           const option = document.createElement('option');
           option.value = brand;
+          option.dataset.imageUrl = imageUrl; // Almacenar URL de la imagen
           option.textContent = brand;
           brandSelect.appendChild(option);
         });
@@ -43,7 +44,7 @@
         if (brand) {
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model','image_url')
+            .select('model, description, image_url') // Corregir sintaxis y añadir image_url
             .eq('brand', brand);
 
           if (!modelsError) {
@@ -58,6 +59,15 @@
             currentDescriptions = models.reduce((acc, item) => {
               acc[item.model] = item.description;
               return acc;
+
+              // Almacenar descripción e imagen
+              currentDescriptions = models.reduce((acc, item) => {
+                acc[item.model] = {
+                  description: item.description,
+                  imageUrl: item.image_url
+                };
+                return acc;
+              }, {});
             }, {});
           }
         }
@@ -78,12 +88,15 @@
       });
     });
 
-    function showResults(brand, model, description) {
+    function showResults(brand, model, description, brandImageUrl, modelImageUrl) {
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
-          <img src="${image_url || 'https://via.placeholder.com/100x80?text=${brand}'}" 
-               alt="${brand}" class="result-logo">
+          <img src="${brandImageUrl}"
+               alt="${brand}" class="brand-logo">
+          <img src="${modelImageUrl}" 
+             alt="${model}" class="model-image">
+          <div class="result-info">
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
             <p>${description}</p>
