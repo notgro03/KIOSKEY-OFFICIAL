@@ -24,12 +24,18 @@
         .select('brand, image_url');
 
       if (!brandsError) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
-        uniqueBrands.forEach(brand => {
+        const uniqueBrands = brands.reduce((acc, item) => {
+          if (!acc.has(item.brand)) {
+            acc.set(item.brand, item.image_url);
+          }
+          return acc;
+        }, new Map());
+
+        uniqueBrands.forEach((imageUrl, brand) => {
           const option = document.createElement('option');
           option.value = brand;
-          option.dataset.imageUrl = imageUrl; // Almacenar URL de la imagen
           option.textContent = brand;
+          option.dataset.imageUrl = imageUrl;
           brandSelect.appendChild(option);
         });
       }
@@ -44,7 +50,7 @@
         if (brand) {
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model, description, image_url') // Corregir sintaxis y añadir image_url
+            .select('model, description, image_url')
             .eq('brand', brand);
 
           if (!modelsError) {
@@ -57,17 +63,11 @@
             });
             
             currentDescriptions = models.reduce((acc, item) => {
-              acc[item.model] = item.description;
+              acc[item.model] = {
+                description: item.description,
+                imageUrl: item.image_url
+              };
               return acc;
-
-              // Almacenar descripción e imagen
-              currentDescriptions = models.reduce((acc, item) => {
-                acc[item.model] = {
-                  description: item.description,
-                  imageUrl: item.image_url
-                };
-                return acc;
-              }, {});
             }, {});
           }
         }
@@ -83,20 +83,23 @@
           return;
         }
         
-        const description = currentDescriptions[model] || 'Descripción no disponible';
-        showResults(brand, model, description);
+        const brandImage = brandSelect.options[brandSelect.selectedIndex].dataset.imageUrl;
+        const modelInfo = currentDescriptions[model] || {};
+        const description = modelInfo.description || 'Descripción no disponible';
+        const modelImage = modelInfo.imageUrl || 'https://via.placeholder.com/150';
+        
+        showResults(brand, model, description, brandImage, modelImage);
       });
     });
 
-    function showResults(brand, model, description, brandImageUrl, modelImageUrl) {
+    function showResults(brand, model, description, brandImage, modelImage) {
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
-          <img src="${brandImageUrl}"
-               alt="${brand}" class="brand-logo">
-          <img src="${modelImageUrl}" 
-             alt="${model}" class="model-image">
-          <div class="result-info">
+          <div class="image-container">
+            <img src="${brandImage}" alt="${brand}" class="brand-image">
+            <img src="${modelImage}" alt="${model}" class="model-image">
+          </div>
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
             <p>${description}</p>
@@ -251,12 +254,27 @@
       border-bottom: none;
     }
 
-    .result-logo {
+    .image-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 150px;
+    }
+
+    .brand-image {
       width: 100px;
-      height: 80px;
+      height: 60px;
       object-fit: contain;
-      background: white;
       padding: 8px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .model-image {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
@@ -381,8 +399,8 @@
         text-align: center;
       }
 
-      .result-logo {
-        margin: 0 auto;
+      .image-container {
+        align-items: center;
       }
 
       .result-features {
