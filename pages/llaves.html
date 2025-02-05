@@ -43,7 +43,7 @@
         if (brand) {
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model')
+            .select('model','image_url')
             .eq('brand', brand);
 
           if (!modelsError) {
@@ -82,7 +82,7 @@
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
-          <img src="https://via.placeholder.com/100x80?text=${brand}" 
+          <img src="${image_url || 'https://via.placeholder.com/100x80?text=${brand}'}" 
                alt="${brand}" class="result-logo">
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
