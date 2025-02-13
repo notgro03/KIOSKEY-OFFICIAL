@@ -3,16 +3,283 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planes - Kioskeys</title>
+  <title>¿Cómo Funciona? - Kioskeys</title>
   <link rel="stylesheet" href="/style.css">
-  <link rel="icon" href="/favicon.jpg">
-  <link rel="stylesheet" href="/css/plans.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .process-section {
+      padding: 64px 0;
+      position: relative;
+    }
+
+    .process-timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    .process-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 100%;
+      background: rgba(0, 59, 142, 0.1);
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 64px;
+      position: relative;
+    }
+
+    .timeline-item:nth-child(odd) {
+      flex-direction: row-reverse;
+    }
+
+    .timeline-content {
+      width: calc(50% - 32px);
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
+      border: 1px solid rgba(0, 59, 142, 0.1);
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0, 59, 142, 0.2);
+    }
+
+    .timeline-content h3 {
+      color: var(--primary-blue);
+      font-size: 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timeline-content p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .timeline-dot {
+      width: 24px;
+      height: 24px;
+      background: var(--card-gradient);
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 0 4px white, 0 0 0 8px rgba(0, 59, 142, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      transform: translateX(-50%) scale(1.2);
+      box-shadow: 0 0 0 6px white, 0 0 0 12px rgba(0, 59, 142, 0.3);
+    }
+
+    .step-icon {
+      font-size: 24px;
+      width: 48px;
+      height: 48px;
+      background: var(--card-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .timeline-content:hover .step-icon {
+      transform: rotate(360deg);
+    }
+
+    .benefits-section {
+      background: var(--card-gradient);
+      color: white;
+      padding: 64px 0;
+      margin-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benefits-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .benefit-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .benefit-card i {
+      font-size: 32px;
+      margin-bottom: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover i {
+      transform: scale(1.2);
+    }
+
+    .benefit-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .benefit-card p {
+      font-size: 15px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    .stats-section {
+      padding: 64px 0;
+      background: #f8f9fa;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0, 59, 142, 0.15);
+    }
+
+    .stat-value {
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      margin-bottom: 8px;
+      background: var(--card-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .stat-label {
+      font-size: 18px;
+      color: #666;
+    }
+
+    .cta-container {
+      text-align: center;
+      margin-top: 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      color: var(--primary-blue);
+      padding: 16px 48px;
+      border-radius: 100px;
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .cta-button i {
+      font-size: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover i {
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 768px) {
+      .timeline-item {
+        flex-direction: column !important;
+        padding-left: 32px;
+      }
+
+      .timeline-content {
+        width: 100%;
+      }
+
+      .timeline-dot {
+        left: 0;
+      }
+
+      .process-timeline::before {
+        left: 12px;
+      }
+
+      .benefits-grid, .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav>
     <div class="logo">
-      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
+      <a href="/"><img src="../LOGO_KIOSKEYS.svg" alt="Kioskeys"></a>
     </div>
     <div class="nav-links">
       <a href="/">Inicio</a>
@@ -30,218 +297,165 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <h1>Planes y Precios</h1>
-        <p>Encuentra el plan perfecto para ti</p>
-        <div style="background: rgba(0, 59, 142, 0.1); padding: 12px 24px; border-radius: 12px; margin-top: 16px; display: inline-block;">
-          <i class="fas fa-clock" style="color: var(--primary-blue); margin-right: 8px;"></i>
-          <span style="color: var(--primary-blue); font-weight: 500;">Promoción de lanzamiento: 50% OFF válido por 2 meses</span>
-        </div>
+        <h1>¿Cómo Funciona Kioskeys?</h1>
+        <p>Tu sistema integral de gestión de llaves en la nube</p>
       </div>
     </section>
 
-    <section class="plans-section">
-      <div class="plans-container">
-        <div class="plan-grid">
-          <!-- Plan Básico -->
-          <div class="plan-card">
-            <div class="promo-badge">50% OFF</div>
-            <div class="plan-header">
-              <i class="fas fa-key plan-icon"></i>
-              <h3 class="plan-title">Plan Básico</h3>
-              <p class="plan-subtitle">Para usuarios individuales</p>
+    <section class="process-section">
+      <div class="content-container">
+        <div class="process-timeline">
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-mobile-alt"></i>
+                </div>
+                1. Descarga la App
+              </h3>
+              <p>Descarga nuestra aplicación móvil desde la App Store o Google Play Store para comenzar a gestionar tus llaves de forma inteligente.</p>
             </div>
-            <div class="plan-price">
-              <div class="plan-price-amount">
-                $6.000<span class="plan-price-period">/año</span>
-              </div>
-              <div class="original-price">
-                Antes: $12.000/año
-              </div>
-              <div class="promo-text">
-                Promo válida por 2 meses
-              </div>
-            </div>
-            <div class="plan-content">
-              <ul class="plan-features">
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Guarda Virtual</span>
-                    <span class="feature-value">1 llave</span>
-                  </div>
-                  <p class="feature-description">Almacenamiento seguro en la nube</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Descuento en Carcasas</span>
-                    <span class="feature-value">20%</span>
-                  </div>
-                  <p class="feature-description">En toda la red de servicios</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Llave de Emergencia</span>
-                    <span class="feature-value">1/año</span>
-                  </div>
-                  <p class="feature-description">Incluye una llave de repuesto, sin grabado ni programación.</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Derivación Cerrajería</span>
-                    <span class="feature-value">Gratis</span>
-                  </div>
-                  <p class="feature-description">Servicio Especializado</p>
-                </li>
-              </ul>
-              <a href="/pages/contacto.html" class="plan-button">Comenzar Ahora</a>
-            </div>
+            <div class="timeline-dot"></div>
           </div>
 
-          <!-- Plan Familiar -->
-          <div class="plan-card plan-most-popular">
-            <div class="promo-badge">50% OFF</div>
-            <div class="plan-header">
-              <i class="fas fa-home plan-icon"></i>
-              <h3 class="plan-title">Plan Familiar</h3>
-              <p class="plan-subtitle">Para toda la familia</p>
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-car"></i>
+                </div>
+                2. Registra tu Vehículo
+              </h3>
+              <p>Ingresa los datos de tu vehículo en la aplicación para asegurar una compatibilidad perfecta con nuestros servicios.</p>
             </div>
-            <div class="plan-price">
-              <div class="plan-price-amount">
-                $20.000<span class="plan-price-period">/año</span>
-              </div>
-              <div class="original-price">
-                Antes: $40.000/año
-              </div>
-              <div class="promo-text">
-                Promo válida por 2 meses
-              </div>
-            </div>
-            <div class="plan-content">
-              <ul class="plan-features">
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Guarda Virtual</span>
-                    <span class="feature-value">3 llaves</span>
-                  </div>
-                  <p class="feature-description">Expandible hasta 5 (+$2.000 c/u)</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Descuentos</span>
-                    <span class="feature-value">20%</span>
-                  </div>
-                  <p class="feature-description">En todos los servicios</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Llaves Adicionales</span>
-                    <span class="feature-value">Hasta 5</span>
-                  </div>
-                  <p class="feature-description">$2.000 por llave adicional</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Programación</span>
-                    <span class="feature-value">-40%</span>
-                  </div>
-                  <p class="feature-description">Descuento en programación</p>
-                </li>
-              </ul>
-              <a href="/pages/contacto.html" class="plan-button">Elegir Plan Familiar</a>
-            </div>
+            <div class="timeline-dot"></div>
           </div>
 
-          <!-- Plan Flotas -->
-          <div class="plan-card">
-            <div class="plan-header">
-              <i class="fas fa-building plan-icon"></i>
-              <h3 class="plan-title">Plan Flotas</h3>
-              <p class="plan-subtitle">Solución empresarial</p>
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-camera"></i>
+                </div>
+                3. Digitaliza tu Llave
+              </h3>
+              <p>Toma una foto clara del inserto de tu llave. Nuestro sistema la procesará y almacenará de forma segura en la nube.</p>
             </div>
-            <div class="plan-price">
-              <div class="plan-price-amount">
-                Personalizado<span class="plan-price-period"></span>
-              </div>
+            <div class="timeline-dot"></div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                4. Almacenamiento Seguro
+              </h3>
+              <p>Tu llave digital se guarda con encriptación de nivel bancario. Accede a ella desde cualquier dispositivo autorizado.</p>
             </div>
-            <div class="plan-content">
-              <ul class="plan-features">
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Guarda Virtual</span>
-                    <span class="feature-value">Ilimitada</span>
-                  </div>
-                  <p class="feature-description">Sin límite de vehículos</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">API Integración</span>
-                    <span class="feature-value">Incluida</span>
-                  </div>
-                  <p class="feature-description">Para sistemas propios</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Soporte</span>
-                    <span class="feature-value">Especializado</span>
-                  </div>
-                  <p class="feature-description">Ejecutivo dedicado</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Descuentos</span>
-                    <span class="feature-value">30%</span>
-                  </div>
-                  <p class="feature-description">En toda la red</p>
-                </li>
-              </ul>
-              <a href="https://api.whatsapp.com/send/?phone=541157237390&text&type=phone_number&app_absent=0" class="plan-button">Contactar Ventas</a>
+            <div class="timeline-dot"></div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-key"></i>
+                </div>
+                5. Recuperación Inmediata
+              </h3>
+              <p>Si necesitas una copia, visita cualquier punto de nuestra red. Con tu identificación y código único, tendrás tu llave lista en minutos.</p>
             </div>
+            <div class="timeline-dot"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- FAQ -->
-    <section class="faq-section">
-      <div class="plans-container">
-        <h2>Preguntas Frecuentes</h2>
-        <div class="faq-grid">
-          <div class="faq-item">
-            <h3>¿Cómo funciona la guarda virtual?</h3>
-            <p>Tu llave se digitaliza de forma segura y se almacena en nuestra nube. Puedes solicitar una copia física en cualquier momento desde nuestra red de servicios.</p>
+    <section class="benefits-section">
+      <div class="content-container">
+        <h2 style="text-align: center; margin-bottom: 32px;">Beneficios de Kioskeys</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card" data-aos="fade-up">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Seguridad Garantizada</h3>
+            <p>Sistema de encriptación avanzado para proteger tus llaves digitales</p>
           </div>
-          <div class="faq-item">
-            <h3>¿Puedo cambiar de plan?</h3>
-            <p>Sí, puedes actualizar o cambiar tu plan en cualquier momento. Los cambios se aplican al siguiente ciclo de facturación.</p>
+
+          <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
+            <i class="fas fa-clock"></i>
+            <h3>Ahorro de Tiempo</h3>
+            <p>Obtén copias de tus llaves en minutos cuando las necesites</p>
           </div>
-          <div class="faq-item">
-            <h3>¿Qué incluye la llave de emergencia?</h3>
-            <p>Incluye el mecanizado de la llave. La programación tiene un costo adicional con descuento según tu plan.</p>
+
+          <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
+            <i class="fas fa-handshake"></i>
+            <h3>Red Profesional</h3>
+            <p>Acceso a cerrajeros certificados en todo el país</p>
           </div>
+        </div>
+
+        <div class="cta-container" data-aos="fade-up">
+          <a href="/pages/planes.html" class="cta-button">
+            Comenzar Ahora <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="cta-section">
-      <div class="plans-container">
-        <div class="cta-content">
-          <h2>¡Aprovecha el 50% de descuento!</h2>
-          <p>Precios promocionales por lanzamiento válidos por 2 meses. ¡No te lo pierdas!</p>
-          <div class="cta-buttons">
-            <a href="/pages/contacto.html" class="cta-button primary">
-              <i class="fas fa-rocket"></i>
-              Comenzar Ahora
-            </a>
-            <a href="https://api.whatsapp.com/send/?phone=541157237390&text&type=phone_number&app_absent=0" class="cta-button secondary">
-              <i class="fas fa-phone"></i>
-              Contactar Ventas
-            </a>
+    <section class="stats-section">
+      <div class="content-container">
+        <h2 style="text-align: center; color: var(--primary-blue);">Por qué elegir Kioskeys</h2>
+        <div class="stats-grid">
+          <div class="stat-card" data-aos="fade-up">
+            <div class="stat-value" data-value="90">90%</div>
+            <div class="stat-label">Ahorro de Tiempo</div>
+          </div>
+
+          <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-value" data-value="100">100%</div>
+            <div class="stat-label">Seguridad Garantizada</div>
+          </div>
+
+          <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-value" data-value="500">500+</div>
+            <div class="stat-label">Puntos de Servicio</div>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script type="module" src="/main.js"></script>
+  <script>
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Animate statistics on scroll
+    const stats = document.querySelectorAll('.stat-value');
+    stats.forEach(stat => {
+      const value = parseInt(stat.dataset.value);
+      let current = 0;
+      const increment = value / 30;
+      const updateValue = () => {
+        if (current < value) {
+          current += increment;
+          if (current > value) current = value;
+          stat.textContent = Math.round(current) + (stat.textContent.includes('%') ? '%' : '+');
+          requestAnimationFrame(updateValue);
+        }
+      };
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          updateValue();
+          observer.disconnect();
+        }
+      });
+      observer.observe(stat);
+    });
+  </script>
 </body>
 </html>
