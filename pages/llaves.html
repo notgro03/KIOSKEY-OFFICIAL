@@ -4,12 +4,120 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Llaves - Kioskeys</title>
-
+  <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script type="module" src="/main.js"></script>
 
+  <script type="module">
+    import { supabase } from '../src/config/supabase.js';
 
+    let currentData = {};
 
+    document.addEventListener('DOMContentLoaded', async () => {
+      const brandSelect = document.getElementById('brandSelect');
+      const modelSelect = document.getElementById('modelSelect');
+      const searchButton = document.querySelector('.search-button');
+
+      // Cargar marcas
+      const { data: brands, error: brandsError } = await supabase
+        .from('llaves')
+        .select('brand, image_url');
+
+      if (!brandsError) {
+        const uniqueBrands = brands.reduce((acc, item) => {
+          if (!acc[item.brand]) {
+            acc[item.brand] = item.image_url;
+          }
+          return acc;
+        }, {});
+
+        Object.entries(uniqueBrands).forEach(([brand, imageUrl]) => {
+          const option = document.createElement('option');
+          option.value = brand;
+          option.textContent = brand;
+          option.dataset.imageUrl = imageUrl;
+          brandSelect.appendChild(option);
+        });
+      }
+
+      // Evento cambio de marca
+      brandSelect.addEventListener('change', async () => {
+        const brand = brandSelect.value;
+        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+        modelSelect.disabled = !brand;
+        currentData = {};
+
+        if (brand) {
+          const { data: models, error: modelsError } = await supabase
+            .from('llaves')
+            .select('model, description, image_url')
+            .eq('brand', brand);
+
+          if (!modelsError) {
+            models.forEach(item => {
+              if (!currentData[item.model]) {
+                const option = document.createElement('option');
+                option.value = item.model;
+                option.textContent = item.model;
+                option.dataset.imageUrl = item.image_url;
+                modelSelect.appendChild(option);
+                currentData[item.model] = item.description;
+              }
+            });
+          }
+        }
+      });
+
+      // Evento botón buscar
+      searchButton.addEventListener('click', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
+        
+        if (!brand || !model) {
+          alert('Selecciona marca y modelo');
+          return;
+        }
+        
+        const brandImage = brandSelect.options[brandSelect.selectedIndex].dataset.imageUrl;
+        const modelImage = modelSelect.options[modelSelect.selectedIndex].dataset.imageUrl;
+        const description = currentData[model] || 'Descripción no disponible';
+        
+        showResults(brand, model, description, brandImage, modelImage);
+      });
+    });
+
+    function showResults(brand, model, description, brandImage, modelImage) {
+      const results = document.getElementById('searchResults');
+      results.innerHTML = `
+        <div class="result-item">
+          <div class="image-container">
+            <img src="${brandImage}" alt="${brand}" class="brand-image">
+            <img src="${modelImage}" alt="${model}" class="model-image">
+          </div>
+          <div class="result-info">
+            <h3>Llave Original ${brand}</h3>
+            <p>${description}</p>
+            <p>Compatible con ${brand} ${model}</p>
+            <div class="result-features">
+              <span class="result-feature">
+                <i class="fas fa-check-circle"></i> Original de fábrica
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-shield-alt"></i> Garantía 2 años
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-microchip"></i> Con chip
+              </span>
+            </div>
+          </div>
+          <a href="/pages/contacto.html" class="result-button">Consultar</a>
+        </div>
+      `;
+      results.classList.add('active');
+    }
+  </script>
   <style>
+    /* Estilos anteriores se mantienen igual */
     .search-container {
       max-width: 800px;
       margin: 0 auto 32px;
@@ -141,12 +249,26 @@
       border-bottom: none;
     }
 
-    .result-logo {
+    .image-container {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    .brand-image {
       width: 100px;
-      height: 80px;
+      height: 60px;
       object-fit: contain;
-      background: white;
       padding: 8px;
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .model-image {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
@@ -271,8 +393,9 @@
         text-align: center;
       }
 
-      .result-logo {
-        margin: 0 auto;
+      .image-container {
+        flex-direction: column;
+        align-items: center;
       }
 
       .result-features {
@@ -281,14 +404,12 @@
       }
     }
   </style>
-  <script type="module" crossorigin src="/assets/llaves-De1aB_rc.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/main-Q2OuMzPj.js">
-  <link rel="stylesheet" crossorigin href="/assets/style-Dwk2eqz8.css">
 </head>
 <body>
+  <!-- El resto del HTML se mantiene igual -->
   <nav>
     <div class="logo">
-      <a href="/"><img src="/assets/LOGO_KIOSKEYS-D4pp04eF.svg" alt="Kioskeys"></a>
+      <a href="/"><img src="../LOGO_KIOSKEYS.svg" alt="Kioskeys"></a>
     </div>
     <div class="nav-links">
       <a href="/">Inicio</a>
