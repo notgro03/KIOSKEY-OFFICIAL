@@ -43,10 +43,6 @@ nav.nav-hidden {
   transform: translate(-50%, -100%);
 }
 
-.logo img {
-  height: 78px;
-}
-
 .nav-links {
   display: flex;
   gap: 40px;
