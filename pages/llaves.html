@@ -79,21 +79,18 @@
           return;
         }
         
-        const brandImage = brandSelect.options[brandSelect.selectedIndex].dataset.imageUrl;
-        const modelImage = modelSelect.options[modelSelect.selectedIndex].dataset.imageUrl;
         const description = currentData[model] || 'Descripción no disponible';
         
-        showResults(brand, model, description, brandImage, modelImage);
+        showResults(brand, model, description);
       });
     });
 
-    function showResults(brand, model, description, brandImage, modelImage) {
+    function showResults(brand, model, description) {
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
           <div class="image-container">
             <img src="${brandImage}" alt="${brand}" class="brand-image">
-            <img src="${modelImage}" alt="${model}" class="model-image">
           </div>
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
