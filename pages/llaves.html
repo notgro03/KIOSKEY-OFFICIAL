@@ -51,7 +51,7 @@
         if (brand) {
           const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model')
+            .select('model, image_url')
             .eq('brand', brand);
 
         console.log('Modelos obtenidos:', models); // <-- Debug
@@ -62,8 +62,9 @@
                 const option = document.createElement('option');
                 option.value = item.model;
                 option.textContent = item.model;
+                option.dataset.imageUrl = item.image_url;
                 modelSelect.appendChild(option);
-                currentData[item.model] = item.description;
+                currentData[item.model] = item.image_url;
             });
           } else {
             console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
@@ -91,6 +92,9 @@
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
+          <div class="image-container">
+            <img src="${imageUrl}" alt="Llave de ${brand} ${model}" class="model-image">
+          </div>
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
             <p>${description}</p>
