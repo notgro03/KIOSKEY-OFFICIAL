@@ -43,18 +43,16 @@
     }
 
     .search-fields {
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Alinea verticalmente */
-    gap: 20px;
-    flex-wrap: wrap;
-    max-width: 600px; /* Ajusta el ancho máximo */
-    margin: 0 auto; /* Centra el contenedor */
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
     }
 
     .search-field {
-      flex: 1;
-      min-width: 250px; /* Asegura que los selects tengan un ancho cómodo */
+      display: flex;
+      flex-direction: column;
     }
 
     .search-field label {
@@ -79,11 +77,13 @@
     }
 
     .search-field select {
-      padding-right: 40px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23003B8E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 16px;
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(0, 59, 142, 0.1);
+      font-size: 15px;
+      background: white;
+      transition: all 0.3s ease;
     }
 
     .search-field select:focus,
@@ -95,6 +95,11 @@
 
     .search-button {
       width: 100%;
+      max-width: 600px;
+      margin: 20px auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 16px;
       border-radius: 12px;
       border: none;
@@ -104,10 +109,6 @@
       font-size: 16px;
       cursor: pointer;
       transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
     .search-button:hover {
