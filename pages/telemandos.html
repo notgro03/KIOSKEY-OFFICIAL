@@ -21,6 +21,9 @@
       padding: 32px;
       margin-bottom: 32px;
       border: 1px solid rgba(0, 59, 142, 0.1);
+      align-items: center;
+      flex-direction: column;
+      display: flex;
     }
 
     .search-title {
@@ -40,15 +43,18 @@
     }
 
     .search-fields {
-    display: flex; /* Usa flexbox para alinear */
-    justify-content: center; /* Centrar elementos horizontalmente */
-    gap: 20px; /* Espaciado entre los elementos */
-    flex-wrap: wrap; /* Permite que los elementos se ajusten si es necesario */
-    } 
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Alinea verticalmente */
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 600px; /* Ajusta el ancho máximo */
+    margin: 0 auto; /* Centra el contenedor */
+    }
 
     .search-field {
-    flex: 1; /* Hace que los selectores ocupen el mismo ancho */
-    min-width: 200px; /* Evita que se reduzcan demasiado */
+      flex: 1;
+      min-width: 250px; /* Asegura que los selects tengan un ancho cómodo */
     }
 
     .search-field label {
