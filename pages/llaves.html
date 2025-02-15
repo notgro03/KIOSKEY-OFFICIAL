@@ -54,17 +54,19 @@
             .select('model, description, image_url')
             .eq('brand', brand);
 
+        console.log('Modelos obtenidos:', models); // <-- Debug
+
+
           if (!modelsError) {
             models.forEach(item => {
-              if (!currentData[item.model]) {
                 const option = document.createElement('option');
                 option.value = item.model;
                 option.textContent = item.model;
-                option.dataset.imageUrl = item.image_url;
                 modelSelect.appendChild(option);
                 currentData[item.model] = item.description;
-              }
             });
+          } else {
+            console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
           }
         }
       });
