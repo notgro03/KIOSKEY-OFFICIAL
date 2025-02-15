@@ -32,11 +32,11 @@
           return acc;
         }, {});
 
-        Object.entries(uniqueBrands).forEach(([brand, imageUrl]) => {
+        Object.entries(uniqueBrands).forEach(([brand, image_url]) => {
           const option = document.createElement('option');
           option.value = brand;
           option.textContent = brand;
-          option.dataset.imageUrl = imageUrl;
+          option.dataset.image_url = image_url;
           brandSelect.appendChild(option);
         });
       }
@@ -62,7 +62,7 @@
                 const option = document.createElement('option');
                 option.value = item.model;
                 option.textContent = item.model;
-                option.dataset.imageUrl = item.image_url;
+                option.dataset.image_url = item.image_url;
                 modelSelect.appendChild(option);
                 currentData[item.model] = item.image_url;
             });
@@ -93,7 +93,7 @@
       results.innerHTML = `
         <div class="result-item">
           <div class="image-container">
-            <img src="${imageUrl}" alt="Llave de ${brand} ${model}" class="model-image">
+            <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
           </div>
           <div class="result-info">
             <h3>Llave Original ${brand}</h3>
