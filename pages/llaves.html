@@ -82,13 +82,14 @@
           return;
         }
         
+        const image_url = currentData[model] || "";
         const description = currentData[model] || 'Descripción no disponible';
         
-        showResults(brand, model, description);
+        showResults(brand, model, image_url, description);
       });
     });
 
-    function showResults(brand, model, description) {
+    function showResults(brand, model, image_url, description) {
       const results = document.getElementById('searchResults');
       results.innerHTML = `
         <div class="result-item">
