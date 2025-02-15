@@ -38,7 +38,7 @@
     
     <label for="brandSelect">Marca:</label>
     <select id="brandSelect">
-      <option value="">Seleccionar marca</option>
+      <option value="">Cargando marcas...</option>
     </select>
 
     <label for="modelSelect">Modelo:</label>
@@ -52,23 +52,33 @@
   </div>
 
   <script>
-    // Conectar con Supabase
-    import { supabase } from '../src/config/supabase.js';
+    // 🔹 Reemplaza estos valores con tu URL y clave pública de Supabase
+    const SUPABASE_URL = "https://ebezqrsgednjwhajddqu.supabase.co";  // ❗ Cambia esto
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZXpxcnNnZWRuandoYWpkZHF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NTEyNzYsImV4cCI6MjA1MDAyNzI3Nn0.6UpoIFJuEGDnLlD3_8w-fyQ2qMZ7uNDUttk-4Aeavgw";  // ❗ Cambia esto
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     async function loadBrands() {
-      let { data, error } = await supabase.from("telemandos").select("brand").distinct();
-      if (error) {
-        console.error("Error al obtener marcas:", error);
-        return;
-      }
+      try {
+        const { data, error } = await supabase.from("telemandos").select("brand");
 
-      const brandSelect = document.getElementById("brandSelect");
-      data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.brand;
-        option.textContent = item.brand;
-        brandSelect.appendChild(option);
-      });
+        if (error) throw error;
+
+        const brands = [...new Set(data.map(item => item.brand))]; // 🔹 Elimina duplicados
+
+        const brandSelect = document.getElementById("brandSelect");
+        brandSelect.innerHTML = '<option value="">Seleccionar marca</option>'; // 🔹 Restablece opciones
+
+        brands.forEach(brand => {
+          const option = document.createElement("option");
+          option.value = brand;
+          option.textContent = brand;
+          brandSelect.appendChild(option);
+        });
+      } catch (error) {
+        console.error("Error al cargar marcas:", error);
+        alert("Error al cargar marcas. Revisa la consola.");
+      }
     }
 
     document.getElementById("brandSelect").addEventListener("change", async () => {
@@ -79,63 +89,70 @@
 
       if (!brand) return;
 
-      let { data, error } = await supabase.from("telemandos").select("model").eq("brand", brand).distinct();
-      if (error) {
-        console.error("Error al obtener modelos:", error);
-        return;
+      try {
+        const { data, error } = await supabase.from("telemandos").select("model").eq("brand", brand);
+        if (error) throw error;
+
+        const models = [...new Set(data.map(item => item.model))]; // 🔹 Elimina duplicados
+
+        models.forEach(model => {
+          const option = document.createElement("option");
+          option.value = model;
+          option.textContent = model;
+          modelSelect.appendChild(option);
+        });
+
+        modelSelect.disabled = false;
+      } catch (error) {
+        console.error("Error al cargar modelos:", error);
+        alert("Error al cargar modelos. Revisa la consola.");
       }
-
-      data.forEach(item => {
-        const option = document.createElement("option");
-        option.value = item.model;
-        option.textContent = item.model;
-        modelSelect.appendChild(option);
-      });
-
-      modelSelect.disabled = false;
     });
 
     async function searchRemotes() {
       const brand = document.getElementById("brandSelect").value;
       const model = document.getElementById("modelSelect").value;
+
       if (!brand || !model) {
-        alert("Por favor, selecciona una marca y modelo.");
+        alert("Por favor, selecciona una marca y un modelo.");
         return;
       }
 
-      let { data, error } = await supabase
-        .from("telemandos")
-        .select("*")
-        .eq("brand", brand)
-        .eq("model", model);
+      try {
+        const { data, error } = await supabase
+          .from("telemandos")
+          .select("*")
+          .eq("brand", brand)
+          .eq("model", model);
 
-      if (error) {
+        if (error) throw error;
+
+        const resultsContainer = document.getElementById("searchResults");
+        resultsContainer.innerHTML = "";
+
+        if (data.length === 0) {
+          resultsContainer.innerHTML = "<p>No se encontraron telemandos.</p>";
+          return;
+        }
+
+        data.forEach(remote => {
+          const item = document.createElement("div");
+          item.classList.add("result-item");
+          item.innerHTML = `
+            <img src="${remote.image_url || 'https://via.placeholder.com/100'}" alt="Telemando">
+            <h3>${remote.brand} ${remote.model}</h3>
+            <p>${remote.description}</p>
+            <p><strong>Precio:</strong> $${remote.price}</p>
+          `;
+          resultsContainer.appendChild(item);
+        });
+      } catch (error) {
         console.error("Error al buscar telemandos:", error);
-        return;
+        alert("Error al buscar telemandos. Revisa la consola.");
       }
-
-      const resultsContainer = document.getElementById("searchResults");
-      resultsContainer.innerHTML = "";
-
-      if (data.length === 0) {
-        resultsContainer.innerHTML = "<p>No se encontraron resultados.</p>";
-        return;
-      }
-
-      data.forEach(remote => {
-        const item = document.createElement("div");
-        item.classList.add("result-item");
-        item.innerHTML = `
-          <img src="${remote.image_url || 'https://via.placeholder.com/100'}" alt="Telemando">
-          <h3>${remote.brand} ${remote.model}</h3>
-          <p>${remote.description}</p>
-          <p><strong>Precio:</strong> $${remote.price}</p>
-          <a href="#">Ver detalles</a>
-        `;
-        resultsContainer.appendChild(item);
-      });
     }
 
+    // 🔹 Llamar a la función para cargar marcas al inicio
     loadBrands();
   </script>
 
