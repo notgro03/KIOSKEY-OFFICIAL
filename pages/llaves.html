@@ -83,7 +83,7 @@
         }
         
         const image_url = currentData[model] || "";
-        const description = currentData[model] || 'Descripción no disponible';
+        const description = "Description no disponible"; 
         
         showResults(brand, model, image_url, description);
       });
@@ -91,6 +91,8 @@
 
     function showResults(brand, model, image_url, description) {
   const results = document.getElementById('searchResults');
+  const descriptionHTML = description ? `<p>${description}</p>` : '';
+
   results.innerHTML = `
     <div class="result-item">
       <div class="image-container">
