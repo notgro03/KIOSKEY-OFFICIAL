@@ -430,31 +430,39 @@
 
       // Evento cambio de marca
       brandSelect.addEventListener('change', async () => {
-        const brand = brandSelect.value;
-        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-        modelSelect.disabled = !brand;
-        currentData = {};
+    const brand = brandSelect.value;
+    modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+    modelSelect.disabled = !brand;
+    currentData = {};
 
-        if (brand) {
-          const { data: models, error: modelsError } = await supabase
+    if (brand) {
+        const { data: models, error: modelsError } = await supabase
             .from('telemandos')
             .select('model, description, image_url')
             .eq('brand', brand);
 
-          if (!modelsError) {
+        if (!modelsError) {
+            // Usar un Set para evitar modelos duplicados
+            const uniqueModels = new Set();
+
             models.forEach(item => {
-              const option = document.createElement('option');
-              option.value = item.model;
-              option.textContent = item.model;
-              modelSelect.appendChild(option);
-              currentData[item.model] = { 
-                description: item.description, 
-                image_url: item.image_url 
-              };
+                if (!uniqueModels.has(item.model)) { // Solo agregar si no está en el Set
+                    uniqueModels.add(item.model);
+
+                    const option = document.createElement('option');
+                    option.value = item.model;
+                    option.textContent = item.model;
+                    modelSelect.appendChild(option);
+
+                    currentData[item.model] = { 
+                        description: item.description, 
+                        image_url: item.image_url 
+                    };
+                }
             });
-          }
         }
-      });
+    }
+});
 
       // Evento botón buscar
       searchButton.addEventListener('click', () => {
