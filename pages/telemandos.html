@@ -465,73 +465,84 @@
 });
 
       // Evento botón buscar
-      searchButton.addEventListener('click', () => {
-        const brand = brandSelect.value;
-        const model = modelSelect.value;
+      searchButton.addEventListener('click', async () => {
+    const brand = brandSelect.value;
+    const model = modelSelect.value;
 
-        if (!brand || !model) {
-          alert('Selecciona una marca y modelo');
-          return;
-        }
+    if (!brand || !model) {
+        alert('Selecciona una marca y modelo');
+        return;
+    }
 
-        const { description = "Descripción no disponible", image_url = "" } = currentData[model] || {};
-        showResults(brand, model, image_url, description);
+    // Consulta a la base de datos para obtener TODOS los telemandos del modelo seleccionado
+    const { data: resultsData, error } = await supabase
+        .from('telemandos')
+        .select('model, description, image_url')
+        .eq('brand', brand)
+        .eq('model', model);
 
-        // Agregar evento click a la imagen después de mostrar resultados
-        const resultImage = document.querySelector('.result-logo');
-        if (resultImage) {
-          resultImage.addEventListener('click', () => {
-            const modalImg = document.querySelector('.modal-content');
-            modalImg.src = resultImage.src;
-            modal.classList.add('active');
-          });
-        }
-      });
+    if (error) {
+        console.error('Error obteniendo datos:', error);
+        alert('Ocurrió un error obteniendo los telemandos.');
+        return;
+    }
+
+    showResults(resultsData, brand, model);
+});
+
     });
 
-    function showResults(brand, model, image_url, description) {
-      const results = document.getElementById('searchResults');
-      
-      // Crear mensaje para WhatsApp
-      const whatsappMessage = encodeURIComponent(
-        `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
-        `Marca: ${brand}\n` +
-        `Modelo: ${model}\n` +
-        `Características:\n` +
-        `- Alta compatibilidad\n` +
-        `- Garantía 2 años\n` +
-        `- Programación incluida\n\n` +
-        `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
-      );
+    function showResults(resultsData, brand, model) {
+    const results = document.getElementById('searchResults');
+    results.innerHTML = ''; 
 
-      const whatsappNumber = "541157237390";
-      const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
-
-      results.innerHTML = `
-        <div class="result-item">
-          <img src="${image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">
-          <div class="result-info">
-            <h3>Telemando ${brand} ${model}</h3>
-            <p>${description}</p>
-            <div class="result-features">
-              <span class="result-feature">
-                <i class="fas fa-check-circle"></i> Alta compatibilidad
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-shield-alt"></i> Garantía 2 años
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-tools"></i> Programación incluida
-              </span>
-            </div>
-          </div>
-          <a href="${whatsappUrl}" target="_blank" class="result-button">
-            <i class="fab fa-whatsapp"></i> Consultar
-          </a>
-        </div>
-      `;
-      results.classList.add('active');
+    if (resultsData.length === 0) {
+        results.innerHTML = `<p>No se encontraron telemandos para este modelo.</p>`;
+        return;
     }
+
+    resultsData.forEach(item => { 
+        const whatsappMessage = encodeURIComponent(
+            `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
+            `Marca: ${brand}\n` +
+            `Modelo: ${model}\n` +
+            `Descripción: ${item.description || "No disponible"}\n\n` +
+            `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+        );
+
+        const whatsappNumber = "541157237390";
+        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
+
+        const telemandoHTML = `
+            <div class="result-item">
+                <img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">
+                <div class="result-info">
+                    <h3>Telemando ${brand} ${model}</h3>
+                    <p>${item.description || "Descripción no disponible"}</p>
+                    <div class="result-features">
+                        <span class="result-feature">
+                            <i class="fas fa-check-circle"></i> Alta compatibilidad
+                        </span>
+                        <span class="result-feature">
+                            <i class="fas fa-shield-alt"></i> Garantía 2 años
+                        </span>
+                        <span class="result-feature">
+                            <i class="fas fa-tools"></i> Programación incluida
+                        </span>
+                    </div>
+                </div>
+                <a href="${whatsappUrl}" target="_blank" class="result-button">
+                    <i class="fab fa-whatsapp"></i> Consultar
+                </a>
+            </div>
+        `;
+
+        results.innerHTML += telemandoHTML; 
+    });
+
+    results.classList.add('active'); 
+}
+
   </script>
 </body>
 </html>
