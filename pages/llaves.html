@@ -54,17 +54,23 @@
             .select('model, image_url')
             .eq('brand', brand);
 
-        console.log('Modelos obtenidos:', models); // <-- Debug
-
+          console.log('Modelos obtenidos:', models); // <-- Debug
 
           if (!modelsError) {
+            const uniqueModels = new Set();
+
             models.forEach(item => {
+              if (!uniqueModels.has(item.model)) {
+                uniqueModels.add(item.model);
+                
                 const option = document.createElement('option');
                 option.value = item.model;
                 option.textContent = item.model;
                 option.dataset.image_url = item.image_url;
                 modelSelect.appendChild(option);
+                
                 currentData[item.model] = item.image_url;
+              }
             });
           } else {
             console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
@@ -90,328 +96,38 @@
     });
 
     function showResults(brand, model, image_url, description) {
-  const results = document.getElementById('searchResults');
-  const descriptionHTML = description ? `<p>${description}</p>` : '';
+      const results = document.getElementById('searchResults');
+      const descriptionHTML = description ? `<p>${description}</p>` : '';
 
-  results.innerHTML = `
-    <div class="result-item">
-      <div class="image-container">
-        <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
-      </div>
-      <div class="result-info">
-        <h3>Llave Original ${brand}</h3>
-        <p>${description}</p>
-        <p>Compatible con ${brand} ${model}</p>
-        <div class="result-features">
-          <span class="result-feature">
-            <i class="fas fa-check-circle"></i> Original de fábrica
-          </span>
-          <span class="result-feature">
-            <i class="fas fa-shield-alt"></i> Garantía 2 años
-          </span>
-          <span class="result-feature">
-            <i class="fas fa-microchip"></i> Con chip
-          </span>
+      results.innerHTML = `
+        <div class="result-item">
+          <div class="image-container">
+            <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
+          </div>
+          <div class="result-info">
+            <h3>Llave Original ${brand}</h3>
+            <p>${description}</p>
+            <p>Compatible con ${brand} ${model}</p>
+            <div class="result-features">
+              <span class="result-feature">
+                <i class="fas fa-check-circle"></i> Original de fábrica
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-shield-alt"></i> Garantía 2 años
+              </span>
+              <span class="result-feature">
+                <i class="fas fa-microchip"></i> Con chip
+              </span>
+            </div>
+          </div>
+          <a href="/pages/contacto.html" class="result-button">Consultar</a>
         </div>
-      </div>
-      <a href="/pages/contacto.html" class="result-button">Consultar</a>
-    </div>
-  `;
-  results.classList.add('active');
-}
+      `;
+      results.classList.add('active');
+    }
   </script>
-  <style>
-    /* Estilos anteriores se mantienen igual */
-    .search-container {
-      max-width: 800px;
-      margin: 0 auto 32px;
-    }
-
-    .search-box {
-      background: white;
-      border-radius: 18px;
-      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
-      padding: 32px;
-      margin-bottom: 32px;
-      border: 1px solid rgba(0, 59, 142, 0.1);
-    }
-
-    .search-title {
-      text-align: center;
-      margin-bottom: 24px;
-      color: var(--primary-blue);
-    }
-
-    .search-title h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .search-title p {
-      color: #666;
-      font-size: 15px;
-    }
-
-    .search-fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .search-field {
-      position: relative;
-    }
-
-    .search-field label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: var(--text-color);
-    }
-
-    .search-field select,
-    .search-field input {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 12px;
-      border: 2px solid rgba(0, 59, 142, 0.1);
-      font-size: 15px;
-      transition: all 0.3s ease;
-      background: white;
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    .search-field select {
-      padding-right: 40px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23003B8E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 16px;
-    }
-
-    .search-field select:focus,
-    .search-field input:focus {
-      outline: none;
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 0 3px rgba(0, 59, 142, 0.1);
-    }
-
-    .search-button {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      background: var(--card-gradient);
-      color: white;
-      font-weight: 500;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .search-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
-    }
-
-    .search-results {
-      display: none;
-      background: white;
-      border-radius: 18px;
-      padding: 32px;
-      margin-top: 24px;
-      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
-      border: 1px solid rgba(0, 59, 142, 0.1);
-    }
-
-    .search-results.active {
-      display: block;
-    }
-
-    .result-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 24px;
-      padding: 24px;
-      border-bottom: 1px solid rgba(0, 59, 142, 0.1);
-      align-items: center;
-      transition: all 0.3s ease;
-    }
-
-    .result-item:hover {
-      background: rgba(0, 59, 142, 0.02);
-    }
-
-    .result-item:last-child {
-      border-bottom: none;
-    }
-
-    .image-container {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .brand-image {
-      width: 100px;
-      height: 60px;
-      object-fit: contain;
-      padding: 8px;
-      border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .model-image {
-    width: 120px; /* Ajusta este valor según el tamaño deseado */
-    height: auto; /* Mantiene la proporción */
-    object-fit: contain; /* Asegura que la imagen no se deforme */
-    border-radius: 10px; /* Suaviza los bordes */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Da un ligero efecto de sombra */
-    }
-
-
-    .result-info h3 {
-      margin: 0 0 8px;
-      color: var(--primary-blue);
-      font-size: 18px;
-    }
-
-    .result-info p {
-      margin: 0 0 8px;
-      color: #666;
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    .result-features {
-      display: flex;
-      gap: 16px;
-      margin-top: 8px;
-    }
-
-    .result-feature {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 13px;
-      color: #666;
-    }
-
-    .result-feature i {
-      color: var(--primary-blue);
-    }
-
-    .result-button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      background: var(--card-gradient);
-      color: white;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      text-align: center;
-      min-width: 120px;
-    }
-
-    .result-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
-    }
-
-    .info-section {
-      background: white;
-      border-radius: 18px;
-      padding: 32px;
-      margin: 32px 0;
-      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
-      border: 1px solid rgba(0, 59, 142, 0.1);
-    }
-
-    .info-section h2 {
-      color: var(--primary-blue);
-      margin-bottom: 24px;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-      margin-top: 32px;
-    }
-
-    .feature-card {
-      padding: 24px;
-      background: var(--card-gradient);
-      border-radius: 12px;
-      text-align: center;
-      transition: all 0.3s ease;
-      color: white;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 59, 142, 0.2);
-    }
-
-    .feature-icon {
-      font-size: 32px;
-      margin-bottom: 16px;
-      background: rgba(255, 255, 255, 0.1);
-      width: 64px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      margin: 0 auto 20px;
-    }
-
-    .feature-card h3 {
-      margin-bottom: 12px;
-      color: white;
-    }
-
-    .feature-card p {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 768px) {
-      .search-fields {
-        grid-template-columns: 1fr;
-      }
-
-      .result-item {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .image-container {
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .result-features {
-        justify-content: center;
-        flex-wrap: wrap;
-      }
-    }
-  </style>
 </head>
 <body>
-  <!-- El resto del HTML se mantiene igual -->
   <nav>
     <div class="logo">
       <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
@@ -467,35 +183,6 @@
 
           <div class="search-results" id="searchResults">
             <!-- Los resultados se mostrarán aquí -->
-          </div>
-        </div>
-
-        <div class="info-section">
-          <h2>¿Por qué elegir nuestras llaves?</h2>
-          <div class="features-grid">
-            <div class="feature-card">
-              <i class="fas fa-shield-alt feature-icon"></i>
-              <h3>Calidad Garantizada</h3>
-              <p>Llaves originales y alternativas de la más alta calidad, con garantía de funcionamiento.</p>
-            </div>
-
-            <div class="feature-card">
-              <i class="fas fa-microchip feature-icon"></i>
-              <h3>Tecnología Avanzada</h3>
-              <p>Programación computarizada y chips de última generación.</p>
-            </div>
-
-            <div class="feature-card">
-              <i class="fas fa-clock feature-icon"></i>
-              <h3>Servicio Express</h3>
-              <p>Servicio especializado</p>
-            </div>
-
-            <div class="feature-card">
-              <i class="fas fa-tag feature-icon"></i>
-              <h3>Precios Competitivos</h3>
-              <p>Mejores precios del mercado con opciones para todos los presupuestos.</p>
-            </div>
           </div>
         </div>
       </div>
