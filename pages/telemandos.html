@@ -102,7 +102,10 @@
     }
 
     .search-results {
-      display: none;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
       background: white;
       border-radius: 18px;
       padding: 32px;
@@ -116,12 +119,16 @@
     }
 
     .result-item {
+      width: calc(50% - 20%);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 24px;
+      gap: 16px;
       padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     .result-logo {
@@ -232,6 +239,10 @@
     @media (max-width: 768px) {
       .search-fields {
         grid-template-columns: 1fr;
+      }
+
+      .result-item {
+        width: 100%;
       }
 
       .result-features {
