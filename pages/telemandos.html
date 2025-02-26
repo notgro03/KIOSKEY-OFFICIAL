@@ -517,8 +517,8 @@
             <div class="result-item">
                 <img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">
                 <div class="result-info">
-                    <h3>Telemando ${brand} ${model}</h3>
-                    <p>${item.description || "Descripción no disponible"}</p>
+                    <h3>Telemando ${brand} ${item.description || "Descripción no disponible"}</h3>
+                    <p><strong>Modelo:</strong> ${model}</p>
                     <div class="result-features">
                         <span class="result-feature">
                             <i class="fas fa-check-circle"></i> Alta compatibilidad
