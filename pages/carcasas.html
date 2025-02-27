@@ -40,7 +40,7 @@
 
     .search-fields {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 20px;
       margin-bottom: 24px;
     }
@@ -71,12 +71,20 @@
     }
 
     .search-field select {
-      padding-right: 40px;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23003B8E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 16px;
-    }
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 59, 142, 0.1);
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: white;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23003B8E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 16px;
+  }
 
     .search-field select:focus,
     .search-field input:focus {
@@ -327,12 +335,6 @@
                   <option value="">Seleccionar modelo</option>
                 </select>
               </div>
-              <div class="search-field">
-                <label for="yearSelect">Año</label>
-                <select id="yearSelect" disabled>
-                  <option value="">Seleccionar año</option>
-                </select>
-              </div>
             </div>
             <button class="search-button" onclick="searchCases()">
               <i class="fas fa-search"></i>
@@ -377,139 +379,98 @@
     </section>
   </main>
 
-  <script>
-    // Datos de marcas y modelos
-    const brandsData = {
-      'Toyota': {
-        'Corolla': ['2020', '2021', '2022', '2023'],
-        'Camry': ['2019', '2020', '2021', '2022', '2023'],
-        'RAV4': ['2018', '2019', '2020', '2021', '2022', '2023'],
-        'Hilux': ['2018', '2019', '2020', '2021', '2022', '2023']
-      },
-      'Honda': {
-        'Civic': ['2019', '2020', '2021', '2022', '2023'],
-        'CR-V': ['2018', '2019', '2020', '2021', '2022', '2023'],
-        'Accord': ['2019', '2020', '2021', '2022', '2023']
-      },
-      'Volkswagen': {
-        'Golf': ['2018', '2019', '2020', '2021', '2022'],
-        'Polo': ['2019', '2020', '2021', '2022', '2023'],
-        'Amarok': ['2018', '2019', '2020', '2021', '2022']
-      }
-    };
-
-    // Llenar select de marcas
-    const brandSelect = document.getElementById('brandSelect');
-    Object.keys(brandsData).forEach(brand => {
-      const option = document.createElement('option');
-      option.value = brand;
-      option.textContent = brand;
-      brandSelect.appendChild(option);
-    });
-
-    // Manejar cambio de marca
-    brandSelect.addEventListener('change', () => {
+  <script type="module">
+    import { supabase } from '../src/config/supabase.js';
+    
+    let currentData = {};
+  
+    document.addEventListener('DOMContentLoaded', async () => {
+      const brandSelect = document.getElementById('brandSelect');
       const modelSelect = document.getElementById('modelSelect');
-      const yearSelect = document.getElementById('yearSelect');
-      const brand = brandSelect.value;
-
-      modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-      yearSelect.innerHTML = '<option value="">Seleccionar año</option>';
-
-      if (brand) {
-        modelSelect.disabled = false;
-        Object.keys(brandsData[brand]).forEach(model => {
+      const searchButton = document.querySelector('.search-button');
+  
+      // Cargar marcas desde la base de datos
+      const { data: brands, error: brandsError } = await supabase
+        .from('carcasas')
+        .select('brand')
+        .order('brand', { ascending: true });
+  
+      if (!brandsError) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
+  
+        uniqueBrands.forEach(brand => {
           const option = document.createElement('option');
-          option.value = model;
-          option.textContent = model;
-          modelSelect.appendChild(option);
+          option.value = brand;
+          option.textContent = brand;
+          brandSelect.appendChild(option);
         });
-      } else {
-        modelSelect.disabled = true;
-        yearSelect.disabled = true;
       }
+  
+      // Evento cambio de marca
+      brandSelect.addEventListener('change', async () => {
+        const brand = brandSelect.value;
+        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+        modelSelect.disabled = !brand;
+        currentData = {};
+  
+        if (brand) {
+          const { data: models, error: modelsError } = await supabase
+            .from('carcasas')
+            .select('model, image_url, description, price')
+            .eq('brand', brand)
+            .order('model', { ascending: true });
+  
+          if (!modelsError) {
+            models.forEach(item => {
+              const option = document.createElement('option');
+              option.value = item.model;
+              option.textContent = item.model;
+              modelSelect.appendChild(option);
+  
+              currentData[item.model] = {
+                image_url: item.image_url,
+                description: item.description,
+                price: item.price
+              };
+            });
+          }
+        }
+      });
+  
+      // Evento botón buscar
+      searchButton.addEventListener('click', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
+  
+        if (!brand || !model) {
+          alert('Selecciona marca y modelo');
+          return;
+        }
+  
+        const { image_url, description, price } = currentData[model] || {};
+        showResults(brand, model, image_url, description, price);
+      });
     });
-
-    // Manejar cambio de modelo
-    document.getElementById('modelSelect').addEventListener('change', () => {
-      const yearSelect = document.getElementById('yearSelect');
-      const brand = brandSelect.value;
-      const model = modelSelect.value;
-
-      yearSelect.innerHTML = '<option value="">Seleccionar año</option>';
-
-      if (model) {
-        yearSelect.disabled = false;
-        brandsData[brand][model].forEach(year => {
-          const option = document.createElement('option');
-          option.value = year;
-          option.textContent = year;
-          yearSelect.appendChild(option);
-        });
-      } else {
-        yearSelect.disabled = true;
-      }
-    });
-
-    // Función de búsqueda
-    function searchCases() {
-      const brand = brandSelect.value;
-      const model = modelSelect.value;
-      const year = yearSelect.value;
-
-      if (!brand || !model || !year) {
-        alert('Por favor, selecciona marca, modelo y año');
-        return;
-      }
-
+  
+    function showResults(brand, model, image_url, description, price) {
       const results = document.getElementById('searchResults');
+  
       results.innerHTML = `
         <div class="result-item">
-          <img src="https://via.placeholder.com/100x80?text=${brand}" 
-               alt="${brand}" class="result-logo">
+          <img src="${image_url}" alt="Carcasa de ${brand} ${model}" class="result-logo">
           <div class="result-info">
-            <h3>Carcasa Original ${brand}</h3>
-            <p>Compatible con ${brand} ${model} ${year}</p>
-            <div class="result-features">
-              <span class="result-feature">
-                <i class="fas fa-check-circle"></i> Original de fábrica
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-shield-alt"></i> Garantía 2 años
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-tools"></i> Instalación incluida
-              </span>
-            </div>
-          </div>
-          <a href="/pages/contacto.html" class="result-button">Consultar</a>
-        </div>
-        
-        <div class="result-item">
-          <img src="https://via.placeholder.com/100x80?text=${brand}" 
-               alt="${brand}" class="result-logo">
-          <div class="result-info">
-            <h3>Carcasa Alternativa Premium</h3>
-            <p>Compatible con ${brand} ${model} ${year}</p>
-            <div class="result-features">
-              <span class="result-feature">
-                <i class="fas fa-star"></i> Alta calidad
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-shield-alt"></i> Garantía 1 año
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-percentage"></i> Mejor precio
-              </span>
-            </div>
+            <h3>Carcasa ${brand} ${model}</h3>
+            <p>${description || 'Descripción no disponible'}</p>
+            <p>Precio: $${price || 'No disponible'}</p>
           </div>
           <a href="/pages/contacto.html" class="result-button">Consultar</a>
         </div>
       `;
-      
+  
       results.classList.add('active');
     }
   </script>
+  
 
 </body>
 </html>
