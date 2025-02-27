@@ -395,92 +395,101 @@
     let currentData = {};
   
     document.addEventListener('DOMContentLoaded', async () => {
-      const brandSelect = document.getElementById('brandSelect');
-      const modelSelect = document.getElementById('modelSelect');
-      const searchButton = document.querySelector('.search-button');
-  
-      // Cargar marcas desde la base de datos
-      const { data: brands, error: brandsError } = await supabase
+    const brandSelect = document.getElementById('brandSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const searchButton = document.querySelector('.search-button');
+
+    // Cargar marcas desde la base de datos
+    const { data: brands, error: brandsError } = await supabase
         .from('carcasas')
         .select('brand')
         .order('brand', { ascending: true });
-  
-      if (!brandsError) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
-  
+
+    if (!brandsError && brands.length > 0) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand))]; // Eliminar marcas repetidas
+
         uniqueBrands.forEach(brand => {
-          const option = document.createElement('option');
-          option.value = brand;
-          option.textContent = brand;
-          brandSelect.appendChild(option);
+            const option = document.createElement('option');
+            option.value = brand;
+            option.textContent = brand;
+            brandSelect.appendChild(option);
         });
-      }
-  
-      // Evento cambio de marca
-      brandSelect.addEventListener('change', async () => {
+    }
+
+    // Evento cambio de marca
+    brandSelect.addEventListener('change', async () => {
         const brand = brandSelect.value;
         modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
         modelSelect.disabled = !brand;
         currentData = {};
-  
+
         if (brand) {
-          const { data: models, error: modelsError } = await supabase
-            .from('carcasas')
-            .select('model, image_url, description, price')
-            .eq('brand', brand)
-            .order('model', { ascending: true });
-  
-          if (!modelsError) {
-            models.forEach(item => {
-              const option = document.createElement('option');
-              option.value = item.model;
-              option.textContent = item.model;
-              modelSelect.appendChild(option);
-  
-              currentData[item.model] = {
-                image_url: item.image_url,
-                description: item.description,
-                price: item.price
-              };
-            });
-          }
+            const { data: models, error: modelsError } = await supabase
+                .from('carcasas')
+                .select('model, image_url, description, price')
+                .eq('brand', brand)
+                .order('model', { ascending: true });
+
+            if (!modelsError && models.length > 0) {
+                // Usamos un objeto para evitar modelos duplicados
+                const uniqueModels = new Map();
+
+                models.forEach(item => {
+                    if (!uniqueModels.has(item.model)) {
+                        uniqueModels.set(item.model, {
+                            image_url: item.image_url,
+                            description: item.description,
+                            price: item.price
+                        });
+
+                        // Agregar opción única al select
+                        const option = document.createElement('option');
+                        option.value = item.model;
+                        option.textContent = item.model;
+                        modelSelect.appendChild(option);
+                    }
+                });
+
+                // Guardar datos en currentData
+                currentData = Object.fromEntries(uniqueModels);
+            }
         }
-      });
-  
-      // Evento botón buscar
-      searchButton.addEventListener('click', () => {
+    });
+
+    // Evento botón buscar
+    searchButton.addEventListener('click', () => {
         const brand = brandSelect.value;
         const model = modelSelect.value;
-  
+
         if (!brand || !model) {
-          alert('Selecciona marca y modelo');
-          return;
+            alert('Selecciona marca y modelo');
+            return;
         }
-  
+
         const { image_url, description, price } = currentData[model] || {};
         showResults(brand, model, image_url, description, price);
-      });
     });
-  
-    function showResults(brand, model, image_url, description, price) {
-      const results = document.getElementById('searchResults');
-  
-      results.innerHTML = `
+});
+
+function showResults(brand, model, image_url, description, price) {
+    const results = document.getElementById('searchResults');
+
+    results.innerHTML = `
         <div class="result-item">
-          <div class="image-container">
-            <img src="${image_url}" alt="Carcasa de ${brand}" class="model-image">
-          </div>
-          <div class="result-info">
-            <h3>Carcasa ${brand}</h3>
-            <p><strong>Modelo:</strong> ${model}</p>
-            <p>${description || 'Descripción no disponible'}</p>
-          </div>
-          <a href="/pages/contacto.html" class="result-button">Consultar</a>
+            <div class="image-container">
+                <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
+            </div>
+            <div class="result-info">
+                <h3>Carcasa ${brand} ${model}</h3>
+                <p>${description || 'Descripción no disponible'}</p>
+                <p><strong>Precio:</strong> ${price ? `$${price}` : 'Consultar'}</p>
+            </div>
+            <a href="/pages/contacto.html" class="result-button">Consultar</a>
         </div>
-      `;
-  
-      results.classList.add('active');
-    }
+    `;
+
+    results.classList.add('active');
+}
   </script>
   
 
