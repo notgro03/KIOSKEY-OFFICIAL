@@ -57,21 +57,25 @@
         console.log('Modelos obtenidos:', models); // Debug
 
         if (!modelsError && models.length > 0) {
-            // Usar un Map para evitar duplicados y conservar los datos completos
-            const uniqueModels = new Map();
+            // Se usa un objeto para almacenar todos los modelos con sus imágenes en una lista
+            const modelImages = {};
 
             models.forEach(item => {
-                if (!uniqueModels.has(item.model)) {
-                    uniqueModels.set(item.model, item.image_url);
-
-                    const option = document.createElement('option');
-                    option.value = item.model;
-                    option.textContent = item.model;
-                    option.dataset.image_url = item.image_url;
-                    modelSelect.appendChild(option);
-
-                    currentData[item.model] = item.image_url;
+                if (!modelImages[item.model]) {
+                    modelImages[item.model] = [];
                 }
+                modelImages[item.model].push(item.image_url);
+            });
+
+            // Ahora agregamos todas las opciones de modelos al select
+            Object.keys(modelImages).forEach(model => {
+                const option = document.createElement('option');
+                option.value = model;
+                option.textContent = model;
+                modelSelect.appendChild(option);
+
+                // Guardamos todas las imágenes de este modelo
+                currentData[model] = modelImages[model];
             });
         } else {
             console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
@@ -82,49 +86,55 @@
 
       // Evento botón buscar
       searchButton.addEventListener('click', () => {
-        const brand = brandSelect.value;
-        const model = modelSelect.value;
-        
-        if (!brand || !model) {
-          alert('Selecciona marca y modelo');
-          return;
-        }
-        
-        const image_url = currentData[model] || "";
-        const description = "Descripción no disponible"; 
-        
-        showResults(brand, model, image_url, description);
-      });
+    const brand = brandSelect.value;
+    const model = modelSelect.value;
+    
+    if (!brand || !model) {
+        alert('Selecciona marca y modelo');
+        return;
+    }
+
+    // Obtener todas las imágenes del modelo seleccionado
+    const image_urls = currentData[model] || [];
+    const description = "Descripción no disponible"; 
+
+    showResults(brand, model, image_urls, description);
+  });
+
     });
 
-    function showResults(brand, model, image_url, description) {
-      const results = document.getElementById('searchResults');
+    function showResults(brand, model, image_urls, description) {
+    const results = document.getElementById('searchResults');
+    results.innerHTML = "";
 
-      results.innerHTML = `
-        <div class="result-item">
-          <div class="image-container">
-            <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
-          </div>
-          <div class="result-info">
-            <h3>Llave Original ${brand}</h3>
-            <p>${description}</p>
-            <div class="result-features">
-              <span class="result-feature">
-                <i class="fas fa-check-circle"></i> Original de fábrica
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-shield-alt"></i> Garantía 1 año
-              </span>
-              <span class="result-feature">
-                <i class="fas fa-microchip"></i> Con chip
-              </span>
+    image_urls.forEach(image_url => {
+        results.innerHTML += `
+            <div class="result-item">
+                <div class="image-container">
+                    <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
+                </div>
+                <div class="result-info">
+                    <h3>Llave Original ${brand} ${model}</h3>
+                    <p>${description}</p>
+                    <div class="result-features">
+                        <span class="result-feature">
+                            <i class="fas fa-check-circle"></i> Original de fábrica
+                        </span>
+                        <span class="result-feature">
+                            <i class="fas fa-shield-alt"></i> Garantía 1 año
+                        </span>
+                        <span class="result-feature">
+                            <i class="fas fa-microchip"></i> Con chip
+                        </span>
+                    </div>
+                </div>
+                <a href="/pages/contacto.html" class="result-button">Consultar</a>
             </div>
-          </div>
-          <a href="/pages/contacto.html" class="result-button">Consultar</a>
-        </div>
-      `;
-      results.classList.add('active');
-    }
+        `;
+    });
+
+    results.classList.add('active');
+}
   </script>
 
 <style>
