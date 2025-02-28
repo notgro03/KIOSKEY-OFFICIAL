@@ -533,7 +533,7 @@ function showResults(resultsData, brand, model) {
             <div class="result-item">
                 <img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">
                 <div class="result-info">
-                    <h3>Telemando ${brand} ${item.description || "Descripción no disponible"}</h3>
+                    <h3>Telemando ${brand} ${item.description ? item.description : ''}</h3>
                     <p><strong>Modelo:</strong> ${model}</p>
                     <div class="result-features">
                         <span class="result-feature">

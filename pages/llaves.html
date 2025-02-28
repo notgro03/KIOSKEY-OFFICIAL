@@ -114,7 +114,7 @@
                     <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
                 </div>
                 <div class="result-info">
-                    <h3>Llave Original ${brand} ${description ? description : ''}</h3>
+                    <h3>Llave Original ${brand} ${description && description !== "Descripción no disponible" ? description : ''}</h3>
                     <p><strong>Modelo:</strong> ${model}</p>
                     <div class="result-features">
                         <span class="result-feature">
@@ -132,6 +132,7 @@
 
     results.classList.add('active');
 }
+
   </script>
 
 <style>
