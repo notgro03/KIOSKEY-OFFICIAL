@@ -480,9 +480,8 @@ function showResults(brand, model, image_url, description, price) {
                 <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
             </div>
             <div class="result-info">
-                <h3>Carcasa ${brand} ${model}</h3>
-                <p>${description || 'Descripción no disponible'}</p>
-                <p><strong>Precio:</strong> ${price ? `$${price}` : 'Consultar'}</p>
+                <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
+                <p><strong>Modelo:</strong>${model}</p>
             </div>
             <a href="/pages/contacto.html" class="result-button">Consultar</a>
         </div>
@@ -490,6 +489,7 @@ function showResults(brand, model, image_url, description, price) {
 
     results.classList.add('active');
 }
+
   </script>
   
 
