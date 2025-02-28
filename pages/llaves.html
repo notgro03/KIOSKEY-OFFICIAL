@@ -51,7 +51,7 @@
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model, image_url, description') // Incluimos la descripción
+            .select('model, image_url, description') // Asegúrate de incluir la descripción
             .eq('brand', brand);
 
         console.log('Modelos obtenidos:', models); // Debug
@@ -61,12 +61,12 @@
 
             models.forEach(item => {
                 if (!modelData[item.model]) {
-                    modelData[item.model] = {
-                        images: [],
-                        description: item.description || "Descripción no disponible"
-                    };
+                    modelData[item.model] = [];
                 }
-                modelData[item.model].images.push(item.image_url);
+                modelData[item.model].push({
+                    image_url: item.image_url,
+                    description: item.description || ""
+                });
             });
 
             Object.keys(modelData).forEach(model => {
@@ -75,13 +75,14 @@
                 option.textContent = model;
                 modelSelect.appendChild(option);
 
-                currentData[model] = modelData[model];
+                currentData[model] = modelData[model]; // Ahora guarda un array de objetos
             });
         } else {
             console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
         }
     }
 });
+
 
 
 
@@ -95,28 +96,27 @@
         return;
     }
 
-    const image_urls = currentData[model]?.images || [];
-    const description = currentData[model]?.description || "Descripción no disponible";
+    const imagesData = currentData[model] || []; // Ahora es un array de objetos con imagen y descripción
 
-    showResults(brand, model, image_urls, description);
+    showResults(brand, model, imagesData);
 });
+
 
     });
 
-    function showResults(brand, model, image_urls, description) {
+    function showResults(brand, model, imagesData) {
     const results = document.getElementById('searchResults');
     results.innerHTML = "";
 
-    image_urls.forEach(image_url => {
+    imagesData.forEach(({ image_url, description }) => {
         results.innerHTML += `
             <div class="result-item">
                 <div class="image-container">
                     <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
                 </div>
                 <div class="result-info">
-                    <h3>Llave Original ${brand}</h3>
+                    <h3>Llave Original ${brand} ${description ? `- ${description}` : ""}</h3>
                     <p><strong>Modelo:</strong> ${model}</p>
-                    ${description && description !== "Descripción no disponible" ? `<p><strong>Descripción:</strong> ${description}</p>` : ""}
                     <div class="result-features">
                         <span class="result-feature">
                             <i class="fas fa-check-circle"></i> Original de fábrica
@@ -133,6 +133,7 @@
 
     results.classList.add('active');
 }
+
 
 
   </script>
