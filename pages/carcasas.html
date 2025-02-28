@@ -418,77 +418,81 @@
 
     // Evento cambio de marca
     brandSelect.addEventListener('change', async () => {
-        const brand = brandSelect.value;
-        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-        modelSelect.disabled = !brand;
-        currentData = {};
+    const brand = brandSelect.value;
+    modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+    modelSelect.disabled = !brand;
+    currentData = {};
 
-        if (brand) {
-            const { data: models, error: modelsError } = await supabase
-                .from('carcasas')
-                .select('model, image_url, description, price')
-                .eq('brand', brand)
-                .order('model', { ascending: true });
+    if (brand) {
+        const { data: models, error: modelsError } = await supabase
+            .from('carcasas')
+            .select('model, image_url, description')
+            .eq('brand', brand)
+            .order('model', { ascending: true });
 
-            if (!modelsError && models.length > 0) {
-                // Usamos un objeto para evitar modelos duplicados
-                const uniqueModels = new Map();
-
-                models.forEach(item => {
-                    if (!uniqueModels.has(item.model)) {
-                        uniqueModels.set(item.model, {
-                            image_url: item.image_url,
-                            description: item.description,
-                            price: item.price
-                        });
-
-                        // Agregar opción única al select
-                        const option = document.createElement('option');
-                        option.value = item.model;
-                        option.textContent = item.model;
-                        modelSelect.appendChild(option);
-                    }
+        if (!modelsError && models.length > 0) {
+            models.forEach(item => {
+                if (!currentData[item.model]) {
+                    currentData[item.model] = [];
+                }
+                currentData[item.model].push({
+                    image_url: item.image_url,
+                    description: item.description,
+                    price: item.price
                 });
+            });
 
-                // Guardar datos en currentData
-                currentData = Object.fromEntries(uniqueModels);
-            }
+            // Agregar modelos al select (sin eliminar repeticiones)
+            models.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.model;
+                option.textContent = item.model;
+                modelSelect.appendChild(option);
+            });
         }
-    });
-
-    // Evento botón buscar
-    searchButton.addEventListener('click', () => {
-        const brand = brandSelect.value;
-        const model = modelSelect.value;
-
-        if (!brand || !model) {
-            alert('Selecciona marca y modelo');
-            return;
-        }
-
-        const { image_url, description, price } = currentData[model] || {};
-        showResults(brand, model, image_url, description, price);
-    });
+    }
 });
 
-function showResults(brand, model, image_url, description, price) {
-    const results = document.getElementById('searchResults');
 
-    results.innerHTML = `
-        <div class="result-item">
-            <div class="image-container">
-                <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
+    // Evento botón buscar
+searchButton.addEventListener('click', () => {
+    const brand = brandSelect.value;
+    const model = modelSelect.value;
+
+    if (!brand || !model) {
+        alert('Selecciona marca y modelo');
+        return;
+    }
+
+    const casesData = currentData[model] || [];
+
+    showResults(brand, model, casesData);
+});
+  
+  });
+
+  function showResults(brand, model, casesData) {
+    const results = document.getElementById('searchResults');
+    results.innerHTML = "";
+
+    casesData.forEach(({ image_url, description }) => {
+        results.innerHTML += `
+            <div class="result-item">
+                <div class="image-container">
+                    <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
+                </div>
+                <div class="result-info">
+                    <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
+                    <p><strong>Modelo:</strong> ${model}</p>
+                </div>
+                <a href="/pages/contacto.html" class="result-button">Consultar</a>
             </div>
-            <div class="result-info">
-                <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
-                <p><strong>Modelo:</strong>${model}</p>
-            </div>
-            <a href="/pages/contacto.html" class="result-button">Consultar</a>
-        </div>
-    `;
+        `;
+    });
 
     results.classList.add('active');
 }
+
 
   </script>
   
