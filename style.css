@@ -113,16 +113,6 @@ nav.nav-hidden {
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .zoomable {
-    cursor: pointer;
-    transition: transform 0.3s ease-in-out;
-}
-
-.zoomable:active {
-    transform: scale(2);
-    transition: transform 0.3s ease-in-out;
-}
-
 
   .nav-links.active {
     transform: translateY(0);
