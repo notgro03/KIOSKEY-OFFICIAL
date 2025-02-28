@@ -426,11 +426,13 @@
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('carcasas')
-            .select('model, image_url, description')
+            .select('model, image_url, description, price')
             .eq('brand', brand)
             .order('model', { ascending: true });
 
         if (!modelsError && models.length > 0) {
+            const uniqueModels = new Set();
+
             models.forEach(item => {
                 if (!currentData[item.model]) {
                     currentData[item.model] = [];
@@ -440,18 +442,21 @@
                     description: item.description,
                     price: item.price
                 });
+
+                uniqueModels.add(item.model); 
             });
 
-            // Agregar modelos al select (sin eliminar repeticiones)
-            models.forEach(item => {
+            // Agregar solo modelos únicos al select
+            uniqueModels.forEach(model => {
                 const option = document.createElement('option');
-                option.value = item.model;
-                option.textContent = item.model;
+                option.value = model;
+                option.textContent = model;
                 modelSelect.appendChild(option);
             });
         }
     }
 });
+
 
 
     // Evento botón buscar
