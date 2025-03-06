@@ -518,22 +518,34 @@ searchButton.addEventListener('click', () => {
     results.innerHTML = "";
 
     casesData.forEach(({ image_url, description }) => {
-        results.innerHTML += `
-            <div class="result-item">
-                <div class="image-container">
-                    <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
-                </div>
-                <div class="result-info">
-                    <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
-                    <p><strong>Modelo:</strong> ${model}</p>
-                </div>
-                <a href="/pages/contacto.html" class="result-button">Consultar</a>
-            </div>
-        `;
-    });
+        const whatsappMessage = encodeURIComponent(
+          `Hola, me interesa obtener una cotización para la siguiente carcasa:\n\n` +
+          `Marca: ${brand}\n` +
+          `Modelo: ${model}\n` +
+          `Descripción: ${description || "No disponible"}\n\n` +
+          `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+        );
+        const whatsappNumber = "541157237390";
+        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
 
-    results.classList.add('active');
-}
+        results.innerHTML += `
+          <div class="result-item">
+            <div class="image-container">
+              <img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">
+            </div>
+            <div class="result-info">
+              <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
+              <p><strong>Modelo:</strong> ${model}</p>
+            </div>
+            <a href="${whatsappUrl}" target="_blank" class="result-button">
+              <i class="fab fa-whatsapp"></i> Consultar
+            </a>
+          </div>
+        `;
+      });
+
+      results.classList.add('active');
+    }
 
     // Función para abrir el modal con la imagen ampliada
     function openModal(src) {
