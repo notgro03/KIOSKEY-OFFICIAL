@@ -134,6 +134,29 @@
     results.classList.add('active');
 }
 
+// Función para abrir el modal con la imagen ampliada
+function openModal(src) {
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImage');
+  modalImg.src = src;
+  modal.classList.add('active');
+}
+
+// Función para cerrar el modal
+function closeModal() {
+  const modal = document.getElementById('modal');
+  modal.classList.remove('active');
+}
+
+// Escuchar clicks en la imagen (delegación de eventos)
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('model-image')) {
+    openModal(event.target.src);
+  }
+});
+
+// Cerrar el modal al hacer click en cualquier lugar del modal
+document.getElementById('modal').addEventListener('click', closeModal);
 
 
   </script>
@@ -487,5 +510,9 @@
       </div>
     </section>
   </main>
+  <div id="modal" class="modal">
+    <img class="modal-content" id="modalImage" alt="Imagen ampliada">
+  </div>
+  
 </body>
 </html>
