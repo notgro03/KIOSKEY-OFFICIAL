@@ -109,31 +109,43 @@
     results.innerHTML = "";
 
     imagesData.forEach(({ image_url, description }) => {
+        // Construcción del mensaje de WhatsApp
+        const whatsappMessage = encodeURIComponent(
+          `Hola, me interesa obtener una cotización para la siguiente llave:\n\n` +
+          `Marca: ${brand}\n` +
+          `Modelo: ${model}\n` +
+          `Descripción: ${description || "No disponible"}\n\n` +
+          `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+        );
+        const whatsappNumber = "541157237390";
+        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
+
         results.innerHTML += `
-            <div class="result-item">
-                <div class="image-container">
-                    <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
-                </div>
-                <div class="result-info">
-                    <h3>Llave Original ${brand} ${description ? `${description}` : ""}</h3>
-                    <p><strong>Modelo:</strong> ${model}</p>
-                    <div class="result-features">
-                        <span class="result-feature">
-                            <i class="fas fa-check-circle"></i> Original de fábrica
-                        </span>
-                        <span class="result-feature">
-                            <i class="fas fa-shield-alt"></i> Garantía 1 año
-                        </span>
-                    </div>
-                </div>
-                <a href="/pages/contacto.html" class="result-button">Consultar</a>
+          <div class="result-item">
+            <div class="image-container">
+              <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
             </div>
+            <div class="result-info">
+              <h3>Llave Original ${brand} ${description ? description : ""}</h3>
+              <p><strong>Modelo:</strong> ${model}</p>
+              <div class="result-features">
+                <span class="result-feature">
+                  <i class="fas fa-check-circle"></i> Original de fábrica
+                </span>
+                <span class="result-feature">
+                  <i class="fas fa-shield-alt"></i> Garantía 1 año
+                </span>
+              </div>
+            </div>
+            <a href="${whatsappUrl}" target="_blank" class="result-button">
+              <i class="fab fa-whatsapp"></i> Consultar
+            </a>
+          </div>
         `;
-    });
+      });
 
-    results.classList.add('active');
-}
-
+      results.classList.add('active');
+    }
 // Función para abrir el modal con la imagen ampliada
 function openModal(src) {
   const modal = document.getElementById('modal');
