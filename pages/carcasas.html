@@ -502,7 +502,25 @@ searchButton.addEventListener('click', () => {
     results.classList.add('active');
 }
 
+    // Función para abrir el modal con la imagen ampliada
+    function openModal(src) {
+      const modal = document.getElementById('modal');
+      const modalImg = document.getElementById('modalImage');
+      modalImg.src = src;
+      modal.classList.add('active');
+    }
 
+    // Cerrar el modal al hacer click sobre él
+    document.getElementById('modal').addEventListener('click', () => {
+      document.getElementById('modal').classList.remove('active');
+    });
+
+    // Detectar click en la imagen para abrir el modal (efecto zoom)
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('model-image')) {
+        openModal(event.target.src);
+      }
+    });
   </script>
   
 

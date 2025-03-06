@@ -559,6 +559,20 @@ function showResults(resultsData, brand, model) {
     results.classList.add('active'); 
 }
 
+    // Función para abrir el modal con la imagen ampliada
+    function openModal(src) {
+      const modal = document.querySelector('.modal');
+      const modalImg = modal.querySelector('.modal-content');
+      modalImg.src = src;
+      modal.classList.add('active');
+    }
+
+    // Agregar un event listener para detectar el click en la imagen del telemando
+    document.addEventListener('click', (event) => {
+      if (event.target.classList.contains('result-logo')) {
+        openModal(event.target.src);
+      }});
+
   </script>
 </body>
 </html>
