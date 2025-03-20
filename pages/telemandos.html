@@ -245,6 +245,27 @@
       transform: scale(1);
     }
 
+    .not-found-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--card-gradient);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 500;
+      margin: 24px auto;
+      width: fit-content;
+      transition: all 0.3s ease;
+    }
+
+    .not-found-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
+    }
+
     @media (max-width: 768px) {
       .search-fields {
         grid-template-columns: 1fr;
@@ -311,8 +332,15 @@
           </div>
 
           <div class="search-results" id="searchResults">
-            <!-- Los resultados se mostrarán aquí -->
+            <!-- Results will be displayed here -->
           </div>
+
+          <a href="https://api.whatsapp.com/send/?phone=541157237390&text=Hola, no encuentro mi telemando en el catálogo. ¿Podrían ayudarme? Adjuntaré una foto de mi telemando." 
+             target="_blank" 
+             class="not-found-button">
+            <i class="fas fa-search"></i>
+            ¿No encuentras tu telemando? Contáctanos
+          </a>
         </div>
       </div>
     </section>
