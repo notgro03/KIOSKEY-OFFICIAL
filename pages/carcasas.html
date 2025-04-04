@@ -463,7 +463,7 @@
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('carcasas')
-            .select('model, image_url, description, price')
+            .select('model, image_url, description')
             .eq('brand', brand)
             .order('model', { ascending: true });
 
@@ -476,8 +476,7 @@
                 }
                 currentData[item.model].push({
                     image_url: item.image_url,
-                    description: item.description,
-                    price: item.price
+                    description: item.description
                 });
 
                 uniqueModels.add(item.model); 
@@ -493,8 +492,6 @@
         }
     }
 });
-
-
 
     // Evento botón buscar
 searchButton.addEventListener('click', () => {
