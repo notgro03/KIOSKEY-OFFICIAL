@@ -129,6 +129,90 @@
       line-height: 1.6;
     }
 
+    /* Form Styles */
+    .join-form-section {
+      background: white;
+      border-radius: 18px;
+      padding: 32px;
+      margin: 32px 0;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
+      border: 1px solid rgba(0, 59, 142, 0.1);
+    }
+
+    .join-form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-color);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(0, 59, 142, 0.1);
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(0, 59, 142, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-submit {
+      background: var(--card-gradient);
+      color: white;
+      border: none;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
+    }
+
+    .form-title {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .form-title h2 {
+      color: var(--primary-blue);
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .form-title p {
+      color: #666;
+      font-size: 16px;
+    }
+
     @media (max-width: 768px) {
       .services-grid {
         grid-template-columns: 1fr;
@@ -146,6 +230,11 @@
       .map-container {
         height: 400px;
         margin: 0 16px 32px;
+      }
+
+      .join-form-section {
+        margin: 32px 16px;
+        padding: 24px;
       }
     }
   </style>
@@ -179,7 +268,7 @@
     <section class="main-content">
       <div class="content-container">
         <div class="map-container">
-          <iframe src="https://www.google.com/maps/d/u/0/embed?mid=19Nd9SZ7TGSbJTvmqFKCnp4Utr3VrngKf&z=12&ll=-34.603722,-58.381592" allowfullscreen></iframe>
+          <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1Vq4f0nMR5BBxaHdWjANlWpuo7UcFmas&ehbc=2E312F" allowfullscreen></iframe>
         </div>
 
         <div class="services-grid">
@@ -204,10 +293,69 @@
           </div>
         </div>
 
-        <a href="/unirse-red" class="tutorial-button">
-          <i class="fas fa-user-plus"></i>
-          Únete a nuestra red de cerrajeros
-        </a>
+        <section class="join-form-section" id="unirse-red">
+          <div class="form-title">
+            <h2>Únete a nuestra red de cerrajeros</h2>
+            <p>Completa el formulario y forma parte del equipo Kioskeys</p>
+          </div>
+          <form class="join-form" id="joinForm">
+            <div class="form-group">
+              <label for="name">Nombre completo *</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+              <label for="business">Nombre del negocio *</label>
+              <input type="text" id="business" name="business" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Teléfono *</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Ciudad/Localidad *</label>
+              <input type="text" id="location" name="location" required>
+            </div>
+
+            <div class="form-group">
+              <label for="experience">Años de experiencia *</label>
+              <select id="experience" name="experience" required>
+                <option value="">Seleccionar</option>
+                <option value="1-3">1-3 años</option>
+                <option value="4-6">4-6 años</option>
+                <option value="7-10">7-10 años</option>
+                <option value="10+">Más de 10 años</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="specialties">Especialidades (selecciona todas las que apliquen) *</label>
+              <select id="specialties" name="specialties" multiple required>
+                <option value="automotive">Cerrajería Automotriz</option>
+                <option value="residential">Cerrajería Residencial</option>
+                <option value="commercial">Cerrajería Comercial</option>
+                <option value="safes">Cajas Fuertes</option>
+                <option value="electronic">Cerraduras Electrónicas</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="message">¿Por qué quieres unirte a Kioskeys? *</label>
+              <textarea id="message" name="message" required></textarea>
+            </div>
+
+            <button type="submit" class="form-submit">
+              <i class="fas fa-paper-plane"></i> Enviar solicitud
+            </button>
+          </form>
+        </section>
       </div>
     </section>
   </main>
@@ -269,8 +417,8 @@
     </div>
   </footer>
 
-  <script src="/main.js"></script>
-  <script>
+  <script src="/main.js" type="module"></script>
+  <script type="module">
     // Animación de las tarjetas de servicio
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
@@ -294,6 +442,33 @@
         });
         button.classList.add('active');
       });
+    });
+
+    // Form submission handler
+    document.getElementById('joinForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+
+      try {
+        const response = await fetch('/api/join-network', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          alert('¡Gracias por tu interés! Te contactaremos pronto.');
+          e.target.reset();
+        } else {
+          throw new Error('Error al enviar el formulario');
+        }
+      } catch (error) {
+        alert('Hubo un error al enviar el formulario. Por favor, intenta nuevamente.');
+        console.error('Error:', error);
+      }
     });
   </script>
 </body>
