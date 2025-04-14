@@ -5,184 +5,132 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>¿Cómo Funciona? - Kioskeys</title>
   <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.jpg">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    .how-it-works-section {
+    .process-section {
       padding: 64px 0;
-      background: #f8f9fa;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .section-title {
-      text-align: center;
-      margin-bottom: 48px;
       position: relative;
     }
 
-    .section-title h2 {
-      font-size: 36px;
-      color: var(--primary-blue);
-      margin-bottom: 16px;
-      font-weight: 700;
-    }
-
-    .section-title p {
-      font-size: 18px;
-      color: #666;
-      max-width: 600px;
+    .process-timeline {
+      position: relative;
+      max-width: 800px;
       margin: 0 auto;
+      padding: 32px 0;
     }
 
-    .step-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
-      margin-bottom: 96px;
-      position: relative;
-    }
-
-    .step-container:nth-child(even) {
-      direction: rtl;
-    }
-
-    .step-container:nth-child(even) .step-content {
-      direction: ltr;
-    }
-
-    .step-image {
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 20px 40px rgba(0, 59, 142, 0.15);
-      position: relative;
-      aspect-ratio: 16/9;
-    }
-
-    .step-image img {
-      width: 100%;
+    .process-timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
       height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.5s ease;
+      background: rgba(0, 59, 142, 0.1);
     }
 
-    .step-image:hover img {
-      transform: scale(1.05);
-    }
-
-    .step-content {
-      padding: 32px;
-    }
-
-    .step-number {
-      font-size: 64px;
-      font-weight: 800;
-      color: var(--primary-blue);
-      opacity: 0.1;
-      position: absolute;
-      top: -40px;
-      left: -20px;
-    }
-
-    .step-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary-blue);
-      margin-bottom: 16px;
-    }
-
-    .step-description {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #666;
-      margin-bottom: 24px;
-    }
-
-    .step-features {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .step-features li {
-      padding: 12px 0;
-      padding-left: 32px;
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 64px;
       position: relative;
-      color: #444;
     }
 
-    .step-features li::before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: var(--primary-blue);
-      font-weight: 700;
+    .timeline-item:nth-child(odd) {
+      flex-direction: row-reverse;
     }
 
-    .security-section {
+    .timeline-content {
+      width: calc(50% - 32px);
       background: white;
-      padding: 64px 0;
-    }
-
-    .security-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      margin-top: 48px;
-    }
-
-    .security-card {
-      background: white;
-      border-radius: 24px;
       padding: 32px;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
+      border: 1px solid rgba(0, 59, 142, 0.1);
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .timeline-content:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0, 59, 142, 0.2);
+    }
+
+    .timeline-content h3 {
+      color: var(--primary-blue);
+      font-size: 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timeline-content p {
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .timeline-dot {
+      width: 24px;
+      height: 24px;
+      background: var(--card-gradient);
+      border-radius: 50%;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 0 4px white, 0 0 0 8px rgba(0, 59, 142, 0.2);
       transition: all 0.3s ease;
     }
 
-    .security-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 48px rgba(0, 59, 142, 0.15);
+    .timeline-item:hover .timeline-dot {
+      transform: translateX(-50%) scale(1.2);
+      box-shadow: 0 0 0 6px white, 0 0 0 12px rgba(0, 59, 142, 0.3);
     }
 
-    .security-icon {
-      width: 80px;
-      height: 80px;
+    .step-icon {
+      font-size: 24px;
+      width: 48px;
+      height: 48px;
       background: var(--card-gradient);
-      border-radius: 50%;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 0 auto 24px;
       color: white;
-      font-size: 32px;
+      transition: all 0.3s ease;
     }
 
-    .security-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--primary-blue);
-      margin-bottom: 16px;
-    }
-
-    .security-description {
-      font-size: 15px;
-      color: #666;
-      line-height: 1.6;
+    .timeline-content:hover .step-icon {
+      transform: rotate(360deg);
     }
 
     .benefits-section {
       background: var(--card-gradient);
-      padding: 64px 0;
       color: white;
+      padding: 64px 0;
       margin-top: 64px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .benefits-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%);
     }
 
     .benefits-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 32px;
       margin-top: 48px;
     }
@@ -202,87 +150,129 @@
       background: rgba(255, 255, 255, 0.15);
     }
 
-    .benefit-icon {
+    .benefit-card i {
       font-size: 32px;
       margin-bottom: 24px;
+      transition: all 0.3s ease;
     }
 
-    .benefit-title {
+    .benefit-card:hover i {
+      transform: scale(1.2);
+    }
+
+    .benefit-card h3 {
       font-size: 20px;
       font-weight: 600;
       margin-bottom: 16px;
     }
 
-    .benefit-description {
+    .benefit-card p {
       font-size: 15px;
       opacity: 0.9;
       line-height: 1.6;
     }
 
-    .cta-section {
-      background: white;
+    .stats-section {
       padding: 64px 0;
+      background: #f8f9fa;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px;
       text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
+      transition: all 0.3s ease;
     }
 
-    .cta-content {
-      max-width: 600px;
-      margin: 0 auto;
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0, 59, 142, 0.15);
     }
 
-    .cta-title {
-      font-size: 32px;
+    .stat-value {
+      font-size: 48px;
       font-weight: 700;
       color: var(--primary-blue);
-      margin-bottom: 16px;
+      margin-bottom: 8px;
+      background: var(--card-gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .cta-description {
+    .stat-label {
       font-size: 18px;
       color: #666;
-      margin-bottom: 32px;
+    }
+
+    .cta-container {
+      text-align: center;
+      margin-top: 48px;
+      position: relative;
+      z-index: 1;
     }
 
     .cta-button {
-      display: inline-block;
-      padding: 16px 32px;
-      background: var(--card-gradient);
-      color: white;
-      text-decoration: none;
-      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      color: var(--primary-blue);
+      padding: 16px 48px;
+      border-radius: 100px;
+      font-size: 20px;
       font-weight: 600;
+      text-decoration: none;
       transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
     }
 
     .cta-button:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 59, 142, 0.2);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.2);
+      background: var(--primary-blue);
+      color: white;
+    }
+
+    .cta-button i {
+      font-size: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover i {
+      transform: translateX(4px);
     }
 
     @media (max-width: 768px) {
-      .step-container {
+      .timeline-item {
+        flex-direction: column !important;
+        padding-left: 32px;
+      }
+
+      .timeline-content {
+        width: 100%;
+      }
+
+      .timeline-dot {
+        left: 0;
+      }
+
+      .process-timeline::before {
+        left: 12px;
+      }
+
+      .benefits-grid, .stats-grid {
         grid-template-columns: 1fr;
-        gap: 32px;
-      }
-
-      .step-container:nth-child(even) {
-        direction: ltr;
-      }
-
-      .security-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-title h2 {
-        font-size: 28px;
-      }
-
-      .step-title {
-        font-size: 24px;
-      }
-
-      .cta-title {
-        font-size: 28px;
       }
     }
   </style>
@@ -290,13 +280,14 @@
 <body>
   <nav>
     <div class="logo">
-      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
     </div>
     <div class="nav-links">
       <a href="/">Inicio</a>
       <a href="/pages/red-servicios.html">Red de Servicios</a>
       <a href="/pages/planes.html">Planes</a>
       <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/faq.html">FAQ</a>
       <a href="/pages/contacto.html">Contacto</a>
     </div>
     <button class="menu-button">
@@ -312,96 +303,72 @@
       </div>
     </section>
 
-    <section class="how-it-works-section">
+    <section class="process-section">
       <div class="content-container">
-        <div class="section-title">
-          <h2>Un proceso simple y seguro</h2>
-          <p>Descubre cómo Kioskeys revoluciona la gestión de tus llaves con tecnología de punta</p>
-        </div>
-
-        <div class="step-container" data-aos="fade-up">
-          <div class="step-image">
-            <img src="https://images.unsplash.com/photo-1586717799252-bd134ad00e26" alt="Registro de llave">
-          </div>
-          <div class="step-content">
-            <div class="step-number">01</div>
-            <h3 class="step-title">Registra tu Llave</h3>
-            <p class="step-description">Visita cualquier punto de nuestra red de servicios para digitalizar tu llave. Nuestros expertos realizarán un escaneo de alta precisión y crearán una copia digital segura.</p>
-            <ul class="step-features">
-              <li>Escaneo digital profesional</li>
-              <li>Verificación de compatibilidad</li>
-              <li>Registro de datos del vehículo</li>
-              <li>Asignación de código único</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="step-container" data-aos="fade-up">
-          <div class="step-image">
-            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa" alt="Almacenamiento seguro">
-          </div>
-          <div class="step-content">
-            <div class="step-number">02</div>
-            <h3 class="step-title">Almacenamiento Seguro</h3>
-            <p class="step-description">Tu llave digital se guarda en nuestra nube con los más altos estándares de seguridad. Accede a ella desde cualquier dispositivo, en cualquier momento.</p>
-            <ul class="step-features">
-              <li>Encriptación de grado militar</li>
-              <li>Autenticación biométrica</li>
-              <li>Copias de seguridad automáticas</li>
-              <li>Historial de accesos detallado</li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="step-container" data-aos="fade-up">
-          <div class="step-image">
-            <img src="https://images.unsplash.com/photo-1517292987719-0369a794ec0f" alt="Recuperación inmediata">
-          </div>
-          <div class="step-content">
-            <div class="step-number">03</div>
-            <h3 class="step-title">Recuperación Inmediata</h3>
-            <p class="step-description">En caso de pérdida o emergencia, acude a cualquier punto de nuestra red. Con tu identificación y código único, tendrás una nueva llave en minutos.</p>
-            <ul class="step-features">
-              <li>Red nacional de cerrajeros</li>
-              <li>Servicio disponible 24/7</li>
-              <li>Verificación de identidad segura</li>
-              <li>Tiempo de respuesta: 30 minutos</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="security-section">
-      <div class="content-container">
-        <div class="section-title">
-          <h2>Seguridad de Primer Nivel</h2>
-          <p>Tu tranquilidad es nuestra prioridad</p>
-        </div>
-
-        <div class="security-grid">
-          <div class="security-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="security-icon">
-              <i class="fas fa-shield-alt"></i>
+        <div class="process-timeline">
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-mobile-alt"></i>
+                </div>
+                1. Descarga la App
+              </h3>
+              <p>Descarga nuestra aplicación móvil desde la App Store o Google Play Store para comenzar a gestionar tus llaves de forma inteligente.</p>
             </div>
-            <h3 class="security-title">Encriptación Avanzada</h3>
-            <p class="security-description">Tus datos están protegidos con encriptación de grado militar y protocolos de seguridad de última generación.</p>
+            <div class="timeline-dot"></div>
           </div>
 
-          <div class="security-card" data-aos="fade-up" data-aos-delay="100">
-            <div class="security-icon">
-              <i class="fas fa-fingerprint"></i>
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-car"></i>
+                </div>
+                2. Registra tu Vehículo
+              </h3>
+              <p>Ingresa los datos de tu vehículo en la aplicación para asegurar una compatibilidad perfecta con nuestros servicios.</p>
             </div>
-            <h3 class="security-title">Autenticación Biométrica</h3>
-            <p class="security-description">Acceso seguro mediante huella digital o reconocimiento facial para máxima protección.</p>
+            <div class="timeline-dot"></div>
           </div>
 
-          <div class="security-card" data-aos="fade-up" data-aos-delay="200">
-            <div class="security-icon">
-              <i class="fas fa-database"></i>
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-camera"></i>
+                </div>
+                3. Digitaliza tu Llave
+              </h3>
+              <p>Toma una foto clara del inserto de tu llave. Nuestro sistema la procesará y almacenará de forma segura en la nube.</p>
             </div>
-            <h3 class="security-title">Respaldo Redundante</h3>
-            <p class="security-description">Copias de seguridad automáticas en múltiples servidores para garantizar la disponibilidad.</p>
+            <div class="timeline-dot"></div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                4. Almacenamiento Seguro
+              </h3>
+              <p>Tu llave digital se guarda con encriptación de nivel bancario. Accede a ella desde cualquier dispositivo autorizado.</p>
+            </div>
+            <div class="timeline-dot"></div>
+          </div>
+
+          <div class="timeline-item" data-aos="fade-up">
+            <div class="timeline-content">
+              <h3>
+                <div class="step-icon">
+                  <i class="fas fa-key"></i>
+                </div>
+                5. Recuperación Inmediata
+              </h3>
+              <p>Si necesitas una copia, visita cualquier punto de nuestra red. Con tu identificación y código único, tendrás tu llave lista en minutos.</p>
+            </div>
+            <div class="timeline-dot"></div>
           </div>
         </div>
       </div>
@@ -409,60 +376,86 @@
 
     <section class="benefits-section">
       <div class="content-container">
-        <div class="section-title">
-          <h2>Beneficios Exclusivos</h2>
-          <p>Descubre todas las ventajas de usar Kioskeys</p>
-        </div>
-
+        <h2 style="text-align: center; margin-bottom: 32px;">Beneficios de Kioskeys</h2>
         <div class="benefits-grid">
-          <div class="benefit-card" data-aos="fade-up" data-aos-delay="0">
-            <i class="fas fa-clock benefit-icon"></i>
-            <h3 class="benefit-title">Ahorro de Tiempo</h3>
-            <p class="benefit-description">Obtén una nueva llave en minutos, sin necesidad de acudir al concesionario oficial.</p>
+          <div class="benefit-card" data-aos="fade-up">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Seguridad Garantizada</h3>
+            <p>Sistema de encriptación avanzado para proteger tus llaves digitales</p>
           </div>
 
           <div class="benefit-card" data-aos="fade-up" data-aos-delay="100">
-            <i class="fas fa-wallet benefit-icon"></i>
-            <h3 class="benefit-title">Ahorro de Dinero</h3>
-            <p class="benefit-description">Precios hasta un 70% más económicos que en concesionarios oficiales.</p>
+            <i class="fas fa-clock"></i>
+            <h3>Ahorro de Tiempo</h3>
+            <p>Obtén copias de tus llaves en minutos cuando las necesites</p>
           </div>
 
           <div class="benefit-card" data-aos="fade-up" data-aos-delay="200">
-            <i class="fas fa-map-marked-alt benefit-icon"></i>
-            <h3 class="benefit-title">Cobertura Nacional</h3>
-            <p class="benefit-description">Accede a tu llave desde cualquier punto de nuestra extensa red de servicios.</p>
+            <i class="fas fa-handshake"></i>
+            <h3>Red Profesional</h3>
+            <p>Acceso a cerrajeros certificados en todo el país</p>
           </div>
+        </div>
 
-          <div class="benefit-card" data-aos="fade-up" data-aos-delay="300">
-            <i class="fas fa-headset benefit-icon"></i>
-            <h3 class="benefit-title">Soporte 24/7</h3>
-            <p class="benefit-description">Asistencia técnica disponible las 24 horas, los 365 días del año.</p>
-          </div>
+        <div class="cta-container" data-aos="fade-up">
+          <a href="/pages/planes.html" class="cta-button">
+            Comenzar Ahora <i class="fas fa-arrow-right"></i>
+          </a>
         </div>
       </div>
     </section>
 
-    <section class="cta-section">
+    <section class="stats-section">
       <div class="content-container">
-        <div class="cta-content">
-          <h2 class="cta-title">¿Listo para empezar?</h2>
-          <p class="cta-description">Únete a miles de usuarios que ya confían en Kioskeys para la gestión segura de sus llaves</p>
-          <a href="/pages/planes.html" class="cta-button">
-            <i class="fas fa-rocket"></i> Comenzar Ahora
-          </a>
+        <h2 style="text-align: center; color: var(--primary-blue);">Por qué elegir Kioskeys</h2>
+        <div class="stats-grid">
+          <div class="stat-card" data-aos="fade-up">
+            <div class="stat-value" data-value="90">90%</div>
+            <div class="stat-label">Ahorro de Tiempo</div>
+          </div>
+
+          <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-value" data-value="100">100%</div>
+            <div class="stat-label">Seguridad Garantizada</div>
+          </div>
+
+          <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-value" data-value="50">50+</div>
+            <div class="stat-label">Puntos de Servicio</div>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      AOS.init({
-        duration: 1000,
-        once: true,
-        offset: 100
+    AOS.init({
+      duration: 1000,
+      once: true,
+      offset: 100
+    });
+
+    // Animate statistics on scroll
+    const stats = document.querySelectorAll('.stat-value');
+    stats.forEach(stat => {
+      const value = parseInt(stat.dataset.value);
+      let current = 0;
+      const increment = value / 30;
+      const updateValue = () => {
+        if (current < value) {
+          current += increment;
+          if (current > value) current = value;
+          stat.textContent = Math.round(current) + (stat.textContent.includes('%') ? '%' : '+');
+          requestAnimationFrame(updateValue);
+        }
+      };
+      const observer = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          updateValue();
+          observer.disconnect();
+        }
       });
+      observer.observe(stat);
     });
   </script>
 </body>

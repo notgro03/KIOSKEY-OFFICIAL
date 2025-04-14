@@ -43,10 +43,6 @@ nav.nav-hidden {
   transform: translate(-50%, -100%);
 }
 
-.logo img {
-  height: 32px;
-}
-
 .nav-links {
   display: flex;
   gap: 40px;
@@ -116,6 +112,7 @@ nav.nav-hidden {
     box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
+
 
   .nav-links.active {
     transform: translateY(0);

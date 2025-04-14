@@ -5,19 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Planes - Kioskeys</title>
   <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="/favicon.jpg">
   <link rel="stylesheet" href="/css/plans.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
   <nav>
     <div class="logo">
-      <a href="/"><img src="/logo.svg" alt="Kioskeys"></a>
+      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
     </div>
     <div class="nav-links">
       <a href="/">Inicio</a>
       <a href="/pages/red-servicios.html">Red de Servicios</a>
       <a href="/pages/planes.html">Planes</a>
       <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/faq.html">FAQ</a>
       <a href="/pages/contacto.html">Contacto</a>
     </div>
     <button class="menu-button">
@@ -30,6 +32,10 @@
       <div class="hero-content">
         <h1>Planes y Precios</h1>
         <p>Encuentra el plan perfecto para ti</p>
+        <div style="background: rgba(0, 59, 142, 0.1); padding: 12px 24px; border-radius: 12px; margin-top: 16px; display: inline-block;">
+          <i class="fas fa-clock" style="color: var(--primary-blue); margin-right: 8px;"></i>
+          <span style="color: var(--primary-blue); font-weight: 500;">Promoción de lanzamiento: 50% OFF válido por 2 meses</span>
+        </div>
       </div>
     </section>
 
@@ -38,6 +44,7 @@
         <div class="plan-grid">
           <!-- Plan Básico -->
           <div class="plan-card">
+            <div class="promo-badge">50% OFF</div>
             <div class="plan-header">
               <i class="fas fa-key plan-icon"></i>
               <h3 class="plan-title">Plan Básico</h3>
@@ -45,7 +52,13 @@
             </div>
             <div class="plan-price">
               <div class="plan-price-amount">
-                $1.000<span class="plan-price-period">/mes</span>
+                $6.000<span class="plan-price-period">/año</span>
+              </div>
+              <div class="original-price">
+                Antes: $12.000/año
+              </div>
+              <div class="promo-text">
+                Promo válida por 2 meses
               </div>
             </div>
             <div class="plan-content">
@@ -69,7 +82,7 @@
                     <span class="feature-name">Llave de Emergencia</span>
                     <span class="feature-value">1/año</span>
                   </div>
-                  <p class="feature-description">No incluye programación</p>
+                  <p class="feature-description">Incluye una llave de repuesto, sin grabado ni programación.</p>
                 </li>
                 <li>
                   <div class="feature-header">
@@ -79,12 +92,15 @@
                   <p class="feature-description">Servicio Especializado</p>
                 </li>
               </ul>
-              <a href="/pages/contacto.html" class="plan-button">Comenzar Ahora</a>
+              <script src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
+                data-preference-id="206202430-c742a186-493f-4493-9a64-54184340678f" data-source="button">
+              </script>
             </div>
           </div>
 
           <!-- Plan Familiar -->
           <div class="plan-card plan-most-popular">
+            <div class="promo-badge">50% OFF</div>
             <div class="plan-header">
               <i class="fas fa-home plan-icon"></i>
               <h3 class="plan-title">Plan Familiar</h3>
@@ -92,7 +108,13 @@
             </div>
             <div class="plan-price">
               <div class="plan-price-amount">
-                $3.000<span class="plan-price-period">/mes</span>
+                $20.000<span class="plan-price-period">/año</span>
+              </div>
+              <div class="original-price">
+                Antes: $40.000/año
+              </div>
+              <div class="promo-text">
+                Promo válida por 2 meses
               </div>
             </div>
             <div class="plan-content">
@@ -102,21 +124,6 @@
                     <span class="feature-name">Guarda Virtual</span>
                     <span class="feature-value">3 llaves</span>
                   </div>
-                  <p class="feature-description">Expandible hasta 5 (+$600 c/u)</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Descuentos</span>
-                    <span class="feature-value">20%</span>
-                  </div>
-                  <p class="feature-description">En todos los servicios</p>
-                </li>
-                <li>
-                  <div class="feature-header">
-                    <span class="feature-name">Llaves Adicionales</span>
-                    <span class="feature-value">Hasta 5</span>
-                  </div>
-                  <p class="feature-description">$600 por llave adicional</p>
                 </li>
                 <li>
                   <div class="feature-header">
@@ -126,7 +133,9 @@
                   <p class="feature-description">Descuento en programación</p>
                 </li>
               </ul>
-              <a href="/pages/contacto.html" class="plan-button">Elegir Plan Familiar</a>
+              <script src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
+                data-preference-id="206202430-c1503499-2ee3-4ed7-98bb-2a257b91da23" data-source="button">
+              </script>
             </div>
           </div>
 
@@ -180,32 +189,6 @@
       </div>
     </section>
 
-    <!-- Beneficios -->
-    <section class="benefits-section">
-      <div class="plans-container">
-        <h2>¿Por qué elegir Kioskeys?</h2>
-        <div class="benefits-grid">
-          <div class="benefit-card">
-            <i class="fas fa-shield-alt benefit-icon"></i>
-            <h3 class="benefit-title">Seguridad Garantizada</h3>
-            <p class="benefit-description">Almacenamiento encriptado y respaldo continuo de tus llaves digitales</p>
-          </div>
-          <div class="benefit-card">
-            <i class="fas fa-clock benefit-icon"></i>
-            <h3 class="benefit-title">Soporte Especializado</h3>
-            <p class="benefit-description">Acceso a expertos en cerrajería durante nuestro horario de atención.              .
-
-</p>
-          </div>
-          <div class="benefit-card">
-            <i class="fas fa-percent benefit-icon"></i>
-            <h3 class="benefit-title">Descuentos Exclusivos</h3>
-            <p class="benefit-description">Ahorra en todos nuestros servicios según tu plan</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- FAQ -->
     <section class="faq-section">
       <div class="plans-container">
@@ -231,8 +214,8 @@
     <section class="cta-section">
       <div class="plans-container">
         <div class="cta-content">
-          <h2>¿Listo para comenzar?</h2>
-          <p>Elige el plan que mejor se adapte a tus necesidades y comienza a disfrutar de todos los beneficios.</p>
+          <h2>¡Aprovecha el 50% de descuento!</h2>
+          <p>Precios promocionales por lanzamiento válidos por 2 meses. ¡No te lo pierdas!</p>
           <div class="cta-buttons">
             <a href="/pages/contacto.html" class="cta-button primary">
               <i class="fas fa-rocket"></i>
