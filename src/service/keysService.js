@@ -5,7 +5,8 @@ export const keysService = {
     const { data, error } = await supabase
       .from('keys')
       .select('*')
-      .order('created_at', { ascending: false });
+      .order('brand', { ascending: true })
+      .order('model', { ascending: true });
 
     if (error) throw error;
     return data;
@@ -27,7 +28,8 @@ export const keysService = {
       .from('keys')
       .select('*')
       .eq('brand', brand)
-      .eq('model', model);
+      .eq('model', model)
+      .order('model', { ascending: true });
 
     if (error) throw error;
     return data;
@@ -37,7 +39,9 @@ export const keysService = {
     const { data, error } = await supabase
       .from('keys')
       .select('*')
-      .or(`brand.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`);
+      .or(`brand.ilike.%${searchTerm}%,model.ilike.%${searchTerm}%`)
+      .order('brand', { ascending: true })
+      .order('model', { ascending: true });
 
     if (error) throw error;
     return data;
