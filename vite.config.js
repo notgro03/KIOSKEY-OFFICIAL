@@ -20,6 +20,7 @@ export default defineConfig({
         'llaves': resolve(__dirname, 'pages/llaves.html'),
         'carcasas': resolve(__dirname, 'pages/carcasas.html'),
         'accesorios': resolve(__dirname, 'pages/accesorios.html'),
+        'descarga-app': resolve(__dirname, 'pages/descarga-app.html'),
       }
     }
   },
