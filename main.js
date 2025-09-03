@@ -1,5 +1,6 @@
 // Import styles
 import './style.css'
+import { themeManager } from './src/theme-manager.js'
 
 // Initialize modules
 const initApp = () => {
@@ -35,6 +36,12 @@ const initApp = () => {
   }
 }
 
+// Initialize theme manager
+document.addEventListener('DOMContentLoaded', () => {
+  // Theme manager is already initialized in its constructor
+  console.log('Theme manager initialized');
+});
+
 // Initialize app when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initApp)
@@ -43,4 +50,4 @@ if (document.readyState === 'loading') {
 }
 
 // Export for use in other modules
-export { initApp }
+export { initApp, themeManager }

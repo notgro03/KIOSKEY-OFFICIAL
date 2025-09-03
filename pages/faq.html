@@ -25,10 +25,11 @@
     }
 
     .faq-item {
-      background: white;
+      background: var(--card-background);
       border-radius: 12px;
       margin-bottom: 16px;
-      box-shadow: 0 2px 4px rgba(0, 59, 142, 0.1);
+      box-shadow: 0 2px 4px var(--shadow-color);
+      border: 1px solid var(--border-color);
       overflow: hidden;
     }
 
@@ -43,7 +44,7 @@
     }
 
     .faq-question:hover {
-      background: rgba(0, 59, 142, 0.05);
+      background: var(--border-color);
     }
 
     .faq-answer {
@@ -56,7 +57,7 @@
     .faq-answer.active {
       padding: 20px;
       max-height: 500px;
-      border-top: 1px solid rgba(0, 59, 142, 0.1);
+      border-top: 1px solid var(--border-color);
     }
 
     .faq-icon {
@@ -76,7 +77,9 @@
       width: 100%;
       padding: 16px 48px;
       border-radius: 12px;
-      border: 2px solid rgba(0, 59, 142, 0.1);
+      border: 2px solid var(--border-color);
+      background: var(--card-background);
+      color: var(--text-color);
       font-size: 16px;
       transition: all 0.3s ease;
     }

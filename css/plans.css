@@ -1,9 +1,13 @@
 /* Plans Section Styles */
 .plans-section {
   padding: 64px 0;
-  background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #f8f9ff 0%, var(--background) 100%);
   position: relative;
   overflow: hidden;
+}
+
+[data-theme="dark"] .plans-section {
+  background: linear-gradient(135deg, #1a1a1a 0%, var(--background) 100%);
 }
 
 .plans-section::before {
@@ -33,7 +37,7 @@
 }
 
 .plan-card {
-  background: white;
+  background: var(--card-background);
   border-radius: 24px;
   overflow: hidden;
   color: var(--text-color);
@@ -41,14 +45,14 @@
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 59, 142, 0.1);
-  border: 1px solid rgba(0, 59, 142, 0.1);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  border: 1px solid var(--border-color);
   transform: translateY(0);
 }
 
 .plan-card:hover {
   transform: translateY(-10px);
-  box-shadow: 0 20px 40px rgba(0, 59, 142, 0.15);
+  box-shadow: 0 20px 40px var(--shadow-color);
 }
 
 .plan-header {
@@ -105,9 +109,13 @@
 .plan-price {
   text-align: center;
   padding: 32px 24px;
-  background: #f8f9fa;
-  border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+  background: var(--card-background);
+  border-bottom: 1px solid var(--border-color);
   position: relative;
+}
+
+[data-theme="dark"] .plan-price {
+  background: #2a2a2a;
 }
 
 .plan-price::after {
@@ -184,7 +192,11 @@
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  background: linear-gradient(135deg, var(--card-background) 0%, var(--background) 100%);
+}
+
+[data-theme="dark"] .plan-content {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
 }
 
 .plan-features {
@@ -196,12 +208,12 @@
 
 .plan-features li {
   padding: 20px 0;
-  border-bottom: 1px solid rgba(0, 59, 142, 0.1);
+  border-bottom: 1px solid var(--border-color);
   transition: all 0.3s ease;
 }
 
 .plan-features li:hover {
-  background: rgba(0, 59, 142, 0.02);
+  background: var(--border-color);
   transform: translateX(5px);
 }
 
@@ -311,7 +323,11 @@
 /* FAQ Section */
 .faq-section {
   padding: 64px 0;
-  background: #f8f9fa;
+  background: var(--background);
+}
+
+[data-theme="dark"] .faq-section {
+  background: #0f0f0f;
 }
 
 .faq-grid {
@@ -322,10 +338,11 @@
 }
 
 .faq-item {
-  background: white;
+  background: var(--card-background);
   padding: 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 59, 142, 0.1);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border: 1px solid var(--border-color);
 }
 
 .faq-item h3 {
@@ -335,7 +352,8 @@
 }
 
 .faq-item p {
-  color: #666;
+  color: var(--text-color);
+  opacity: 0.8;
   line-height: 1.6;
 }
 
@@ -343,7 +361,7 @@
 .cta-section {
   padding: 64px 0;
   text-align: center;
-  background: white;
+  background: var(--background);
 }
 
 .cta-content {
@@ -375,14 +393,14 @@
 }
 
 .cta-button.secondary {
-  background: white;
+  background: var(--card-background);
   color: var(--primary-blue);
   border: 2px solid var(--primary-blue);
 }
 
 .cta-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 59, 142, 0.2);
+  box-shadow: 0 8px 16px var(--shadow-color);
 }
 
 /* Animations */
