@@ -7,27 +7,39 @@ class ThemeManager {
   init() {
     // Apply saved theme
     this.applyTheme(this.currentTheme);
-    
+
     // Create toggle button
     this.createToggleButton();
-    
+
     // Listen for system theme changes
     this.listenForSystemThemeChanges();
   }
 
   createToggleButton() {
-    const toggle = document.createElement('button');
-    toggle.className = 'theme-toggle';
-    toggle.setAttribute('aria-label', 'Cambiar tema');
-    toggle.innerHTML = `
-      <i class="theme-toggle-icon ${this.currentTheme === 'dark' ? 'fas fa-sun sun' : 'fas fa-moon moon'}"></i>
-    `;
-    
+    // Check if toggle button already exists in HTML
+    let toggle = document.getElementById('themeToggle');
+
+    if (!toggle) {
+      // Create toggle button if it doesn't exist
+      toggle = document.createElement('div');
+      toggle.id = 'themeToggle';
+      toggle.className = 'theme-toggle';
+      toggle.setAttribute('aria-label', 'Cambiar tema');
+      toggle.innerHTML = `
+        <i class="theme-toggle-icon ${this.currentTheme === 'dark' ? 'fas fa-sun sun' : 'fas fa-moon moon'}"></i>
+      `;
+      document.body.appendChild(toggle);
+    } else {
+      // Update existing button icon
+      const icon = toggle.querySelector('.theme-toggle-icon');
+      if (icon) {
+        icon.className = `theme-toggle-icon ${this.currentTheme === 'dark' ? 'fas fa-sun sun' : 'fas fa-moon moon'}`;
+      }
+    }
+
     toggle.addEventListener('click', () => {
       this.toggleTheme();
     });
-
-    document.body.appendChild(toggle);
   }
 
   toggleTheme() {
@@ -35,7 +47,7 @@ class ThemeManager {
     this.applyTheme(newTheme);
     this.currentTheme = newTheme;
     localStorage.setItem('kioskeys-theme', newTheme);
-    
+
     // Update toggle icon
     const icon = document.querySelector('.theme-toggle-icon');
     if (icon) {
@@ -48,7 +60,7 @@ class ThemeManager {
 
   applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
-    
+
     // Update meta theme-color for mobile browsers
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
@@ -59,7 +71,7 @@ class ThemeManager {
   animateThemeTransition() {
     // Add a subtle animation when switching themes
     document.body.style.transition = 'background-color 0.3s ease, color 0.3s ease';
-    
+
     setTimeout(() => {
       document.body.style.transition = '';
     }, 300);
@@ -67,14 +79,14 @@ class ThemeManager {
 
   listenForSystemThemeChanges() {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     mediaQuery.addEventListener('change', (e) => {
       // Only auto-switch if user hasn't manually set a preference
       if (!localStorage.getItem('kioskeys-theme')) {
         const systemTheme = e.matches ? 'dark' : 'light';
         this.applyTheme(systemTheme);
         this.currentTheme = systemTheme;
-        
+
         // Update toggle icon
         const icon = document.querySelector('.theme-toggle-icon');
         if (icon) {
@@ -93,7 +105,7 @@ class ThemeManager {
       this.applyTheme(theme);
       this.currentTheme = theme;
       localStorage.setItem('kioskeys-theme', theme);
-      
+
       // Update toggle icon
       const icon = document.querySelector('.theme-toggle-icon');
       if (icon) {
