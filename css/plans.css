@@ -17,9 +17,15 @@
   left: 0;
   right: 0;
   height: 100%;
-  background: linear-gradient(45deg, rgba(0, 59, 142, 0.03) 0%, rgba(0, 163, 255, 0.03) 100%);
+  background: linear-gradient(45deg, rgba(0, 59, 142, 0.08) 0%, rgba(0, 163, 255, 0.08) 100%);
   transform: skewY(-6deg);
   transform-origin: top left;
+  animation: backgroundShift 15s ease-in-out infinite;
+}
+
+@keyframes backgroundShift {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
 .plans-container {
@@ -38,27 +44,50 @@
 
 .plan-card {
   background: var(--card-background);
-  border-radius: 24px;
+  border-radius: 28px;
   overflow: hidden;
   color: var(--text-color);
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px var(--shadow-color);
-  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px var(--shadow-color),
+              0 4px 16px rgba(0, 59, 142, 0.1);
+  border: 2px solid var(--border-color);
   transform: translateY(0);
 }
 
+.plan-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(0, 163, 255, 0.05) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
 .plan-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 40px var(--shadow-color);
+  transform: translateY(-15px) scale(1.02);
+  box-shadow: 0 25px 60px var(--shadow-color),
+              0 8px 24px rgba(0, 59, 142, 0.2),
+              0 0 0 1px rgba(0, 163, 255, 0.2);
+  border-color: rgba(0, 163, 255, 0.3);
+}
+
+.plan-card:hover::before {
+  opacity: 1;
 }
 
 .plan-header {
-  background: var(--card-gradient);
+  background: linear-gradient(135deg, rgba(0, 59, 142, 0.95) 0%, rgba(0, 114, 188, 0.95) 100%);
   color: white;
-  padding: 32px;
+  padding: 36px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -71,17 +100,33 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 50%);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
   transform: translate(0, 0);
-  animation: shine 10s infinite linear;
+  animation: shine 8s infinite linear;
+}
+
+.plan-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .plan-icon {
-  font-size: 32px;
+  font-size: 36px;
   margin-bottom: 16px;
-  background: rgba(255, 255, 255, 0.2);
-  width: 64px;
-  height: 64px;
+  background: rgba(255, 255, 255, 0.25);
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -89,6 +134,15 @@
   margin: 0 auto 20px;
   position: relative;
   z-index: 1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+              inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+  transition: all 0.4s ease;
+}
+
+.plan-card:hover .plan-icon {
+  transform: scale(1.15) rotate(10deg);
+  box-shadow: 0 6px 24px rgba(255, 255, 255, 0.4),
+              inset 0 0 0 3px rgba(255, 255, 255, 0.5);
 }
 
 .plan-title {
@@ -158,14 +212,28 @@
   position: absolute;
   top: 16px;
   right: -32px;
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  background: linear-gradient(135deg, #FFD700 0%, #FF8C00 100%);
   color: #000;
-  padding: 8px 40px;
+  padding: 10px 45px;
   transform: rotate(45deg);
   font-size: 14px;
-  font-weight: 600;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.5),
+              0 0 20px rgba(255, 215, 0, 0.3);
   z-index: 2;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(255, 140, 0, 0.5),
+                0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(255, 140, 0, 0.7),
+                0 0 30px rgba(255, 215, 0, 0.5);
+  }
 }
 
 .promo-text {
@@ -261,18 +329,20 @@
 .plan-button {
   display: inline-block;
   width: 100%;
-  padding: 16px 32px;
-  background: var(--card-gradient);
+  padding: 18px 32px;
+  background: linear-gradient(135deg, rgba(0, 59, 142, 0.95) 0%, rgba(0, 114, 188, 0.95) 100%);
   color: white;
   text-decoration: none;
-  border-radius: 12px;
+  border-radius: 14px;
   text-align: center;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 16px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   margin-top: 24px;
   border: none;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 59, 142, 0.3);
 }
 
 .plan-button::before {
@@ -282,18 +352,34 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.2) 0%, transparent 50%);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
   transform: translate(-100%, -100%);
   transition: all 0.5s ease;
 }
 
+.plan-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.6s;
+}
+
 .plan-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 59, 142, 0.2);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 59, 142, 0.4),
+              0 0 40px rgba(0, 163, 255, 0.3);
 }
 
 .plan-button:hover::before {
   transform: translate(0, 0);
+}
+
+.plan-button:hover::after {
+  left: 100%;
 }
 
 .plan-badge {
@@ -311,13 +397,39 @@
 }
 
 .plan-most-popular {
-  transform: scale(1.05);
-  border: 2px solid var(--primary-blue);
+  transform: scale(1.08);
+  border: 3px solid var(--primary-blue);
   z-index: 2;
+  box-shadow: 0 15px 50px rgba(0, 59, 142, 0.3),
+              0 0 0 1px rgba(0, 163, 255, 0.2),
+              0 0 60px rgba(0, 163, 255, 0.15);
+}
+
+.plan-most-popular::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 28px;
+  background: linear-gradient(45deg,
+    rgba(0, 59, 142, 0.3),
+    rgba(0, 163, 255, 0.3),
+    rgba(0, 59, 142, 0.3));
+  background-size: 200% 200%;
+  animation: borderGradient 3s ease infinite;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+@keyframes borderGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .plan-most-popular:hover {
-  transform: scale(1.05) translateY(-10px);
+  transform: scale(1.08) translateY(-15px);
+  box-shadow: 0 25px 70px rgba(0, 59, 142, 0.4),
+              0 0 0 2px rgba(0, 163, 255, 0.4),
+              0 0 80px rgba(0, 163, 255, 0.25);
 }
 
 /* FAQ Section */
@@ -362,11 +474,47 @@
   padding: 64px 0;
   text-align: center;
   background: var(--background);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 30% 50%, rgba(0, 163, 255, 0.08) 0%, transparent 50%),
+              radial-gradient(circle at 70% 50%, rgba(0, 59, 142, 0.08) 0%, transparent 50%);
+  animation: ctaGlow 10s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ctaGlow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .cta-content {
   max-width: 600px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.cta-content h2 {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  background: var(--card-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .cta-buttons {
@@ -377,30 +525,68 @@
 }
 
 .cta-button {
-  padding: 16px 32px;
-  border-radius: 12px;
-  font-weight: 600;
+  padding: 18px 36px;
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 16px;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: 0.6s;
+}
+
+.cta-button:hover::before {
+  left: 100%;
 }
 
 .cta-button.primary {
-  background: var(--card-gradient);
+  background: linear-gradient(135deg, rgba(0, 59, 142, 0.95), rgba(0, 114, 188, 0.95));
   color: white;
+  box-shadow: 0 4px 16px rgba(0, 59, 142, 0.3);
+}
+
+.cta-button.primary:hover {
+  box-shadow: 0 8px 24px rgba(0, 59, 142, 0.4),
+              0 0 40px rgba(0, 163, 255, 0.3);
 }
 
 .cta-button.secondary {
   background: var(--card-background);
   color: var(--primary-blue);
   border: 2px solid var(--primary-blue);
+  box-shadow: 0 4px 16px rgba(0, 59, 142, 0.1);
+}
+
+.cta-button.secondary:hover {
+  background: rgba(0, 59, 142, 0.1);
+  border-color: rgba(0, 163, 255, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 59, 142, 0.2);
 }
 
 .cta-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px var(--shadow-color);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.cta-button i {
+  transition: transform 0.3s ease;
+}
+
+.cta-button:hover i {
+  transform: translateX(3px);
 }
 
 /* Animations */

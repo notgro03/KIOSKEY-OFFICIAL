@@ -24,37 +24,65 @@
     z-index: 99;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
     background: rgba(255, 255, 255, 0.95);
-    padding: 16px;
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: 16px;
     box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(0, 59, 142, 0.1);
     backdrop-filter: blur(12px);
     align-items: center;
   }
 
+    [data-theme="dark"] .app-download {
+      background: rgba(26, 26, 26, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
     .app-download-item {
       text-align: center;
+      position: relative;
+    }
+
+    .qr-wrapper {
+      background: #ffffff;
+      padding: 8px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      margin-bottom: 8px;
+    }
+
+    .qr-wrapper:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 59, 142, 0.3);
     }
 
     .app-download img {
       width: 80px;
       height: 80px;
-      border-radius: 8px;
-      margin-bottom: 4px;
+      border-radius: 4px;
+      display: block;
       transition: transform 0.3s ease;
     }
 
-    .app-download a:hover img {
-    transform: scale(1.1);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
-  }
-
     .app-download-label {
-      font-size: 12px;
+      font-size: 13px;
       color: var(--text-color);
-      font-weight: 500;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .app-download-label i {
+      font-size: 16px;
+      color: var(--primary-blue);
+    }
+
+    [data-theme="dark"] .app-download-label {
+      color: #ffffff;
     }
 
     @media (max-width: 768px) {
@@ -92,7 +120,9 @@
   <div class="app-download">
     <div class="app-download-item">
       <a href="https://apps.apple.com/id/app/kioskeys/id1632084137" target="_blank" rel="noopener">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://apps.apple.com/id/app/kioskeys/id1632084137" alt="App Store QR">
+        <div class="qr-wrapper">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://apps.apple.com/id/app/kioskeys/id1632084137" alt="App Store QR">
+        </div>
         <div class="app-download-label">
           <i class="fab fa-apple"></i> App Store
         </div>
@@ -100,7 +130,9 @@
     </div>
     <div class="app-download-item">
       <a href="https://play.google.com/store/apps/details?id=com.imagosur.keymanager_app&hl=es" target="_blank" rel="noopener">
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://play.google.com/store/apps/details?id=com.imagosur.keymanager_app" alt="Play Store QR">
+        <div class="qr-wrapper">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://play.google.com/store/apps/details?id=com.imagosur.keymanager_app" alt="Play Store QR">
+        </div>
         <div class="app-download-label">
           <i class="fab fa-google-play"></i> Play Store
         </div>
