@@ -84,12 +84,12 @@
     }
 
     .product-card {
-      background: rgba(10, 10, 10, 0.4);
-      backdrop-filter: blur(20px) saturate(180%);
-      border-radius: 20px;
-      padding: 28px;
+      background: rgba(15, 15, 15, 0.8);
+      backdrop-filter: blur(12px) saturate(150%);
+      border-radius: 18px;
+      padding: 20px;
       color: white;
-      border: 1px solid rgba(0, 163, 255, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       text-decoration: none;
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
@@ -97,10 +97,8 @@
       height: 100%;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                  0 0 1px rgba(0, 163, 255, 0.3),
-                  inset 0 0 0 1px rgba(0, 163, 255, 0.2),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                  inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     }
 
 
@@ -110,14 +108,14 @@
       inset: -30px;
       border-radius: 35px;
       background: radial-gradient(circle at center,
-        rgba(0, 163, 255, 0.3),
-        rgba(0, 163, 255, 0.15),
+        rgba(0, 163, 255, 0.08),
+        rgba(0, 163, 255, 0.03),
         transparent);
-      opacity: 0.6;
+      opacity: 0;
       pointer-events: none;
       z-index: -1;
-      filter: blur(40px);
-      transition: all 0.5s ease;
+      filter: blur(60px);
+      transition: all 0.6s ease;
     }
 
     .product-card::after {
@@ -137,7 +135,7 @@
     }
 
     .product-card:hover::before {
-      opacity: 0.9;
+      opacity: 0.4;
     }
 
     .product-card:hover::after {
@@ -145,13 +143,12 @@
     }
 
     .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 20px 60px rgba(0, 163, 255, 0.3),
-                  0 0 2px rgba(0, 163, 255, 0.6),
-                  inset 0 0 0 1px rgba(0, 163, 255, 0.4),
-                  inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      border-color: rgba(0, 163, 255, 0.6);
-      background: rgba(10, 10, 10, 0.5);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                  0 2px 12px rgba(0, 163, 255, 0.1),
+                  inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(20, 20, 20, 0.9);
     }
 
     .product-badge {
@@ -169,51 +166,50 @@
     }
 
     .feature-icon {
-      font-size: 32px;
-      margin-bottom: 20px;
-      background: rgba(255, 255, 255, 0.15);
-      width: 70px;
-      height: 70px;
+      font-size: 28px;
+      margin-bottom: 16px;
+      background: rgba(255, 255, 255, 0.08);
+      width: 56px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      margin: 0 auto 20px;
-      color: white;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
-                  inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+      margin: 0 auto 16px;
+      color: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2),
+                  inset 0 0 0 1px rgba(255, 255, 255, 0.1);
       position: relative;
       z-index: 2;
       transition: all 0.4s ease;
     }
 
     .product-card:hover .feature-icon {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3),
-                  inset 0 0 0 2px rgba(255, 255, 255, 0.3);
+      transform: scale(1.05) rotate(3deg);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3),
+                  inset 0 0 0 1px rgba(255, 255, 255, 0.15);
     }
 
     .product-card h3 {
-      font-size: 24px;
-      margin-bottom: 16px;
+      font-size: 20px;
+      margin-bottom: 12px;
       text-align: center;
-      color: rgba(0, 212, 255, 0.95);
-      font-weight: 700;
+      color: #ffffff;
+      font-weight: 600;
       position: relative;
       z-index: 2;
-      text-shadow: 0 0 20px rgba(0, 163, 255, 0.6),
-                   0 0 40px rgba(0, 163, 255, 0.3);
+      text-shadow: 0 2px 12px rgba(255, 255, 255, 0.1);
     }
 
     .product-description {
-      margin: 16px 0;
-      line-height: 1.7;
-      opacity: 0.95;
+      margin: 12px 0;
+      line-height: 1.6;
+      opacity: 0.8;
       text-align: center;
-      font-size: 16px;
+      font-size: 14px;
       position: relative;
       z-index: 2;
-      color: rgba(255, 255, 255, 0.95);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     .product-details {
@@ -227,11 +223,11 @@
     }
 
     .product-details li {
-      margin-bottom: 12px;
-      padding-left: 28px;
+      margin-bottom: 10px;
+      padding-left: 24px;
       position: relative;
-      font-size: 15px;
-      color: rgba(255, 255, 255, 0.95);
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.75);
       line-height: 1.5;
     }
 
@@ -239,10 +235,10 @@
       content: "✓";
       position: absolute;
       left: 0;
-      color: white;
+      color: rgba(255, 255, 255, 0.6);
       font-weight: bold;
-      font-size: 16px;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+      text-shadow: none;
     }
 
     .learn-more {
