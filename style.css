@@ -1,33 +1,16 @@
 :root {
   --primary-blue: #003B8E;
   --secondary-blue: #0072BC;
-  --background: #ffffff;
-  --text-color: #1d1d1f;
-  --card-background: #ffffff;
-  --border-color: rgba(0, 59, 142, 0.1);
-  --shadow-color: rgba(0, 59, 142, 0.15);
-  --footer-background: var(--card-gradient);
-  --nav-height: 64px;
-  --card-gradient: linear-gradient(135deg, #003B8E, #0072BC);
-  --content-padding: 24px;
-  --max-content-width: 1200px;
-}
-
-/* Dark mode variables */
-[data-theme="dark"] {
   --background: #0a0a0a;
   --text-color: #ffffff;
   --card-background: #1a1a1a;
   --border-color: rgba(255, 255, 255, 0.15);
   --shadow-color: rgba(0, 0, 0, 0.5);
   --footer-background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-}
-
-[data-theme="dark"] body::before {
-  background-image:
-    radial-gradient(circle at 20% 30%, rgba(0, 59, 142, 0.25) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(0, 114, 188, 0.22) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(0, 163, 255, 0.18) 0%, transparent 50%);
+  --nav-height: 64px;
+  --card-gradient: linear-gradient(135deg, #003B8E, #0072BC);
+  --content-padding: 24px;
+  --max-content-width: 1200px;
 }
 
 * {
@@ -38,51 +21,9 @@
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dark mode toggle */
+/* Theme toggle hidden - dark mode only */
 .theme-toggle {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  z-index: 1000;
-  background: var(--card-background);
-  border: 2px solid var(--border-color);
-  border-radius: 50px;
-  padding: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px var(--shadow-color);
-  backdrop-filter: blur(10px);
-}
-
-.theme-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 20px var(--shadow-color);
-}
-
-.theme-toggle-icon {
-  font-size: 20px;
-  color: var(--text-color);
-  transition: all 0.3s ease;
-}
-
-.theme-toggle-icon.sun {
-  color: #ffa500;
-}
-
-.theme-toggle-icon.moon {
-  color: #4a90e2;
-}
-
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 80px;
-    right: 10px;
-    padding: 10px;
-  }
-  
-  .theme-toggle-icon {
-    font-size: 18px;
-  }
+  display: none !important;
 }
 
 /* Navigation */
@@ -94,7 +35,7 @@ nav {
   width: 90%;
   max-width: var(--max-content-width);
   height: var(--nav-height);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(26, 26, 26, 0.85);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   border-radius: 100px;
@@ -103,10 +44,10 @@ nav {
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15),
-              0 4px 16px rgba(0, 114, 188, 0.1),
-              inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 2px solid rgba(0, 59, 142, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 4px 16px rgba(0, 0, 0, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -122,7 +63,7 @@ nav::before {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(0, 163, 255, 0.1),
+    rgba(0, 163, 255, 0.2),
     transparent
   );
   transition: 0.8s;
@@ -130,14 +71,6 @@ nav::before {
 
 nav:hover::before {
   left: 100%;
-}
-
-[data-theme="dark"] nav {
-  background: rgba(26, 26, 26, 0.85);
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              0 4px 16px rgba(0, 0, 0, 0.3),
-              inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 nav.nav-hidden {
@@ -798,18 +731,18 @@ footer {
   position: relative;
   width: 100%;
   height: 280px;
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 59, 142, 0.2);
+  border-radius: 20px;
+  overflow: visible;
+  box-shadow: 0 8px 32px rgba(0, 59, 142, 0.3);
   transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .gif-card-content::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  padding: 4px;
+  inset: -5px;
+  border-radius: 25px;
+  padding: 5px;
   background: linear-gradient(45deg,
     #003B8E,
     #0072BC,
@@ -823,28 +756,30 @@ footer {
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: borderRotate 3s linear infinite, borderGlow 2s ease-in-out infinite;
-  z-index: 2;
+  z-index: 10;
   pointer-events: none;
+  box-shadow: 0 0 20px rgba(0, 163, 255, 0.6),
+              inset 0 0 20px rgba(0, 163, 255, 0.3);
 }
 
 .gif-card-content::after {
   content: '';
   position: absolute;
-  inset: -4px;
-  border-radius: 26px;
+  inset: -8px;
+  border-radius: 28px;
   background: linear-gradient(45deg,
-    rgba(0, 59, 142, 0.8),
-    rgba(0, 114, 188, 0.9),
+    rgba(0, 59, 142, 0.9),
+    rgba(0, 114, 188, 1),
     rgba(0, 163, 255, 1),
     rgba(0, 212, 255, 1),
     rgba(0, 163, 255, 1),
-    rgba(0, 114, 188, 0.9),
-    rgba(0, 59, 142, 0.8));
+    rgba(0, 114, 188, 1),
+    rgba(0, 59, 142, 0.9));
   background-size: 400% 400%;
-  filter: blur(20px);
+  filter: blur(25px);
   animation: borderRotate 3s linear infinite, borderPulse 2s ease-in-out infinite;
-  opacity: 1;
-  z-index: 0;
+  opacity: 0.9;
+  z-index: -1;
   pointer-events: none;
 }
 
@@ -887,7 +822,8 @@ footer {
   display: block;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  z-index: 2;
+  z-index: 5;
+  border-radius: 20px;
 }
 
 .gif-card-1 {
@@ -922,13 +858,16 @@ footer {
 
 .gif-card:hover .gif-card-content::before {
   animation: borderRotate 1.5s linear infinite, borderGlow 1s ease-in-out infinite;
-  padding: 5px;
+  inset: -6px;
+  padding: 6px;
+  box-shadow: 0 0 30px rgba(0, 163, 255, 0.9),
+              inset 0 0 30px rgba(0, 163, 255, 0.5);
 }
 
 .gif-card:hover .gif-card-content::after {
   opacity: 1;
-  filter: blur(30px);
-  inset: -6px;
+  filter: blur(35px);
+  inset: -12px;
 }
 
 .gif-card:hover .gif-card-content img {
