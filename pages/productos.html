@@ -55,49 +55,86 @@
     .category-filter {
       padding: 10px 20px;
       border-radius: 25px;
-      background: rgba(10, 10, 10, 0.4);
-      backdrop-filter: blur(20px);
+      background: rgba(15, 15, 15, 0.4);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
       color: rgba(255, 255, 255, 0.8);
-      border: 1px solid rgba(0, 163, 255, 0.3);
+      border: 1px solid rgba(0, 188, 212, 0.3);
       cursor: pointer;
       white-space: nowrap;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       font-weight: 500;
+      position: relative;
+      overflow: hidden;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2),
-                  inset 0 0 0 1px rgba(0, 163, 255, 0.2);
+                  inset 0 0 0 1px rgba(0, 188, 212, 0.1);
+    }
+
+    .category-filter::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(0, 188, 212, 0.8),
+        transparent);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
     }
 
     .category-filter:hover {
-      border-color: rgba(0, 163, 255, 0.5);
+      border-color: rgba(0, 188, 212, 0.5);
       color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 163, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3),
+                  inset 0 0 0 1px rgba(0, 188, 212, 0.15);
+      background: rgba(20, 20, 20, 0.5);
+    }
+
+    .category-filter:hover::after {
+      transform: translateX(0);
     }
 
     .category-filter.active {
-      background: rgba(0, 163, 255, 0.2);
-      border-color: rgba(0, 163, 255, 0.8);
+      background: rgba(0, 188, 212, 0.2);
+      border-color: rgba(0, 188, 212, 0.8);
       color: rgba(0, 212, 255, 0.95);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(0, 163, 255, 0.3),
-                  inset 0 0 20px rgba(0, 163, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 25px rgba(0, 188, 212, 0.4),
+                  inset 0 0 20px rgba(0, 188, 212, 0.2);
+    }
+
+    .category-filter.active::after {
+      transform: translateX(0);
+      animation: lineScanProducts 2s ease-in-out infinite;
+    }
+
+    @keyframes lineScanProducts {
+      0%, 100% { transform: translateX(-100%); opacity: 0; }
+      10%, 90% { opacity: 1; }
+      50% { transform: translateX(100%); }
     }
 
     .product-card {
-      background: rgba(15, 15, 15, 0.8);
-      backdrop-filter: blur(12px) saturate(150%);
-      border-radius: 18px;
-      padding: 20px;
+      background: rgba(15, 15, 15, 0.4);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-radius: 20px;
+      padding: 28px;
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       text-decoration: none;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       height: 100%;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
                   inset 0 0 0 1px rgba(255, 255, 255, 0.05);
     }
 
@@ -105,11 +142,11 @@
     .product-card::before {
       content: '';
       position: absolute;
-      inset: -30px;
-      border-radius: 35px;
+      inset: -40px;
+      border-radius: 40px;
       background: radial-gradient(circle at center,
+        rgba(0, 188, 212, 0.15),
         rgba(0, 163, 255, 0.08),
-        rgba(0, 163, 255, 0.03),
         transparent);
       opacity: 0;
       pointer-events: none;
@@ -121,17 +158,19 @@
     .product-card::after {
       content: '';
       position: absolute;
-      top: 0;
-      left: -100%;
+      bottom: 0;
+      left: 0;
       width: 100%;
-      height: 100%;
-      background: linear-gradient(
-        90deg,
+      height: 2px;
+      background: linear-gradient(90deg,
         transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-      );
-      transition: 0.6s;
+        rgba(0, 188, 212, 0.9),
+        transparent);
+      box-shadow: 0 0 20px rgba(0, 188, 212, 0.7),
+                  0 0 40px rgba(0, 188, 212, 0.5);
+      animation: lineScanProducts 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 10;
     }
 
     .product-card:hover::before {
@@ -139,16 +178,16 @@
     }
 
     .product-card:hover::after {
-      left: 100%;
+      animation-duration: 2s;
     }
 
     .product-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-                  0 2px 12px rgba(0, 163, 255, 0.1),
-                  inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      background: rgba(20, 20, 20, 0.9);
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
+                  0 4px 20px rgba(0, 188, 212, 0.25),
+                  inset 0 0 0 1px rgba(0, 188, 212, 0.15);
+      border-color: rgba(0, 188, 212, 0.3);
+      background: rgba(20, 20, 20, 0.5);
     }
 
     .product-badge {
