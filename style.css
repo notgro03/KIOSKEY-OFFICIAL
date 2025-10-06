@@ -99,25 +99,16 @@ nav.nav-hidden {
   z-index: 2;
 }
 
-.logo-k {
-  font-size: 36px;
-  font-weight: 800;
-  color: #ffffff;
-  text-decoration: none;
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.85) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+.nav-logo-img {
+  height: 45px;
+  width: auto;
   transition: all 0.4s ease;
-  display: inline-block;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-  letter-spacing: -0.02em;
+  filter: drop-shadow(0 2px 8px rgba(0, 163, 255, 0.3));
 }
 
-.logo a:hover .logo-k {
-  transform: scale(1.1) rotate(-5deg);
-  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+.logo a:hover .nav-logo-img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 4px 16px rgba(0, 163, 255, 0.5));
 }
 
 .nav-links {
@@ -640,9 +631,9 @@ body::after {
 }
 
 .feature-card {
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.98) 0%, rgba(40, 40, 40, 0.98) 100%);
-  backdrop-filter: blur(12px) saturate(150%);
-  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  background: rgba(15, 15, 15, 0.4);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-radius: 20px;
   padding: 28px;
   color: white;
@@ -655,9 +646,9 @@ body::after {
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .feature-card::before {
@@ -678,11 +669,11 @@ body::after {
 
 .feature-card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
               0 4px 16px rgba(0, 163, 255, 0.15),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, rgba(35, 35, 35, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
+              inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(20, 20, 20, 0.5);
 }
 
 .feature-card:hover::before {
@@ -739,7 +730,7 @@ body::after {
 /* Tutorial Button */
 .tutorial-button {
   display: block;
-  background: linear-gradient(135deg, rgba(30, 30, 30, 0.98) 0%, rgba(40, 40, 40, 0.98) 100%);
+  background: rgba(15, 15, 15, 0.4);
   color: white;
   text-decoration: none;
   padding: 28px 32px;
@@ -751,10 +742,11 @@ body::after {
   margin: 32px 0;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .tutorial-button::before {
@@ -775,11 +767,11 @@ body::after {
 
 .tutorial-button:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
               0 4px 16px rgba(0, 163, 255, 0.15),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-  background: linear-gradient(135deg, rgba(35, 35, 35, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
+              inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(20, 20, 20, 0.5);
 }
 
 .tutorial-button:hover::before {
