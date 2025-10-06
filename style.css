@@ -636,166 +636,181 @@ body::after {
 .features-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
+  gap: 28px;
+  margin-bottom: 32px;
 }
 
 .feature-card {
-  background: rgba(15, 15, 15, 0.4);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-radius: 20px;
-  padding: 28px;
+  background: linear-gradient(135deg, rgba(15, 15, 15, 0.6), rgba(20, 20, 20, 0.5));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-radius: 28px;
+  padding: 36px;
   color: white;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
-  min-height: 200px;
+  min-height: 220px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 4px 16px rgba(0, 0, 0, 0.3),
               inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .feature-card::before {
   content: '';
   position: absolute;
-  inset: -40px;
-  border-radius: 40px;
+  inset: -60px;
+  border-radius: 60px;
   background: radial-gradient(circle at center,
-    rgba(0, 188, 212, 0.15),
-    rgba(0, 163, 255, 0.08),
+    rgba(0, 188, 212, 0.25),
+    rgba(0, 163, 255, 0.15),
     transparent);
   opacity: 0;
   pointer-events: none;
   z-index: -1;
-  filter: blur(60px);
-  transition: all 0.6s ease;
+  filter: blur(80px);
+  transition: all 0.7s ease;
 }
 
 .feature-card:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
-              0 4px 20px rgba(0, 188, 212, 0.25),
-              inset 0 0 0 1px rgba(0, 188, 212, 0.15);
-  border-color: rgba(0, 188, 212, 0.3);
-  background: rgba(20, 20, 20, 0.5);
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 8px 32px rgba(0, 188, 212, 0.35),
+              0 0 80px rgba(0, 163, 255, 0.15),
+              inset 0 0 0 1px rgba(0, 188, 212, 0.2);
+  border-color: rgba(0, 188, 212, 0.4);
+  background: linear-gradient(135deg, rgba(20, 20, 20, 0.8), rgba(25, 25, 25, 0.7));
 }
 
 .feature-card:hover::before {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .feature-card h3 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 14px;
   color: #ffffff;
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.1);
-  transition: all 0.4s ease;
+  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.15),
+               0 4px 24px rgba(0, 163, 255, 0.2);
+  transition: all 0.5s ease;
+  letter-spacing: -0.02em;
 }
 
 .feature-card:hover h3 {
-  transform: translateX(2px);
-  text-shadow: 0 2px 16px rgba(255, 255, 255, 0.15);
+  transform: translateX(4px);
+  text-shadow: 0 2px 20px rgba(255, 255, 255, 0.2),
+               0 4px 32px rgba(0, 163, 255, 0.3);
 }
 
 .feature-card p {
-  font-size: 16px;
-  opacity: 0.8;
-  margin-bottom: 16px;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 17px;
+  opacity: 0.85;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.9);
   position: relative;
   z-index: 1;
-  transition: all 0.4s ease;
-  line-height: 1.6;
+  transition: all 0.5s ease;
+  line-height: 1.7;
 }
 
 .feature-card:hover p {
   opacity: 1;
-  color: rgba(255, 255, 255, 0.95);
+  color: #ffffff;
+  transform: translateX(2px);
 }
 
 .feature-icon {
-  font-size: 32px;
-  margin-bottom: 20px;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 44px;
+  margin-bottom: 24px;
+  color: rgba(255, 255, 255, 0.95);
   position: relative;
   z-index: 1;
-  transition: all 0.4s ease;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-block;
+  filter: drop-shadow(0 4px 16px rgba(0, 163, 255, 0.3));
 }
 
 .feature-card:hover .feature-icon {
-  transform: scale(1.15) rotate(5deg);
+  transform: scale(1.2) rotate(-5deg) translateY(-4px);
   color: #ffffff;
+  filter: drop-shadow(0 8px 24px rgba(0, 188, 212, 0.5));
 }
 
 /* Tutorial Button */
 .tutorial-button {
-  display: block;
-  background: linear-gradient(135deg, rgba(0, 59, 142, 0.85), rgba(0, 114, 188, 0.85));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9));
   color: white;
   text-decoration: none;
-  padding: 28px 32px;
-  border-radius: 20px;
+  padding: 32px 40px;
+  border-radius: 28px;
   text-align: center;
-  font-size: 20px;
-  font-weight: 600;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 32px 0;
+  font-size: 22px;
+  font-weight: 700;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin: 40px 0;
   position: relative;
   overflow: hidden;
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 4px 16px rgba(0, 59, 142, 0.3),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  letter-spacing: -0.01em;
 }
 
 .tutorial-button::before {
   content: '';
   position: absolute;
-  inset: -40px;
-  border-radius: 40px;
+  inset: -60px;
+  border-radius: 60px;
   background: radial-gradient(circle at center,
-    rgba(0, 188, 212, 0.15),
-    rgba(0, 163, 255, 0.08),
+    rgba(0, 188, 212, 0.3),
+    rgba(0, 163, 255, 0.15),
     transparent);
   opacity: 0;
   pointer-events: none;
   z-index: -1;
-  filter: blur(60px);
-  transition: all 0.6s ease;
+  filter: blur(80px);
+  transition: all 0.7s ease;
 }
 
 .tutorial-button:hover {
-  transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4),
-              0 4px 20px rgba(0, 188, 212, 0.25),
-              inset 0 0 0 1px rgba(0, 188, 212, 0.15);
-  border-color: rgba(0, 188, 212, 0.3);
-  background: linear-gradient(135deg, rgba(0, 69, 162, 0.9), rgba(0, 134, 208, 0.9));
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 8px 32px rgba(0, 188, 212, 0.4),
+              0 0 80px rgba(0, 163, 255, 0.2),
+              inset 0 0 0 1px rgba(0, 188, 212, 0.2);
+  border-color: rgba(0, 188, 212, 0.5);
+  background: linear-gradient(135deg, rgba(0, 79, 182, 1), rgba(0, 154, 228, 1));
 }
 
 .tutorial-button:hover::before {
-  opacity: 0.4;
+  opacity: 0.6;
 }
 
 .tutorial-button i {
-  margin-right: 12px;
-  font-size: 22px;
-  transition: all 0.4s ease;
+  font-size: 26px;
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 2px 8px rgba(0, 163, 255, 0.3));
 }
 
 .tutorial-button:hover i {
-  transform: scale(1.1);
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(0 4px 16px rgba(0, 188, 212, 0.5));
 }
 
 /* Footer */
@@ -877,72 +892,112 @@ footer {
 
 /* GIF Gallery Section */
 .gif-gallery-section {
-  padding: 48px 0;
-  margin-bottom: 32px;
+  padding: 64px 0;
+  margin-bottom: 48px;
   position: relative;
   overflow: hidden;
+}
+
+.gif-gallery-section::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(circle at center,
+    rgba(0, 163, 255, 0.05),
+    rgba(0, 114, 188, 0.03),
+    transparent);
+  filter: blur(120px);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 8s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 }
 
 .gif-gallery-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 20px;
-  perspective: 1000px;
+  gap: 24px;
+  perspective: 1500px;
+  position: relative;
+  z-index: 1;
 }
 
 .gif-card {
   position: relative;
-  border-radius: 24px;
-  overflow: hidden;
+  border-radius: 28px;
+  overflow: visible;
   cursor: pointer;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
   transform-style: preserve-3d;
 }
 
 .gif-card-content {
   position: relative;
   width: 100%;
-  height: 280px;
-  border-radius: 20px;
+  height: 320px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+              0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, rgba(15, 15, 15, 0.8), rgba(20, 20, 20, 0.8));
 }
 
 .gif-card-content::before {
   content: '';
   position: absolute;
-  inset: -30px;
-  border-radius: 35px;
+  inset: -50px;
+  border-radius: 50px;
   background: radial-gradient(circle at center,
-    rgba(0, 163, 255, 0.08),
-    rgba(0, 163, 255, 0.03),
+    rgba(0, 188, 212, 0.2),
+    rgba(0, 163, 255, 0.1),
     transparent);
   opacity: 0;
   pointer-events: none;
   z-index: -1;
-  filter: blur(60px);
+  filter: blur(80px);
+  transition: all 0.7s ease;
 }
 
 .gif-card-content::after {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: linear-gradient(45deg,
-    rgba(0, 59, 142, 0.3),
-    rgba(0, 163, 255, 0.3),
-    rgba(0, 59, 142, 0.3));
-  background-size: 200% 200%;
-  animation: borderRotate 4s linear infinite;
+  inset: -2px;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(135deg,
+    rgba(0, 163, 255, 0.6),
+    rgba(0, 188, 212, 0.6),
+    rgba(0, 114, 188, 0.6),
+    rgba(0, 163, 255, 0.6));
+  background-size: 300% 300%;
+  animation: borderFlow 6s linear infinite;
   opacity: 0;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   pointer-events: none;
-  z-index: 1;
-  transition: opacity 0.3s ease;
+  z-index: 10;
+  transition: opacity 0.5s ease;
 }
 
-@keyframes borderRotate {
+@keyframes borderFlow {
   0% {
     background-position: 0% 50%;
   }
@@ -954,78 +1009,61 @@ footer {
   }
 }
 
-@keyframes borderGlow {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes borderPulse {
-  0%, 100% {
-    filter: blur(20px);
-    opacity: 1;
-  }
-  50% {
-    filter: blur(25px);
-    opacity: 0.8;
-  }
-}
-
 .gif-card-content img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
   position: relative;
   z-index: 5;
-  border-radius: 20px;
+  border-radius: 24px;
+  filter: brightness(0.9) contrast(1.05);
 }
 
 .gif-card-1 {
-  transform: rotate(-2deg);
+  transform: rotate(-1.5deg) translateY(8px);
 }
 
 .gif-card-2 {
-  transform: rotate(1.5deg);
+  transform: rotate(1deg) translateY(-4px);
 }
 
 .gif-card-3 {
-  transform: rotate(-1deg);
+  transform: rotate(-0.5deg) translateY(4px);
 }
 
 .gif-card-4 {
-  transform: rotate(2deg);
+  transform: rotate(1.5deg) translateY(-8px);
 }
 
 .gif-card-5 {
-  transform: rotate(-1.5deg);
+  transform: rotate(-1deg) translateY(4px);
 }
 
 .gif-card:hover {
-  transform: translateY(-6px) scale(1.02) rotate(0deg) !important;
-  z-index: 10;
+  transform: translateY(-16px) scale(1.05) rotate(0deg) !important;
+  z-index: 20;
 }
 
 .gif-card:hover .gif-card-content {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
-              0 2px 12px rgba(0, 163, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5),
+              0 8px 24px rgba(0, 163, 255, 0.3),
+              0 0 80px rgba(0, 188, 212, 0.2);
+  border-color: rgba(0, 163, 255, 0.4);
 }
 
 .gif-card:hover .gif-card-content::before {
-  opacity: 0.3;
+  opacity: 1;
 }
 
 .gif-card:hover .gif-card-content::after {
-  opacity: 0.3;
+  opacity: 1;
 }
 
 .gif-card:hover .gif-card-content img {
-  transform: scale(1.08);
+  transform: scale(1.12);
+  filter: brightness(1) contrast(1.1);
 }
 
 @media (prefers-reduced-motion: reduce) {
