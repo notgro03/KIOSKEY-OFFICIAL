@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panel de Administración - Kioskeys</title>
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: calc(var(--nav-height) + 40px) 24px 40px;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .admin-header h1 {
+      font-size: 42px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #00a3ff, #00bcdc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .admin-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .admin-tab {
+      padding: 12px 28px;
+      border-radius: 50px;
+      background: rgba(15, 15, 15, 0.4);
+      backdrop-filter: blur(16px);
+      color: rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(0, 188, 212, 0.3);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .admin-tab:hover {
+      background: rgba(20, 20, 20, 0.6);
+      border-color: rgba(0, 188, 212, 0.5);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .admin-tab.active {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9));
+      border-color: rgba(0, 188, 212, 0.8);
+      color: white;
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.4);
+    }
+
+    .admin-content {
+      display: none;
+    }
+
+    .admin-content.active {
+      display: block;
+    }
+
+    .admin-grid {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .admin-card {
+      background: linear-gradient(135deg, rgba(15, 15, 15, 0.6), rgba(20, 20, 20, 0.5));
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .admin-card h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .admin-card h3 i {
+      color: rgba(0, 188, 212, 0.8);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: rgba(10, 10, 10, 0.4);
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: rgba(0, 188, 212, 0.6);
+      box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      padding: 12px 28px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9));
+      color: white;
+      border: 2px solid rgba(0, 188, 212, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(0, 188, 212, 0.4);
+      border-color: rgba(0, 188, 212, 0.6);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, rgba(220, 38, 38, 0.9), rgba(185, 28, 28, 0.9));
+      color: white;
+      border: 2px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(239, 68, 68, 0.4);
+      border-color: rgba(239, 68, 68, 0.6);
+    }
+
+    .items-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .item-card {
+      background: rgba(10, 10, 10, 0.4);
+      border-radius: 16px;
+      padding: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .item-card:hover {
+      border-color: rgba(0, 188, 212, 0.4);
+      background: rgba(15, 15, 15, 0.5);
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-info h4 {
+      color: white;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .item-info p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .btn-icon:hover {
+      transform: scale(1.1);
+      border-color: rgba(0, 188, 212, 0.6);
+      background: rgba(0, 188, 212, 0.2);
+    }
+
+    .btn-icon.delete:hover {
+      border-color: rgba(239, 68, 68, 0.6);
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    .feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .feature-item input {
+      flex: 1;
+    }
+
+    .login-container {
+      max-width: 450px;
+      margin: 120px auto;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(15, 15, 15, 0.8), rgba(20, 20, 20, 0.7));
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 32px;
+      color: white;
+    }
+
+    .alert {
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid rgba(34, 197, 94, 0.4);
+      color: rgb(134, 239, 172);
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid rgba(239, 68, 68, 0.4);
+      color: rgb(252, 165, 165);
+    }
+
+    @media (max-width: 768px) {
+      .admin-tabs {
+        flex-direction: column;
+      }
+
+      .admin-tab {
+        width: 100%;
+        text-align: center;
+      }
+
+      .item-card {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="../images/k logo.png" alt="Kioskeys" class="nav-logo-img"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/admin.html" class="active">Admin</a>
+      <button id="logoutBtn" class="btn btn-danger" style="margin-left: 20px;">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+  </nav>
+
+  <div id="loginSection" class="login-container" style="display: none;">
+    <h2><i class="fas fa-lock"></i> Admin Login</h2>
+    <div id="loginAlert"></div>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required placeholder="admin@kioskeys.com">
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width: 100%;">
+        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+      </button>
+    </form>
+  </div>
+
+  <div id="adminSection" class="admin-container" style="display: none;">
+    <div class="admin-header">
+      <h1><i class="fas fa-tools"></i> Panel de Administración</h1>
+      <p style="color: rgba(255, 255, 255, 0.7); font-size: 18px;">Gestiona el contenido de tu sitio web</p>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" data-tab="gifs">
+        <i class="fas fa-images"></i> GIFs del Banner
+      </button>
+      <button class="admin-tab" data-tab="products">
+        <i class="fas fa-box"></i> Productos
+      </button>
+      <button class="admin-tab" data-tab="plans">
+        <i class="fas fa-crown"></i> Planes
+      </button>
+    </div>
+
+    <!-- GIFs Section -->
+    <div id="gifs" class="admin-content active">
+      <div class="admin-card">
+        <h3><i class="fas fa-plus-circle"></i> Agregar Nuevo GIF</h3>
+        <form id="gifForm">
+          <div class="form-group">
+            <label for="gifUrl">URL del GIF</label>
+            <input type="url" id="gifUrl" required placeholder="https://media.giphy.com/...">
+          </div>
+          <div class="form-group">
+            <label for="gifAlt">Texto Alternativo</label>
+            <input type="text" id="gifAlt" placeholder="Descripción del GIF">
+          </div>
+          <div class="form-group">
+            <label for="gifOrder">Orden</label>
+            <input type="number" id="gifOrder" value="1" min="1">
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar GIF
+          </button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="fas fa-list"></i> GIFs Actuales</h3>
+        <div id="gifsList" class="items-list"></div>
+      </div>
+    </div>
+
+    <!-- Products Section -->
+    <div id="products" class="admin-content">
+      <div class="admin-card">
+        <h3><i class="fas fa-plus-circle"></i> Agregar/Editar Producto</h3>
+        <form id="productForm">
+          <input type="hidden" id="productId">
+          <div class="form-group">
+            <label for="productTitle">Título</label>
+            <input type="text" id="productTitle" required placeholder="Nombre del producto">
+          </div>
+          <div class="form-group">
+            <label for="productDescription">Descripción</label>
+            <textarea id="productDescription" required placeholder="Descripción del producto"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="productIcon">Ícono (Font Awesome)</label>
+            <input type="text" id="productIcon" required placeholder="fa-car" value="fa-box">
+            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 4px;">
+              Busca íconos en <a href="https://fontawesome.com/icons" target="_blank" style="color: #00a3ff;">fontawesome.com/icons</a>
+            </small>
+          </div>
+          <div class="form-group">
+            <label for="productCategory">Categoría</label>
+            <input type="text" id="productCategory" required placeholder="telemandos, llaves, etc.">
+          </div>
+          <div class="form-group">
+            <label>Características</label>
+            <div id="featuresList" class="feature-list">
+              <div class="feature-item">
+                <input type="text" class="feature-input" placeholder="Característica 1">
+                <button type="button" class="btn-icon" onclick="removeFeature(this)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addFeature()" style="margin-top: 12px;">
+              <i class="fas fa-plus"></i> Agregar Característica
+            </button>
+          </div>
+          <div class="form-group">
+            <label for="productLinkUrl">URL del Enlace</label>
+            <input type="text" id="productLinkUrl" required placeholder="/pages/producto.html">
+          </div>
+          <div class="form-group">
+            <label for="productLinkText">Texto del Botón</label>
+            <input type="text" id="productLinkText" required placeholder="Ver más">
+          </div>
+          <div class="form-group">
+            <label for="productOrder">Orden</label>
+            <input type="number" id="productOrder" value="1" min="1">
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar Producto
+          </button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="fas fa-list"></i> Productos Actuales</h3>
+        <div id="productsList" class="items-list"></div>
+      </div>
+    </div>
+
+    <!-- Plans Section -->
+    <div id="plans" class="admin-content">
+      <div class="admin-card">
+        <h3><i class="fas fa-plus-circle"></i> Agregar/Editar Plan</h3>
+        <form id="planForm">
+          <input type="hidden" id="planId">
+          <div class="form-group">
+            <label for="planName">Nombre del Plan</label>
+            <input type="text" id="planName" required placeholder="Plan Básico">
+          </div>
+          <div class="form-group">
+            <label for="planDescription">Descripción</label>
+            <textarea id="planDescription" required placeholder="Descripción del plan"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="planPrice">Precio</label>
+            <input type="number" id="planPrice" step="0.01" required placeholder="9.99">
+          </div>
+          <div class="form-group">
+            <label for="planCurrency">Moneda</label>
+            <input type="text" id="planCurrency" required placeholder="USD" value="USD">
+          </div>
+          <div class="form-group">
+            <label>Características del Plan</label>
+            <div id="planFeaturesList" class="feature-list">
+              <div class="feature-item">
+                <input type="text" class="plan-feature-input" placeholder="Característica 1">
+                <button type="button" class="btn-icon" onclick="removePlanFeature(this)">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="addPlanFeature()" style="margin-top: 12px;">
+              <i class="fas fa-plus"></i> Agregar Característica
+            </button>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="planHighlight" style="width: auto; margin-right: 8px;">
+              Plan Destacado
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="planOrder">Orden</label>
+            <input type="number" id="planOrder" value="1" min="1">
+          </div>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Guardar Plan
+          </button>
+        </form>
+      </div>
+
+      <div class="admin-card">
+        <h3><i class="fas fa-list"></i> Planes Actuales</h3>
+        <div id="plansList" class="items-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/admin.js"></script>
+</body>
+</html>

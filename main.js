@@ -2,6 +2,15 @@
 import './style.css'
 import { themeManager } from './src/theme-manager.js'
 
+// Import dynamic loaders conditionally
+const currentPath = window.location.pathname;
+
+if (currentPath === '/' || currentPath === '/index.html') {
+  import('./src/index-dynamic.js');
+} else if (currentPath.includes('/productos.html')) {
+  import('./src/productos-dynamic.js');
+}
+
 // Initialize modules
 const initApp = () => {
   // Navigation menu

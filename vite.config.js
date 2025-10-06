@@ -21,6 +21,7 @@ export default defineConfig({
         'carcasas': resolve(__dirname, 'pages/carcasas.html'),
         'accesorios': resolve(__dirname, 'pages/accesorios.html'),
         'descarga-app': resolve(__dirname, 'pages/descarga-app.html'),
+        'admin': resolve(__dirname, 'pages/admin.html'),
       }
     }
   },
