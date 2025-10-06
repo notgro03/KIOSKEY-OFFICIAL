@@ -94,6 +94,32 @@ nav.nav-hidden {
   transform: translate(-50%, -100%);
 }
 
+/* Logo K en navegaci\u00f3n */
+.logo {
+  z-index: 2;
+}
+
+.logo-k {
+  font-size: 36px;
+  font-weight: 800;
+  color: #ffffff;
+  text-decoration: none;
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.85) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 20px rgba(255, 255, 255, 0.3));
+  transition: all 0.4s ease;
+  display: inline-block;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.logo a:hover .logo-k {
+  transform: scale(1.1) rotate(-5deg);
+  filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.5));
+}
+
 .nav-links {
   display: flex;
   gap: 8px;
@@ -243,25 +269,46 @@ nav.nav-hidden {
 }
 
 /* Efecto de brillo sutil al hover en botones */
+/* Efecto de l\u00ednea de luz brillante como los planes */
 .tutorial-button::after,
 .feature-card::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
+  bottom: 0;
+  left: 0;
   width: 100%;
-  height: 100%;
+  height: 2px;
   background: linear-gradient(90deg,
     transparent,
-    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.8),
     transparent);
-  transition: left 0.8s ease;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6),
+              0 0 30px rgba(0, 163, 255, 0.4);
+  animation: lineScan 3s ease-in-out infinite;
   pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes lineScan {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
 }
 
 .tutorial-button:hover::after,
 .feature-card:hover::after {
-  left: 100%;
+  animation-duration: 2s;
 }
 
 @keyframes textShine {
@@ -451,6 +498,57 @@ body::after {
   margin-bottom: 48px;
 }
 
+/* Secci\u00f3n de logo destacado en hero */
+.hero-logo {
+  margin-bottom: 48px;
+  animation: logoFloat 3s ease-in-out infinite;
+  position: relative;
+}
+
+.hero-logo::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle at center,
+    rgba(0, 163, 255, 0.15),
+    rgba(0, 163, 255, 0.05),
+    transparent);
+  filter: blur(60px);
+  z-index: -1;
+  animation: logoPulse 3s ease-in-out infinite;
+}
+
+.hero-logo img {
+  width: 320px;
+  max-width: 90vw;
+  height: auto;
+  filter: drop-shadow(0 8px 32px rgba(0, 163, 255, 0.25));
+  transition: all 0.5s ease;
+}
+
+.hero-logo:hover img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 12px 48px rgba(0, 163, 255, 0.35));
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes logoPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
 .hero::before {
   content: '';
   position: absolute;
@@ -542,7 +640,7 @@ body::after {
 }
 
 .feature-card {
-  background: linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.98) 0%, rgba(40, 40, 40, 0.98) 100%);
   backdrop-filter: blur(12px) saturate(150%);
   -webkit-backdrop-filter: blur(12px) saturate(150%);
   border-radius: 20px;
@@ -557,9 +655,9 @@ body::after {
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .feature-card::before {
@@ -580,11 +678,11 @@ body::after {
 
 .feature-card:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
-              0 4px 16px rgba(0, 163, 255, 0.1),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(25, 25, 25, 0.95) 100%);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+              0 4px 16px rgba(0, 163, 255, 0.15),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(35, 35, 35, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
 }
 
 .feature-card:hover::before {
@@ -641,7 +739,7 @@ body::after {
 /* Tutorial Button */
 .tutorial-button {
   display: block;
-  background: linear-gradient(135deg, rgba(15, 15, 15, 0.95) 0%, rgba(20, 20, 20, 0.95) 100%);
+  background: linear-gradient(135deg, rgba(30, 30, 30, 0.98) 0%, rgba(40, 40, 40, 0.98) 100%);
   color: white;
   text-decoration: none;
   padding: 28px 32px;
@@ -654,9 +752,9 @@ body::after {
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(12px);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .tutorial-button::before {
@@ -677,11 +775,11 @@ body::after {
 
 .tutorial-button:hover {
   transform: translateY(-6px) scale(1.01);
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5),
-              0 4px 16px rgba(0, 163, 255, 0.1),
-              inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
-  background: linear-gradient(135deg, rgba(20, 20, 20, 0.95) 0%, rgba(25, 25, 25, 0.95) 100%);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6),
+              0 4px 16px rgba(0, 163, 255, 0.15),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, rgba(35, 35, 35, 0.98) 0%, rgba(45, 45, 45, 0.98) 100%);
 }
 
 .tutorial-button:hover::before {
