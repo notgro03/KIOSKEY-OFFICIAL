@@ -1193,3 +1193,81 @@ footer {
     height: 280px;
   }
 }
+/* Cart Icon in Navigation */
+.cart-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 163, 255, 0.1);
+  border: 2px solid rgba(0, 163, 255, 0.3);
+  color: rgba(0, 163, 255, 0.9);
+  transition: all 0.3s ease;
+  margin-left: 12px;
+  text-decoration: none;
+}
+
+.cart-icon:hover {
+  background: rgba(0, 163, 255, 0.2);
+  border-color: rgba(0, 163, 255, 0.6);
+  transform: scale(1.05);
+}
+
+.cart-icon i {
+  font-size: 18px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: linear-gradient(135deg, #e11d48, #dc2626);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+  border: 2px solid rgba(10, 10, 10, 1);
+}
+
+.user-menu,
+.login-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  background: rgba(0, 163, 255, 0.1);
+  border: 2px solid rgba(0, 163, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  margin-left: 12px;
+}
+
+.user-menu:hover,
+.login-link:hover {
+  background: rgba(0, 163, 255, 0.2);
+  border-color: rgba(0, 163, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .cart-icon,
+  .user-menu,
+  .login-link {
+    margin-left: 0;
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi Cuenta - Kioskeys</title>
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .account-container {
+      max-width: 1200px;
+      margin: calc(var(--nav-height) + 60px) auto 60px;
+      padding: 0 24px;
+    }
+
+    .account-header {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9));
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .account-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: white;
+    }
+
+    .account-info h1 {
+      font-size: 32px;
+      color: white;
+      margin-bottom: 8px;
+    }
+
+    .account-info p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .logout-btn {
+      margin-left: auto;
+      padding: 12px 24px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      border-radius: 50px;
+      background: rgba(15, 15, 15, 0.6);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9));
+      border-color: rgba(0, 188, 212, 0.6);
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .section-card {
+      background: linear-gradient(135deg, rgba(15, 15, 15, 0.9), rgba(20, 20, 20, 0.85));
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      padding: 32px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      color: white;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: rgba(10, 10, 10, 0.5);
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: rgba(0, 188, 212, 0.6);
+      box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.2);
+    }
+
+    .btn-primary {
+      padding: 14px 28px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.95), rgba(0, 114, 188, 0.95));
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.4s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 188, 212, 0.5);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="../images/k logo.png" alt="Kioskeys" class="nav-logo-img"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/planes.html">Planes</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <div class="account-container">
+    <div class="account-header">
+      <div class="account-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="account-info">
+        <h1 id="userName">Cargando...</h1>
+        <p id="userPhone"></p>
+      </div>
+      <button class="logout-btn" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+      </button>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="profile">
+        <i class="fas fa-user"></i> Perfil
+      </button>
+      <button class="tab" data-tab="orders">
+        <i class="fas fa-box"></i> Mis Pedidos
+      </button>
+      <button class="tab" data-tab="addresses">
+        <i class="fas fa-map-marker-alt"></i> Direcciones
+      </button>
+    </div>
+
+    <div id="profile" class="tab-content active">
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-user-edit"></i> Información Personal</h3>
+        <form id="profileForm">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="profileName" placeholder="Tu nombre">
+          </div>
+          <div class="form-group">
+            <label>Email (opcional)</label>
+            <input type="email" id="profileEmail" placeholder="tu@email.com">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="profilePhone" disabled>
+          </div>
+          <button type="submit" class="btn-primary">
+            <i class="fas fa-save"></i> Guardar Cambios
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="orders" class="tab-content">
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-history"></i> Historial de Pedidos</h3>
+        <p style="color: rgba(255, 255, 255, 0.7); text-align: center; padding: 40px;">
+          No tienes pedidos aún
+        </p>
+      </div>
+    </div>
+
+    <div id="addresses" class="tab-content">
+      <div class="section-card">
+        <h3 class="section-title"><i class="fas fa-map-marked-alt"></i> Mis Direcciones</h3>
+        <p style="color: rgba(255, 255, 255, 0.7); text-align: center; padding: 40px;">
+          No tienes direcciones guardadas
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { supabase } from '/src/config/supabase.js';
+
+    const session = localStorage.getItem('kioskeys_session');
+    if (!session) {
+      window.location.href = '/pages/login.html';
+    }
+
+    const sessionData = JSON.parse(session);
+    const user = sessionData.user;
+
+    document.getElementById('userName').textContent = user.name || 'Usuario';
+    document.getElementById('userPhone').textContent = user.phone;
+    document.getElementById('profileName').value = user.name || '';
+    document.getElementById('profileEmail').value = user.email || '';
+    document.getElementById('profilePhone').value = user.phone;
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('kioskeys_session');
+        window.location.href = '/';
+      }
+    });
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('profileName').value;
+      const email = document.getElementById('profileEmail').value;
+
+      try {
+        const { error } = await supabase
+          .from('users')
+          .update({ name, email })
+          .eq('id', user.id);
+
+        if (error) throw error;
+
+        user.name = name;
+        user.email = email;
+        sessionData.user = user;
+        localStorage.setItem('kioskeys_session', JSON.stringify(sessionData));
+
+        alert('Perfil actualizado exitosamente');
+        location.reload();
+      } catch (error) {
+        alert('Error al actualizar perfil');
+        console.error(error);
+      }
+    });
+  </script>
+  <script type="module" src="/main.js"></script>
+</body>
+</html>

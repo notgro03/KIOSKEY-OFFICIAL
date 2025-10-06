@@ -1,6 +1,7 @@
 // Import styles
 import './style.css'
 import { themeManager } from './src/theme-manager.js'
+import { cartManager } from './src/cart-manager.js'
 
 // Import dynamic loaders conditionally
 const currentPath = window.location.pathname;
@@ -32,6 +33,12 @@ const initApp = () => {
     })
   }
 
+  // Add cart icon to nav
+  addCartIconToNav();
+
+  // Add auth links to nav
+  addAuthLinksToNav();
+
   // Scroll effects
   const hero = document.querySelector('.hero')
   if (hero) {
@@ -42,6 +49,66 @@ const initApp = () => {
         hero.classList.remove('scrolled')
       }
     })
+  }
+}
+
+// Add cart icon to navigation
+function addCartIconToNav() {
+  const nav = document.querySelector('nav');
+  if (!nav || document.querySelector('.cart-icon')) return;
+
+  const cartIcon = document.createElement('a');
+  cartIcon.href = '/pages/carrito.html';
+  cartIcon.className = 'cart-icon';
+  cartIcon.innerHTML = `
+    <i class="fas fa-shopping-cart"></i>
+    <span class="cart-badge" style="display: none;">0</span>
+  `;
+
+  const navLinks = nav.querySelector('.nav-links');
+  if (navLinks) {
+    navLinks.appendChild(cartIcon);
+  }
+
+  cartManager.updateCartUI();
+}
+
+// Add auth links to navigation
+function addAuthLinksToNav() {
+  const nav = document.querySelector('nav');
+  if (!nav) return;
+
+  const navLinks = nav.querySelector('.nav-links');
+  if (!navLinks) return;
+
+  const session = localStorage.getItem('kioskeys_session');
+
+  if (session) {
+    try {
+      const sessionData = JSON.parse(session);
+      const user = sessionData.user;
+
+      if (!document.querySelector('.user-menu')) {
+        const userMenu = document.createElement('a');
+        userMenu.href = '/pages/mi-cuenta.html';
+        userMenu.className = 'user-menu shiny-text';
+        userMenu.innerHTML = `
+          <i class="fas fa-user-circle"></i>
+          <span>${user.name || 'Mi Cuenta'}</span>
+        `;
+        navLinks.appendChild(userMenu);
+      }
+    } catch (e) {
+      localStorage.removeItem('kioskeys_session');
+    }
+  } else {
+    if (!document.querySelector('.login-link')) {
+      const loginLink = document.createElement('a');
+      loginLink.href = '/pages/login.html';
+      loginLink.className = 'login-link shiny-text';
+      loginLink.innerHTML = `<i class="fas fa-sign-in-alt"></i> <span>Ingresar</span>`;
+      navLinks.appendChild(loginLink);
+    }
   }
 }
 

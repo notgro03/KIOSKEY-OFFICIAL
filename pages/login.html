@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iniciar Sesión - Kioskeys</title>
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .login-container {
+      max-width: 480px;
+      margin: 120px auto 60px;
+      padding: 48px;
+      background: linear-gradient(135deg, rgba(15, 15, 15, 0.9), rgba(20, 20, 20, 0.85));
+      backdrop-filter: blur(20px);
+      border-radius: 32px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 16px 64px rgba(0, 0, 0, 0.6);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .login-header img {
+      width: 120px;
+      height: auto;
+      margin-bottom: 24px;
+    }
+
+    .login-header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #00a3ff, #00bcdc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .login-header p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+    }
+
+    .form-step {
+      display: none;
+    }
+
+    .form-step.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 10px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .phone-input-group {
+      display: flex;
+      gap: 12px;
+    }
+
+    .country-code {
+      width: 100px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: rgba(10, 10, 10, 0.5);
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      background: rgba(10, 10, 10, 0.5);
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .country-code:focus {
+      outline: none;
+      border-color: rgba(0, 188, 212, 0.6);
+      box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.2);
+    }
+
+    .otp-inputs {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .otp-input {
+      width: 56px !important;
+      height: 56px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      padding: 0 !important;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px 32px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.95), rgba(0, 114, 188, 0.95));
+      color: white;
+      border: 2px solid rgba(0, 188, 212, 0.4);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 188, 212, 0.5);
+      border-color: rgba(0, 188, 212, 0.7);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: rgba(255, 255, 255, 0.8);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      margin-top: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .timer {
+      text-align: center;
+      margin-top: 20px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    .timer.expired {
+      color: rgba(239, 68, 68, 0.9);
+    }
+
+    .alert {
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.2);
+      border: 2px solid rgba(239, 68, 68, 0.4);
+      color: rgb(252, 165, 165);
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.2);
+      border: 2px solid rgba(34, 197, 94, 0.4);
+      color: rgb(134, 239, 172);
+    }
+
+    .alert-info {
+      background: rgba(0, 163, 255, 0.2);
+      border: 2px solid rgba(0, 163, 255, 0.4);
+      color: rgb(134, 211, 255);
+    }
+
+    .loading-spinner {
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .resend-link {
+      color: rgba(0, 188, 212, 0.9);
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .resend-link:hover {
+      color: rgba(0, 188, 212, 1);
+    }
+
+    .resend-link.disabled {
+      color: rgba(255, 255, 255, 0.4);
+      cursor: not-allowed;
+      text-decoration: none;
+    }
+
+    .back-home {
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .back-home a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .back-home a:hover {
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        margin: 100px 20px 40px;
+        padding: 32px 24px;
+      }
+
+      .otp-input {
+        width: 48px !important;
+        height: 48px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="../images/k logo.png" alt="Kioskeys" class="nav-logo-img"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <div class="login-container">
+    <div class="login-header">
+      <img src="../images/big logo.png" alt="Kioskeys">
+      <h1>Iniciar Sesión</h1>
+      <p>Te enviaremos un código por WhatsApp</p>
+    </div>
+
+    <div id="alertContainer"></div>
+
+    <!-- Step 1: Phone Number -->
+    <div id="phoneStep" class="form-step active">
+      <form id="phoneForm">
+        <div class="form-group">
+          <label for="phone">Número de WhatsApp</label>
+          <div class="phone-input-group">
+            <select class="country-code" id="countryCode">
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+55">🇧🇷 +55</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+57">🇨🇴 +57</option>
+              <option value="+51">🇵🇪 +51</option>
+            </select>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="11 2345 6789"
+              required
+              pattern="[0-9]{8,15}"
+            >
+          </div>
+          <small style="color: rgba(255, 255, 255, 0.6); margin-top: 8px; display: block;">
+            Ingresa tu número sin el código de país
+          </small>
+        </div>
+        <button type="submit" class="btn btn-primary" id="sendCodeBtn">
+          <i class="fab fa-whatsapp"></i>
+          <span>Enviar Código</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Step 2: OTP Verification -->
+    <div id="otpStep" class="form-step">
+      <form id="otpForm">
+        <div class="form-group">
+          <label>Ingresa el código de 6 dígitos</label>
+          <div class="otp-inputs">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+            <input type="text" class="otp-input" maxlength="1" pattern="[0-9]" inputmode="numeric">
+          </div>
+        </div>
+
+        <div class="timer" id="timer">
+          <i class="fas fa-clock"></i>
+          <span>Código válido por <strong id="timeLeft">5:00</strong></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="verifyBtn">
+          <i class="fas fa-check-circle"></i>
+          <span>Verificar Código</span>
+        </button>
+
+        <button type="button" class="btn btn-secondary" id="changePhoneBtn">
+          <i class="fas fa-arrow-left"></i>
+          <span>Cambiar Número</span>
+        </button>
+
+        <div style="text-align: center; margin-top: 20px; color: rgba(255, 255, 255, 0.7);">
+          ¿No recibiste el código?
+          <span class="resend-link disabled" id="resendLink">Reenviar código</span>
+        </div>
+      </form>
+    </div>
+
+    <div class="back-home">
+      <a href="/">
+        <i class="fas fa-home"></i> Volver al inicio
+      </a>
+    </div>
+  </div>
+
+  <script type="module" src="/src/auth-login.js"></script>
+</body>
+</html>
