@@ -641,7 +641,7 @@ body::after {
 }
 
 .feature-card {
-  background: linear-gradient(135deg, rgba(0, 59, 142, 0.85), rgba(0, 114, 188, 0.85));
+  background: rgba(15, 15, 15, 0.4);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-radius: 20px;
@@ -683,7 +683,7 @@ body::after {
               0 4px 20px rgba(0, 188, 212, 0.25),
               inset 0 0 0 1px rgba(0, 188, 212, 0.15);
   border-color: rgba(0, 188, 212, 0.3);
-  background: linear-gradient(135deg, rgba(0, 69, 162, 0.9), rgba(0, 134, 208, 0.9));
+  background: rgba(20, 20, 20, 0.5);
 }
 
 .feature-card:hover::before {
