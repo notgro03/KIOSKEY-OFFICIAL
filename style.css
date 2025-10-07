@@ -131,6 +131,18 @@ nav.nav-hidden {
   position: relative;
   overflow: hidden;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-links a i {
+  font-size: 16px;
+  transition: transform 0.3s ease;
+}
+
+.nav-links a:hover i {
+  transform: scale(1.15);
 }
 
 .nav-links a::before {
@@ -243,9 +255,17 @@ nav.nav-hidden {
   }
 
   .nav-links a {
-    font-size: 18px;
-    padding: 12px;
+    font-size: 16px;
+    padding: 14px 20px;
     width: 100%;
+    text-align: left;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  .nav-links a i {
+    font-size: 18px;
+    min-width: 24px;
     text-align: center;
   }
 }
