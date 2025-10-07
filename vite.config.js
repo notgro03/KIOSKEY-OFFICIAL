@@ -4,6 +4,7 @@ import { resolve } from 'path'
 export default defineConfig({
   build: {
     outDir: 'dist',
+    target: 'esnext',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
@@ -22,6 +23,9 @@ export default defineConfig({
         'accesorios': resolve(__dirname, 'pages/accesorios.html'),
         'descarga-app': resolve(__dirname, 'pages/descarga-app.html'),
         'admin': resolve(__dirname, 'pages/admin.html'),
+        'login': resolve(__dirname, 'pages/login.html'),
+        'carrito': resolve(__dirname, 'pages/carrito.html'),
+        'mi-cuenta': resolve(__dirname, 'pages/mi-cuenta.html'),
       }
     }
   },
@@ -33,5 +37,10 @@ export default defineConfig({
   },
   server: {
     open: true
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext'
+    }
   }
 })
