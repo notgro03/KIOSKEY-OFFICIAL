@@ -1,2 +1,8 @@
 node_modules
 .env
+dist/
+env.js
+.env.*
+.DS_Store
+Thumbs.db
+.vscode/

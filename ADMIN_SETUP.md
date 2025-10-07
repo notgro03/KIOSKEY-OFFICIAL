@@ -1,34 +1,49 @@
 # Panel de Administración - Configuración
 
+## Arranque rápido (sin Vite)
+1. Crea el archivo `env.js` en la raíz copiando `env.example.js` y completa:
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+2. Sirve la carpeta del proyecto con cualquier servidor estático:
+   - VS Code: extensión Live Server > Open with Live Server
+   - Terminal Windows: `npx.cmd serve .` (o `npm.cmd exec -y serve -- -l 3000 .`)
+3. Abre:
+   - `http://localhost:3000/create-admin-user.html` para crear el primer admin
+   - Luego `http://localhost:3000/pages/admin.html` para gestionar el contenido
+
+> Nota: También puedes usar Vite: `npm run dev` (cuando tengas Node permitido por PowerShell).
+
 ## Acceso al Panel
 El panel de administración está disponible en: `/pages/admin.html`
 
 ## Crear Usuario Administrador
 
-Para crear un usuario administrador, sigue estos pasos:
+Para crear un usuario administrador, tienes dos opciones:
 
-### 1. Crear usuario en Supabase Auth
-Primero, crea un usuario en Supabase Auth:
+### Opción A: Página `create-admin-user.html` (recomendada)
+1. Abre `/create-admin-user.html`
+2. Ingresa contraseña y crea el usuario
+3. Se insertará automáticamente en la tabla `admin_users`
+
+### Opción B: Manual desde Supabase
+1. Crear usuario en Supabase Auth
 
 ```sql
 -- Ve a tu panel de Supabase > Authentication > Users
 -- Haz clic en "Add user" y crea un nuevo usuario con email y contraseña
--- O usa la API de Supabase para crear el usuario
 ```
 
-### 2. Agregar usuario a la tabla admin_users
-Una vez creado el usuario, ejecuta este SQL en Supabase para darle permisos de admin:
+2. Agregar usuario a la tabla admin_users
 
 ```sql
--- Reemplaza 'tu-email@ejemplo.com' con el email del usuario que creaste
+-- Reemplaza 'tu-email@ejemplo.com' con el email del usuario creado
 INSERT INTO admin_users (id, email)
 SELECT id, email
 FROM auth.users
 WHERE email = 'tu-email@ejemplo.com';
 ```
 
-### 3. Iniciar Sesión
-Ahora puedes acceder al panel de administración en `/pages/admin.html` con las credenciales del usuario que creaste.
+3. Iniciar Sesión en `/pages/admin.html`.
 
 ## Funcionalidades del Panel
 

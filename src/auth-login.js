@@ -1,5 +1,11 @@
 import { supabase } from './config/supabase.js';
 
+// Resolve env for edge functions base URL and anon key
+const viteEnv = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : {};
+const browserEnv = (typeof window !== 'undefined' && window.__ENV__) ? window.__ENV__ : {};
+const SUPABASE_URL = viteEnv.VITE_SUPABASE_URL || browserEnv.SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = viteEnv.VITE_SUPABASE_ANON_KEY || browserEnv.SUPABASE_ANON_KEY || '';
+
 let currentPhone = '';
 let timerInterval = null;
 let canResend = false;
@@ -60,11 +66,11 @@ phoneForm.addEventListener('submit', async (e) => {
   sendCodeBtn.innerHTML = '<div class="loading-spinner"></div><span>Enviando...</span>';
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp-otp`, {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-whatsapp-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ phone: currentPhone }),
     });
@@ -116,11 +122,11 @@ otpForm.addEventListener('submit', async (e) => {
   verifyBtn.innerHTML = '<div class="loading-spinner"></div><span>Verificando...</span>';
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-whatsapp-otp`, {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/verify-whatsapp-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({
         phone: currentPhone,
@@ -194,11 +200,11 @@ resendLink.addEventListener('click', async () => {
   resendLink.classList.add('disabled');
 
   try {
-    const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-whatsapp-otp`, {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/send-whatsapp-otp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({ phone: currentPhone }),
     });

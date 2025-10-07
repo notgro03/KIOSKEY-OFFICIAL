@@ -1,6 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
+// Support both Vite (bundled) and plain browser via CDN
+let createClient;
+try {
+  // Try local dependency (Vite / bundlers)
+  ({ createClient } = await import('@supabase/supabase-js'));
+} catch (e) {
+  // Fallback to CDN when running without bundler
+  ({ createClient } = await import('https://esm.sh/@supabase/supabase-js@2'));
+}
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Resolve env from Vite or window.__ENV__ (env.js)
+const viteEnv = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : {};
+const browserEnv = (typeof window !== 'undefined' && window.__ENV__) ? window.__ENV__ : {};
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseUrl = viteEnv.VITE_SUPABASE_URL || browserEnv.SUPABASE_URL;
+const supabaseKey = viteEnv.VITE_SUPABASE_ANON_KEY || browserEnv.SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.warn('[Supabase] Faltan credenciales. Define VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY (Vite) o crea env.js con window.__ENV__ = { SUPABASE_URL, SUPABASE_ANON_KEY }');
+}
+
+export const supabase = createClient(supabaseUrl || '', supabaseKey || '');

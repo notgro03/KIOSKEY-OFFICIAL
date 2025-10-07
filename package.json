@@ -32,5 +32,15 @@
     "axios": "^1.6.7",
     "date-fns": "^3.3.1",
     "dexie": "^3.2.4"
+  },
+  "fiveServer": {
+    "port": 5500,
+    "open": "index.html",
+    "root": ".",
+    "address": "0.0.0.0",
+    "ignore": ["node_modules", "dist"],
+    "rewriteRules": [
+      { "match": "/admin", "to": "/pages/admin.html" }
+    ]
   }
 }
