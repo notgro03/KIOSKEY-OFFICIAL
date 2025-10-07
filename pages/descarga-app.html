@@ -10,7 +10,7 @@
   <style>
     .app-download-section {
       padding: 80px 0;
-      background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
       position: relative;
       overflow: hidden;
     }
@@ -205,12 +205,12 @@
     }
 
     .feature-preview {
-      background: white;
+      background: rgba(26, 26, 26, 0.8);
       padding: 24px;
       border-radius: 16px;
       text-align: center;
-      box-shadow: 0 4px 16px rgba(0, 59, 142, 0.1);
-      border: 1px solid rgba(0, 59, 142, 0.05);
+      box-shadow: 0 4px 16px rgba(0, 59, 142, 0.3);
+      border: 1px solid rgba(0, 59, 142, 0.2);
       transition: all 0.3s ease;
     }
 
@@ -242,7 +242,7 @@
 
     .feature-preview p {
       font-size: 14px;
-      color: #666;
+      color: rgba(255, 255, 255, 0.7);
       line-height: 1.5;
     }
 
@@ -252,9 +252,9 @@
       gap: 48px;
       margin-top: 48px;
       padding: 32px;
-      background: rgba(0, 59, 142, 0.02);
+      background: rgba(0, 59, 142, 0.1);
       border-radius: 20px;
-      border: 1px solid rgba(0, 59, 142, 0.1);
+      border: 1px solid rgba(0, 59, 142, 0.3);
     }
 
     .qr-item {
@@ -333,22 +333,7 @@
   </style>
 </head>
 <body>
-  <nav>
-    <div class="logo">
-      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
-    </div>
-    <div class="nav-links">
-      <a href="/">Inicio</a>
-      <a href="/pages/red-servicios.html">Red de Servicios</a>
-      <a href="/pages/planes.html">Planes</a>
-      <a href="/pages/productos.html">Productos</a>
-      <a href="/pages/faq.html">FAQ</a>
-      <a href="/pages/contacto.html">Contacto</a>
-    </div>
-    <button class="menu-button">
-      <i class="fas fa-bars"></i>
-    </button>
-  </nav>
+  <nav></nav>
 
   <main>
     <section class="app-download-section">
@@ -509,5 +494,9 @@
   </footer>
 
   <script type="module" src="/src/main.js"></script>
+  <script type="module">
+    import { initNavigation } from '/src/components/navigation.js';
+    initNavigation('descarga-app');
+  </script>
 </body>
 </html>
