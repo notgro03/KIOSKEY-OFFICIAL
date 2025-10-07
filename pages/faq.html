@@ -100,22 +100,7 @@
   </style>
 </head>
 <body>
-  <nav>
-    <div class="logo">
-      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
-    </div>
-    <div class="nav-links">
-      <a href="/">Inicio</a>
-      <a href="/pages/red-servicios.html">Red de Servicios</a>
-      <a href="/pages/planes.html">Planes</a>
-      <a href="/pages/productos.html">Productos</a>
-      <a href="/pages/faq.html">FAQ</a>
-      <a href="/pages/contacto.html">Contacto</a>
-    </div>
-    <button class="menu-button">
-      <i class="fas fa-bars"></i>
-    </button>
-  </nav>
+  <nav></nav>
 
   <main>
     <!-- Theme Toggle Button -->
@@ -307,5 +292,9 @@
   </script>
 
   <script type="module" src="/src/main.js"></script>
+  <script type="module">
+    import { initNavigation } from '/src/components/navigation.js';
+    initNavigation('faq');
+  </script>
 </body>
 </html>
