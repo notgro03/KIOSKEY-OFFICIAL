@@ -1,9 +1,5 @@
 import { logoManager } from './logo-manager';
 import { showSuccess, showError } from './ui';
-import { initCookieBanner } from './components/cookie-banner';
-
-// Initialize cookie banner
-initCookieBanner();
 
 // Initialize admin interface
 document.addEventListener('DOMContentLoaded', () => {
