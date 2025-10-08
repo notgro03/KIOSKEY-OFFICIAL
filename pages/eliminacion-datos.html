@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Solicitud de eliminación de datos de usuario - Kioskeys">
+  <title>Eliminación de Datos - Kioskeys</title>
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    .legal-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 32px;
+      background: white;
+      border-radius: 18px;
+      box-shadow: 0 4px 6px rgba(0, 59, 142, 0.1);
+    }
+
+    .legal-content h2 {
+      color: var(--primary-blue);
+      margin: 24px 0 16px;
+      font-size: 24px;
+    }
+
+    .legal-content h3 {
+      color: var(--primary-blue);
+      margin: 20px 0 12px;
+      font-size: 18px;
+    }
+
+    .legal-content p {
+      margin-bottom: 16px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    .legal-content ul {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+
+    .legal-content li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .legal-content strong {
+      color: var(--primary-blue);
+      font-weight: 600;
+    }
+
+    .info-box {
+      background: rgba(0, 59, 142, 0.05);
+      border-left: 4px solid var(--primary-blue);
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+
+    .warning-box {
+      background: rgba(255, 59, 48, 0.05);
+      border-left: 4px solid #ff3b30;
+      padding: 16px 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+    }
+
+    .warning-box p {
+      color: #ff3b30;
+      margin: 0;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 16px;
+      margin: 32px 0;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 16px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #003b8e, #0072bc);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.3);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff3b30, #c81e1e);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+    }
+
+    .last-updated {
+      color: #6e6e73;
+      font-size: 14px;
+      margin-top: 32px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
+    </div>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/pages/red-servicios.html">Red de Servicios</a>
+      <a href="/pages/planes.html">Planes</a>
+      <a href="/pages/productos.html">Productos</a>
+      <a href="/pages/faq.html">FAQ</a>
+      <a href="/pages/contacto.html">Contacto</a>
+    </div>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
+  </nav>
+
+  <main>
+    <div class="theme-toggle" id="themeToggle">
+      <i class="theme-toggle-icon fas fa-moon moon"></i>
+    </div>
+
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Eliminación de Datos de Usuario</h1>
+        <p>Gestiona tus datos personales en Kioskeys</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="legal-content">
+          <h2>Solicitud de Eliminación de Datos</h2>
+          <p>En Kioskeys respetamos tu derecho a la privacidad y al control sobre tus datos personales. Esta página te permite solicitar la eliminación completa de tu cuenta y todos los datos asociados.</p>
+
+          <h2>¿Qué sucede cuando eliminas tu cuenta?</h2>
+          <p>Cuando solicitas la eliminación de tu cuenta, se eliminará permanentemente la siguiente información:</p>
+
+          <h3>Datos de Usuario</h3>
+          <ul>
+            <li><strong>Información personal:</strong> Nombre, email, número de teléfono</li>
+            <li><strong>Cuenta de usuario:</strong> Credenciales de acceso y autenticación</li>
+            <li><strong>Perfil:</strong> Foto de perfil y preferencias de usuario</li>
+          </ul>
+
+          <h3>Datos de Actividad</h3>
+          <ul>
+            <li><strong>Historial de pedidos:</strong> Todos los servicios contratados</li>
+            <li><strong>Direcciones:</strong> Direcciones guardadas para entregas</li>
+            <li><strong>Carrito de compras:</strong> Productos pendientes de compra</li>
+            <li><strong>Historial de navegación:</strong> Preferencias y configuraciones</li>
+          </ul>
+
+          <h3>Datos de Autenticación Social</h3>
+          <ul>
+            <li><strong>Conexiones con Facebook:</strong> Se desvinculará tu cuenta de Facebook</li>
+            <li><strong>Conexiones con Google:</strong> Se desvinculará tu cuenta de Google</li>
+          </ul>
+
+          <div class="warning-box">
+            <p><strong><i class="fas fa-exclamation-triangle"></i> Advertencia:</strong> Esta acción es permanente e irreversible. Una vez eliminada tu cuenta, no podrás recuperar ninguno de tus datos.</p>
+          </div>
+
+          <h2>Tiempo de Procesamiento</h2>
+          <p>La eliminación de tus datos se procesa inmediatamente. Sin embargo:</p>
+          <ul>
+            <li>Los datos se eliminan de forma permanente en un plazo de 24 horas</li>
+            <li>Las copias de respaldo se eliminarán en un plazo máximo de 30 días</li>
+            <li>Algunos datos pueden conservarse por requisitos legales (por ejemplo, datos fiscales durante 10 años)</li>
+          </ul>
+
+          <h2>Datos que se conservan por obligación legal</h2>
+          <p>Según la legislación argentina, estamos obligados a conservar ciertos datos:</p>
+          <ul>
+            <li>Información fiscal y de facturación (10 años)</li>
+            <li>Registros de transacciones comerciales (10 años)</li>
+            <li>Datos requeridos por autoridades gubernamentales</li>
+          </ul>
+
+          <h2>Métodos para solicitar la eliminación</h2>
+
+          <h3>1. Desde tu cuenta (Recomendado)</h3>
+          <p>Si tienes una sesión activa, puedes eliminar tu cuenta directamente:</p>
+          <div class="button-container">
+            <a href="/pages/mi-cuenta.html" class="btn btn-primary">
+              <i class="fas fa-user"></i> Ir a Mi Cuenta
+            </a>
+          </div>
+          <p style="color: #6e6e73; font-size: 14px;">Ve a Mi Cuenta → Privacidad y Datos → Eliminar Mi Cuenta</p>
+
+          <h3>2. Contacto directo</h3>
+          <p>Si no puedes acceder a tu cuenta, puedes contactarnos directamente:</p>
+          <div class="info-box">
+            <p><strong>Email:</strong> <a href="mailto:privacidad@kioskeys.com">privacidad@kioskeys.com</a></p>
+            <p><strong>Teléfono:</strong> +54 11 1234-5678</p>
+            <p><strong>WhatsApp:</strong> <a href="https://api.whatsapp.com/send/?phone=541157237390&text=Solicito%20la%20eliminaci%C3%B3n%20de%20mi%20cuenta" target="_blank">+54 11 5723-7390</a></p>
+          </div>
+          <p>Por favor incluye la siguiente información en tu solicitud:</p>
+          <ul>
+            <li>Nombre completo</li>
+            <li>Número de teléfono o email asociado a la cuenta</li>
+            <li>Confirmación de que deseas eliminar todos tus datos</li>
+          </ul>
+
+          <h3>3. Formulario de contacto</h3>
+          <div class="button-container">
+            <a href="/pages/contacto.html" class="btn btn-primary">
+              <i class="fas fa-envelope"></i> Formulario de Contacto
+            </a>
+          </div>
+
+          <h2>Para usuarios de Facebook</h2>
+          <p>Si iniciaste sesión con Facebook, la eliminación de tu cuenta en Kioskeys no afecta tu cuenta de Facebook. Los datos compartidos con Facebook se gestionan según su propia política de privacidad.</p>
+          <p>Para revocar el acceso de Kioskeys a tu cuenta de Facebook:</p>
+          <ol>
+            <li>Ve a Configuración de Facebook → Aplicaciones y sitios web</li>
+            <li>Busca "Kioskeys" en la lista</li>
+            <li>Haz clic en "Eliminar"</li>
+          </ol>
+
+          <h2>Alternativa: Desactivación temporal</h2>
+          <p>Si no estás seguro de eliminar tu cuenta permanentemente, puedes simplemente cerrar sesión y dejar tu cuenta inactiva. No utilizaremos tus datos mientras tu cuenta esté inactiva.</p>
+
+          <h2>Preguntas Frecuentes</h2>
+
+          <h3>¿Puedo recuperar mi cuenta después de eliminarla?</h3>
+          <p>No. La eliminación es permanente e irreversible. Si cambias de opinión, deberás crear una nueva cuenta desde cero.</p>
+
+          <h3>¿Cuánto tiempo tarda el proceso?</h3>
+          <p>La eliminación es inmediata desde tu cuenta. Si solicitas la eliminación por contacto, procesaremos tu solicitud en un plazo máximo de 10 días hábiles.</p>
+
+          <h3>¿Qué sucede con mis pedidos en curso?</h3>
+          <p>Si tienes pedidos pendientes, te recomendamos esperar a que se completen antes de eliminar tu cuenta. De lo contrario, perderás acceso al seguimiento y soporte de esos pedidos.</p>
+
+          <h3>¿Puedo exportar mis datos antes de eliminar mi cuenta?</h3>
+          <p>Sí. Desde tu cuenta, en la sección de Privacidad y Datos, puedes descargar una copia de toda tu información antes de eliminarla.</p>
+
+          <h2>Más información</h2>
+          <p>Para más detalles sobre cómo manejamos tus datos, consulta:</p>
+          <ul>
+            <li><a href="/pages/privacidad.html">Política de Privacidad</a></li>
+            <li><a href="/pages/terminos.html">Términos y Condiciones</a></li>
+            <li><a href="/pages/cookies.html">Política de Cookies</a></li>
+          </ul>
+
+          <p class="last-updated">Última actualización: 8 de Octubre, 2025</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
