@@ -663,6 +663,77 @@
             </a>
           </div>
         </div>
+
+        <div class="search-container">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="Buscar productos..." id="productSearch">
+        </div>
+
+        <div class="category-filters">
+          <button class="category-filter active" data-category="all">Todos</button>
+          <button class="category-filter" data-category="telemandos">Telemandos</button>
+          <button class="category-filter" data-category="llaves">Llaves</button>
+          <button class="category-filter" data-category="carcasas">Carcasas</button>
+          <button class="category-filter" data-category="accesorios">Accesorios</button>
+        </div>
+
+        <div class="features-grid">
+          <a href="/pages/telemandos.html" class="product-card" data-category="telemandos">
+            <i class="fas fa-car feature-icon"></i>
+            <h3>Telemandos</h3>
+            <p class="product-description">Controles remotos originales y alternativos para todo tipo de vehículos. Programación profesional incluida.</p>
+            <ul class="product-details">
+              <li>Telemandos originales y alternativos</li>
+              <li>Más de 1000 modelos disponibles</li>
+              <li>Programación incluida</li>
+              <li>Garantía de funcionamiento</li>
+              <li>Servicio express disponible</li>
+            </ul>
+            <span class="learn-more">Ver catálogo completo <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/llaves.html" class="product-card" data-category="llaves">
+            <i class="fas fa-key feature-icon"></i>
+            <h3>Llaves</h3>
+            <p class="product-description">Amplia gama de llaves de seguridad y copias certificadas para todo tipo de cerraduras.</p>
+            <ul class="product-details">
+              <li>Llaves codificadas de alta seguridad</li>
+              <li>Llaves de puntos y multipuntos</li>
+              <li>Llaves magnéticas y de proximidad</li>
+              <li>Duplicados certificados</li>
+              <li>Servicio Especializado</li>
+            </ul>
+            <span class="learn-more">Explorar llaves <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/carcasas.html" class="product-card" data-category="carcasas">
+            <i class="fas fa-shield-alt feature-icon"></i>
+            <h3>Carcasas</h3>
+            <p class="product-description">Carcasas de repuesto originales y alternativas para mandos de todas las marcas.</p>
+            <ul class="product-details">
+              <li>Carcasas originales de fábrica</li>
+              <li>Alternativas de alta calidad</li>
+              <li>Compatibles con todas las marcas</li>
+              <li>Instalación profesional</li>
+              <li>Amplio stock disponible</li>
+            </ul>
+            <span class="learn-more">Ver modelos <i class="fas fa-arrow-right"></i></span>
+          </a>
+
+          <a href="/pages/accesorios.html" class="product-card" data-category="accesorios">
+            <i class="fas fa-tools feature-icon"></i>
+            <h3>Accesorios</h3>
+            <p class="product-description">Complementos y accesorios profesionales para el cuidado y mantenimiento de tus llaves.</p>
+            <ul class="product-details">
+              <li>Fundas protectoras premium</li>
+              <li>Llaveros de seguridad</li>
+              <li>Baterías certificadas</li>
+              <li>Productos de mantenimiento</li>
+              <li>Accesorios de personalización</li>
+            </ul>
+            <span class="learn-more">Descubrir más <i class="fas fa-arrow-right"></i></span>
+          </a>
+        </div>
       </div>
     </section>
   </main>
@@ -724,6 +795,46 @@
     </div>
   </footer>
 
+  <script type="module">
+    // Filtrado por categorías
+    document.querySelectorAll('.category-filter').forEach(button => {
+      button.addEventListener('click', () => {
+        // Actualizar estado activo de los botones
+        document.querySelectorAll('.category-filter').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        button.classList.add('active');
+
+        const category = button.dataset.category;
+        document.querySelectorAll('.product-card').forEach(card => {
+          if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Búsqueda en tiempo real
+    document.getElementById('productSearch').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      
+      document.querySelectorAll('.product-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const description = card.querySelector('.product-description').textContent.toLowerCase();
+        const details = Array.from(card.querySelectorAll('.product-details li'))
+          .map(li => li.textContent.toLowerCase())
+          .join(' ');
+
+        if (title.includes(searchTerm) || description.includes(searchTerm) || details.includes(searchTerm)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  </script>
   <script type="module">
     import { initNavigation } from '/src/components/navigation.js';
     initNavigation('productos');
