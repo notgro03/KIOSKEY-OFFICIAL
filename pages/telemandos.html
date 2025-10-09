@@ -153,6 +153,11 @@
       transition: transform 0.3s ease;
     }
 
+    .result-video {
+      object-fit: cover;
+      padding: 0;
+    }
+
     .result-logo:hover {
       transform: scale(1.05);
     }
@@ -488,7 +493,7 @@
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('telemandos')
-            .select('model, description, image_url')
+            .select('model, description, image_url, video_url')
             .eq('brand', brand);
 
         if (!modelsError) {
@@ -527,7 +532,7 @@
     // Consulta a la base de datos para obtener TODOS los telemandos del modelo seleccionado
     const { data: resultsData, error } = await supabase
         .from('telemandos')
-        .select('model, description, image_url')
+        .select('model, description, image_url, video_url')
         .eq('brand', brand)
         .eq('model', model);
 
@@ -563,9 +568,17 @@ function showResults(resultsData, brand, model) {
         const whatsappNumber = "541157237390";
         const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
 
+        // Determinar si hay video o imagen
+        const hasVideo = item.video_url && item.video_url.trim() !== '';
+        const mediaHTML = hasVideo
+            ? `<video class="result-logo result-video" autoplay loop muted playsinline>
+                 <source src="${item.video_url}" type="video/mp4">
+               </video>`
+            : `<img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">`;
+
         const telemandoHTML = `
             <div class="result-item">
-                <img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo" >
+                ${mediaHTML}
                 <div class="result-info">
                     <h3>Telemando ${brand} ${item.description ? item.description : ''}</h3>
                     <p><strong>Modelo:</strong> ${model}</p>

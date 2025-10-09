@@ -22,7 +22,7 @@
       // Cargar marcas
       const { data: brands, error: brandsError } = await supabase
         .from('llaves')
-        .select('brand, image_url');
+        .select('brand, image_url, video_url');
 
       if (!brandsError) {
         const uniqueBrands = brands.reduce((acc, item) => {
@@ -51,7 +51,7 @@
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('llaves')
-            .select('model, image_url, description')
+            .select('model, image_url, description, video_url')
             .eq('brand', brand);
 
         console.log('Modelos obtenidos:', models);
@@ -65,7 +65,8 @@
                 }
                 modelData[item.model].push({
                     image_url: item.image_url,
-                    description: item.description || ""
+                    description: item.description || "",
+                    video_url: item.video_url || ""
                 });
             });
 
@@ -104,7 +105,7 @@
     const results = document.getElementById('searchResults');
     results.innerHTML = "";
 
-    imagesData.forEach(({ image_url, description }) => {
+    imagesData.forEach(({ image_url, description, video_url }) => {
         const whatsappMessage = encodeURIComponent(
           `Hola, me interesa obtener una cotización para la siguiente llave:\n\n` +
           `Marca: ${brand}\n` +
@@ -115,10 +116,18 @@
         const whatsappNumber = "541157237390";
         const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
 
+        // Determinar si hay video o imagen
+        const hasVideo = video_url && video_url.trim() !== '';
+        const mediaHTML = hasVideo
+            ? `<video class="model-image model-video" autoplay loop muted playsinline>
+                 <source src="${video_url}" type="video/mp4">
+               </video>`
+            : `<img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">`;
+
         results.innerHTML += `
           <div class="result-item">
             <div class="image-container">
-              <img src="${image_url}" alt="Llave de ${brand} ${model}" class="model-image">
+              ${mediaHTML}
             </div>
             <div class="result-info">
               <h3>Llave ${brand} ${description ? description : ""}</h3>
@@ -172,6 +181,12 @@ document.getElementById('modal').addEventListener('click', closeModal);
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     background: white;
+    transition: transform 0.3s ease;
+  }
+
+  .model-video {
+    object-fit: cover;
+    background: transparent;
   }
 
   .model-image:hover{

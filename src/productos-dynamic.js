@@ -19,9 +19,17 @@ async function loadProducts() {
   container.innerHTML = products.map(product => {
     const features = typeof product.features === 'string' ? JSON.parse(product.features) : product.features;
 
+    // Determinar si hay video o imagen
+    const hasVideo = product.video_url && product.video_url.trim() !== '';
+    const mediaHTML = hasVideo
+      ? `<video class="product-media" autoplay loop muted playsinline>
+           <source src="${product.video_url}" type="video/mp4">
+         </video>`
+      : `<i class="fas ${product.icon} feature-icon"></i>`;
+
     return `
       <a href="${product.link_url}" class="product-card" data-category="${product.category}">
-        <i class="fas ${product.icon} feature-icon"></i>
+        ${mediaHTML}
         <h3>${product.title}</h3>
         <p class="product-description">${product.description}</p>
         <ul class="product-details">
