@@ -9,38 +9,45 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "^5.4.2",
-    "tailwindcss": "^3.4.1",
+    "@types/node": "^20.11.17",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
-    "@types/node": "^20.11.17"
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.4.2"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.39.3",
-    "sweetalert2": "^11.10.5",
-    "compressorjs": "^1.2.1",
-    "@uploadcare/upload-client": "^6.12.0",
-    "lodash": "^4.17.21",
-    "uuid": "^9.0.1",
-    "localforage": "^1.10.0",
-    "uploadcare-widget": "^3.21.2",
-    "aos": "^2.3.4",
     "@tinymce/tinymce-react": "^4.3.2",
-    "cropperjs": "^1.6.1",
-    "filepond": "^4.30.6",
-    "sortablejs": "^1.15.2",
+    "@uploadcare/upload-client": "^6.12.0",
+    "aos": "^2.3.4",
     "axios": "^1.6.7",
+    "compressorjs": "^1.2.1",
+    "cropperjs": "^1.6.1",
     "date-fns": "^3.3.1",
-    "dexie": "^3.2.4"
+    "dexie": "^3.2.4",
+    "filepond": "^4.30.6",
+    "localforage": "^1.10.0",
+    "lodash": "^4.17.21",
+    "pg": "^8.16.3",
+    "sortablejs": "^1.15.2",
+    "sweetalert2": "^11.10.5",
+    "uploadcare-widget": "^3.21.2",
+    "uuid": "^9.0.1"
   },
   "fiveServer": {
     "port": 5500,
     "open": "index.html",
     "root": ".",
     "address": "0.0.0.0",
-    "ignore": ["node_modules", "dist"],
+    "ignore": [
+      "node_modules",
+      "dist"
+    ],
     "rewriteRules": [
-      { "match": "/admin", "to": "/pages/admin.html" }
+      {
+        "match": "/admin",
+        "to": "/pages/admin.html"
+      }
     ]
   }
 }
