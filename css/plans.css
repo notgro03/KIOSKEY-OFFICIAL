@@ -411,6 +411,13 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 4px;
+  gap: 12px;
+}
+
+.feature-header i {
+  color: var(--primary-blue);
+  font-size: 16px;
+  min-width: 20px;
 }
 
 .feature-name {
@@ -419,12 +426,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.feature-name::before {
-  content: '✓';
-  color: var(--primary-blue);
-  font-weight: bold;
+  flex: 1;
 }
 
 .feature-value {
@@ -528,6 +530,23 @@
   z-index: 2;
 }
 
+.popular-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(135deg, #00D4FF 0%, #0072BC 100%);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 12px rgba(0, 212, 255, 0.4);
+  z-index: 3;
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
 .plan-most-popular {
   transform: scale(1.03);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -538,6 +557,13 @@
 
 .plan-most-popular::before {
   opacity: 0.3;
+}
+
+.plan-custom-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 8px;
+  font-weight: 400;
 }
 
 @keyframes borderGradient {
