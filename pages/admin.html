@@ -259,6 +259,18 @@
       flex: 1;
     }
 
+    .item-image {
+      width: 80px;
+      height: 80px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+
+    .item-card {
+      display: flex;
+      align-items: center;
+    }
+
     .login-container {
       max-width: 450px;
       margin: 120px auto;
@@ -396,63 +408,107 @@
     <!-- Products Section -->
     <div id="products" class="admin-content">
       <div class="admin-card">
-        <h3><i class="fas fa-plus-circle"></i> Agregar/Editar Producto</h3>
-        <form id="productForm">
-          <input type="hidden" id="productId">
-          <div class="form-group">
-            <label for="productTitle">Título</label>
-            <input type="text" id="productTitle" required placeholder="Nombre del producto">
-          </div>
-          <div class="form-group">
-            <label for="productDescription">Descripción</label>
-            <textarea id="productDescription" required placeholder="Descripción del producto"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="productIcon">Ícono (Font Awesome)</label>
-            <input type="text" id="productIcon" required placeholder="fa-car" value="fa-box">
-            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 4px;">
-              Busca íconos en <a href="https://fontawesome.com/icons" target="_blank" style="color: #00a3ff;">fontawesome.com/icons</a>
-            </small>
-          </div>
-          <div class="form-group">
-            <label for="productCategory">Categoría</label>
-            <input type="text" id="productCategory" required placeholder="telemandos, llaves, etc.">
-          </div>
-          <div class="form-group">
-            <label>Características</label>
-            <div id="featuresList" class="feature-list">
-              <div class="feature-item">
-                <input type="text" class="feature-input" placeholder="Característica 1">
-                <button type="button" class="btn-icon" onclick="removeFeature(this)">
-                  <i class="fas fa-times"></i>
-                </button>
-              </div>
-            </div>
-            <button type="button" class="btn btn-primary" onclick="addFeature()" style="margin-top: 12px;">
-              <i class="fas fa-plus"></i> Agregar Característica
-            </button>
-          </div>
-          <div class="form-group">
-            <label for="productLinkUrl">URL del Enlace</label>
-            <input type="text" id="productLinkUrl" required placeholder="/pages/producto.html">
-          </div>
-          <div class="form-group">
-            <label for="productLinkText">Texto del Botón</label>
-            <input type="text" id="productLinkText" required placeholder="Ver más">
-          </div>
-          <div class="form-group">
-            <label for="productOrder">Orden</label>
-            <input type="number" id="productOrder" value="1" min="1">
-          </div>
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-save"></i> Guardar Producto
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <h3 style="margin: 0;"><i class="fas fa-box"></i> Catálogo de Productos</h3>
+          <button id="btnNewProduct" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nuevo Producto
           </button>
-        </form>
+        </div>
+
+        <div class="form-group">
+          <label for="filterCategory">Filtrar por Categoría</label>
+          <select id="filterCategory" class="category-select">
+            <option value="">Todas las categorías</option>
+          </select>
+        </div>
       </div>
 
       <div class="admin-card">
-        <h3><i class="fas fa-list"></i> Productos Actuales</h3>
+        <h3><i class="fas fa-list"></i> Productos</h3>
         <div id="productsList" class="items-list"></div>
+      </div>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+      <div style="background: linear-gradient(135deg, rgba(15, 15, 15, 0.95), rgba(20, 20, 20, 0.95)); max-width: 600px; width: 100%; border-radius: 24px; padding: 32px; border: 2px solid rgba(255,255,255,0.1); max-height: 90vh; overflow-y: auto;">
+        <h3 id="modalTitle" style="color: white; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+          <i class="fas fa-box"></i> Nuevo Producto
+        </h3>
+
+        <form id="productForm">
+          <div class="form-group">
+            <label for="productCategory">Categoría</label>
+            <select id="productCategory" class="category-select" required>
+              <option value="">Seleccionar categoría</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="productTitle">Título del Producto</label>
+            <input type="text" id="productTitle" required placeholder="Ej: Telemando Toyota Original">
+          </div>
+
+          <div class="form-group">
+            <label for="productDescription">Descripción</label>
+            <textarea id="productDescription" placeholder="Descripción detallada del producto"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="productImage">URL de la Imagen</label>
+            <input type="url" id="productImage" placeholder="https://ejemplo.com/imagen.jpg">
+            <small style="color: rgba(255, 255, 255, 0.6); display: block; margin-top: 4px;">
+              Sube tu imagen a <a href="https://uploadcare.com" target="_blank" style="color: #00a3ff;">Uploadcare</a> y pega la URL aquí
+            </small>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="productPrice">Precio ($)</label>
+              <input type="number" id="productPrice" step="0.01" min="0" placeholder="0.00">
+            </div>
+
+            <div class="form-group">
+              <label for="productStock">Stock</label>
+              <input type="number" id="productStock" min="0" value="0">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label for="productBrand">Marca</label>
+              <input type="text" id="productBrand" placeholder="Ej: Toyota">
+            </div>
+
+            <div class="form-group">
+              <label for="productModel">Modelo</label>
+              <input type="text" id="productModel" placeholder="Ej: Corolla 2020">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px;">
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="productActive" checked style="width: auto; margin-right: 8px;">
+                Producto Activo (visible en el sitio)
+              </label>
+            </div>
+
+            <div class="form-group">
+              <label for="productOrder">Orden</label>
+              <input type="number" id="productOrder" value="0" min="0">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 24px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+            <button type="button" id="btnCancelProduct" class="btn" style="flex: 1; background: rgba(255,255,255,0.1); color: white;">
+              <i class="fas fa-times"></i> Cancelar
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
