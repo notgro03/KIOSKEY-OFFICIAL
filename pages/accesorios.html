@@ -282,7 +282,24 @@
         </div>
       </div>
     </section>
+
+    <section class="main-content" style="padding: 60px 0;">
+      <div class="content-container">
+        <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Accesorios</h2>
+        <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
+      </div>
+    </section>
   </main>
+
+  <script type="module">
+    import { loadAccesorios } from '../src/pages/accesorios-loader.js';
+    import { initNavigation } from '../src/components/navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavigation('accesorios');
+      loadAccesorios();
+    });
+  </script>
 
   <script type="module" src="/src/main.js"></script>
 </body>

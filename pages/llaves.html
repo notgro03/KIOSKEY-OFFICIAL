@@ -555,10 +555,27 @@ document.getElementById('modal').addEventListener('click', closeModal);
 
       </div>
     </section>
+
+    <section class="main-content" style="padding: 60px 0;">
+      <div class="content-container">
+        <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Llaves</h2>
+        <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
+      </div>
+    </section>
   </main>
   <div id="modal" class="modal">
     <img class="modal-content" id="modalImage" alt="Imagen ampliada">
   </div>
-  
+
+  <script type="module">
+    import { loadLlaves } from '../src/pages/llaves-loader.js';
+    import { initNavigation } from '../src/components/navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavigation('llaves');
+      loadLlaves();
+    });
+  </script>
+
 </body>
 </html>

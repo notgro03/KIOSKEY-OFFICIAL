@@ -621,6 +621,24 @@ function showResults(resultsData, brand, model) {
       }});
 
   </script>
+
+  <section class="main-content" style="padding: 60px 0;">
+    <div class="content-container">
+      <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Telemandos</h2>
+      <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { loadTelemandos } from '../src/pages/telemandos-loader.js';
+    import { initNavigation } from '../src/components/navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavigation('telemandos');
+      loadTelemandos();
+    });
+  </script>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

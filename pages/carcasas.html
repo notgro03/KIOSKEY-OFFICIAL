@@ -589,7 +589,24 @@ searchButton.addEventListener('click', () => {
   <div id="modal" class="modal">
     <img id="modalImage" class="modal-content" alt="Imagen ampliada">
   </div>
-  
+
+  <section class="main-content" style="padding: 60px 0;">
+    <div class="content-container">
+      <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Carcasas</h2>
+      <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
+    </div>
+  </section>
+
+  <script type="module">
+    import { loadCarcasas } from '../src/pages/carcasas-loader.js';
+    import { initNavigation } from '../src/components/navigation.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavigation('carcasas');
+      loadCarcasas();
+    });
+  </script>
+
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>
