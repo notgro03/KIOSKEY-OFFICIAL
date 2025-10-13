@@ -1,8 +1,22 @@
-// Copia este archivo como env.js y completa con tus credenciales públicas de Supabase
-// No subas env.js al repo (está ignorado por .gitignore)
-window.__ENV__ = {
-  // Ej: "https://xxxxx.supabase.co"
-  SUPABASE_URL: "",
-  // Ej: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...."
-  SUPABASE_ANON_KEY: ""
-};
+const { Pool } = require('pg')
+
+const pool = new Pool({
+  host: 'aws-0-sa-east-1.pooler.supabase.com',
+  port: 6543,
+  database: 'postgres',
+  user: 'postgres.ebezqrsgednjwhajddqu',
+  password: 'pQNzoy48T6YNMsik',
+  ssl: { rejectUnauthorized: false }
+})
+
+// Helper para queries
+async function query(text, params) {
+  const client = await pool.connect()
+  try {
+    return await client.query(text, params)
+  } finally {
+    client.release()
+  }
+}
+
+module.exports = { query }
