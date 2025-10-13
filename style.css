@@ -1,16 +1,18 @@
 :root {
-  --primary-blue: #00B8D4;
-  --secondary-blue: #00D4FF;
+  --primary-blue: #0072BC;
+  --secondary-blue: #00A3FF;
+  --accent-cyan: #00D4FF;
   --background: #0a0a0a;
   --text-color: #ffffff;
   --card-background: #1a1a1a;
-  --border-color: rgba(255, 255, 255, 0.15);
+  --border-color: rgba(0, 163, 255, 0.2);
   --shadow-color: rgba(0, 0, 0, 0.5);
-  --footer-background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  --footer-background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
   --nav-height: 64px;
-  --card-gradient: linear-gradient(135deg, #00B8D4, #00D4FF);
+  --card-gradient: linear-gradient(135deg, #0072BC, #00A3FF);
   --content-padding: 24px;
   --max-content-width: 1200px;
+  --glow-blue: rgba(0, 163, 255, 0.4);
 }
 
 * {
@@ -335,15 +337,18 @@ nav.nav-hidden {
 .shiny-text {
   background: linear-gradient(
     to right,
-    rgba(255, 255, 255, 0.85) 30%,
-    rgba(255, 255, 255, 1) 50%,
-    rgba(255, 255, 255, 0.85) 70%
+    rgba(255, 255, 255, 0.9) 20%,
+    var(--accent-cyan) 40%,
+    var(--secondary-blue) 50%,
+    var(--accent-cyan) 60%,
+    rgba(255, 255, 255, 0.9) 80%
   );
   background-size: 200% auto;
   color: transparent;
   background-clip: text;
   -webkit-background-clip: text;
   animation: textShine 6s linear infinite;
+  text-shadow: 0 0 20px var(--glow-blue);
 }
 
 .shiny-button {
@@ -360,9 +365,11 @@ nav.nav-hidden {
   height: 200%;
   background: linear-gradient(
     45deg,
-    transparent 40%,
-    rgba(255, 255, 255, 0.1) 50%,
-    transparent 60%
+    transparent 35%,
+    rgba(0, 163, 255, 0.15) 45%,
+    rgba(0, 212, 255, 0.25) 50%,
+    rgba(0, 163, 255, 0.15) 55%,
+    transparent 65%
   );
   animation: shine 5s infinite;
   pointer-events: none;
@@ -1006,42 +1013,13 @@ footer::before {
 }
 
 .footer-logo-section {
-  max-width: var(--max-content-width);
-  margin: 0 auto 48px;
-  padding: 0 var(--content-padding);
-  text-align: center;
-  position: relative;
-  z-index: 1;
-}
-
-.footer-logo {
-  max-width: 320px;
-  height: auto;
-  filter: drop-shadow(0 8px 32px rgba(0, 114, 188, 0.4));
-  animation: logoFloat 6s ease-in-out infinite;
-  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes logoFloat {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    filter: drop-shadow(0 8px 32px rgba(0, 212, 255, 0.5));
-  }
-  50% {
-    transform: translateY(-12px) scale(1.02);
-    filter: drop-shadow(0 16px 48px rgba(0, 188, 212, 0.6));
-  }
-}
-
-.footer-logo:hover {
-  transform: scale(1.05) rotate(-2deg);
-  filter: drop-shadow(0 12px 48px rgba(0, 188, 212, 0.8));
+  display: none;
 }
 
 .footer-content {
   max-width: var(--max-content-width);
   margin: 0 auto;
-  padding: 0 var(--content-padding);
+  padding: 48px var(--content-padding);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 40px;
@@ -1086,9 +1064,10 @@ footer::before {
   left: 0;
   width: 40px;
   height: 3px;
-  background: linear-gradient(90deg, #00d4ff, transparent);
+  background: linear-gradient(90deg, var(--secondary-blue), var(--accent-cyan));
   border-radius: 2px;
   animation: lineGrow 1s ease-out backwards;
+  box-shadow: 0 0 12px var(--glow-blue);
 }
 
 @keyframes lineGrow {
