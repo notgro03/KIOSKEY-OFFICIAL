@@ -4,7 +4,7 @@ export function renderNavigation(currentPage = '') {
 
   const navHTML = `
     <div class="logo">
-      <a href="/index.html"><img src="/images/k logo.png" alt="Kioskeys" class="nav-logo-img"></a>
+      <a href="/index.html"><img src="https://ucarecdn.com/bdf174c8-8731-47fa-a3f9-2443689099be/logokioskey.png" alt="Kioskeys" class="nav-logo-img"></a>
     </div>
     <div class="nav-links">
       <a href="/index.html" class="shiny-text ${currentPage === 'inicio' ? 'active' : ''}">
