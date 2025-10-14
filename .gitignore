@@ -2,6 +2,7 @@ node_modules
 .env
 dist/
 env.js
+!public/env.js
 .env.*
 .DS_Store
 Thumbs.db
