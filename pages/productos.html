@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Productos - Kioskeys</title>
-  <link rel="icon" href="/favicon.jpg">
-  <link rel="stylesheet" href="/style.css">
+  <link rel="icon" href="./favicon.jpg">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./css/kioskeys-styles.css">
+  <link rel="stylesheet" href="./css/productos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="/env.js"></script>
-  <script type="module" src="/src/main.js"></script>
-  <script type="module" src="/src/productos-dynamic.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+  <script src="./env.js"></script>
+  <script type="module" src="./src/main.js"></script>
   <style>
     /* Product Selector Section */
     .product-selector-section {
@@ -629,6 +629,32 @@
 <body>
   <nav></nav>
 
+  <style>
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 1rem 2rem;
+      background: rgba(10, 10, 10, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    nav.nav-hidden {
+      transform: translateY(-100%);
+    }
+
+    nav .logo img {
+      height: 40px;
+      width: auto;
+    }
+  </style>
+
   <main>
     <section class="hero">
       <div class="hero-content">
@@ -659,7 +685,7 @@
               <p>Repuestos originales</p>
             </a>
 
-            <a href="/pages/telemandos.html" class="selector-card selector-card-active">
+            <a href="/pages/telemandos.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-car"></i>
               </div>
@@ -676,18 +702,6 @@
             </a>
           </div>
         </div>
-
-        <!-- Búsqueda y Filtros -->
-        <div class="search-section">
-          <div class="search-container">
-            <i class="fas fa-search search-icon"></i>
-            <input type="text" id="productSearch" class="search-input" placeholder="Buscar productos...">
-          </div>
-          <div class="category-filters"></div>
-        </div>
-
-        <!-- Contenedor de Productos -->
-        <div class="products-grid"></div>
       </div>
     </section>
   </main>
@@ -751,7 +765,19 @@
 
   <script type="module">
     import { initNavigation } from '/src/components/navigation.js';
-    initNavigation('productos');
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Inicializar navegación
+      initNavigation('productos');
+
+      // Actualizar links para que sean relativos a la raíz
+      document.querySelectorAll('.selector-card').forEach(card => {
+        const href = card.getAttribute('href');
+        if (href && href.startsWith('/')) {
+          card.setAttribute('href', '.' + href);
+        }
+      });
+    });
   </script>
 </body>
 </html>
