@@ -1,64 +1,106 @@
-import Dexie from 'dexie';
+import { supabase } from './config/supabase.js';
 
-export const db = new Dexie('kioskeysDB');
-
-db.version(1).stores({
-  brands: '++id, name, type, logo',
-  products: '++id, name, brandId, category, price, description, image, type, features',
-  categories: '++id, name, description',
-  settings: 'key, value'
-});
-
-// Brand API
-export const brandsAPI = {
-  async getAll() {
-    return await db.brands.toArray();
-  },
-  async add(brand) {
-    return await db.brands.add(brand);
-  },
-  async update(id, brand) {
-    return await db.brands.update(id, brand);
-  },
-  async delete(id) {
-    return await db.brands.delete(id);
-  }
-};
-
-// Product API
+// Products API
 export const productsAPI = {
   async getAll() {
-    return await db.products.toArray();
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('active', true)
+      .order('created_at', { ascending: false });
+    
+    if (error) throw error;
+    return data;
   },
+
   async getByType(type) {
-    return await db.products.where('type').equals(type).toArray();
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('type', type)
+      .eq('active', true);
+    
+    if (error) throw error;
+    return data;
   },
+
   async getByBrand(brandId) {
-    return await db.products.where('brandId').equals(brandId).toArray();
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('brand_id', brandId)
+      .eq('active', true);
+    
+    if (error) throw error;
+    return data;
   },
+
   async add(product) {
-    return await db.products.add(product);
+    const { data, error } = await supabase
+      .from('products')
+      .insert([product])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   },
+
   async update(id, product) {
-    return await db.products.update(id, product);
+    const { data, error } = await supabase
+      .from('products')
+      .update(product)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   },
+
   async delete(id) {
-    return await db.products.delete(id);
+    const { error } = await supabase
+      .from('products')
+      .update({ active: false })
+      .eq('id', id);
+    
+    if (error) throw error;
   }
 };
 
-// Categories API
-export const categoriesAPI = {
-  async getAll() {
-    return await db.categories.toArray();
+// Banner Videos API
+export const bannerAPI = {
+  async getVideos() {
+    const { data, error } = await supabase
+      .from('banner_videos')
+      .select('*')
+      .eq('active', true)
+      .order('order_num');
+    
+    if (error) throw error;
+    return data;
   },
-  async add(category) {
-    return await db.categories.add(category);
+
+  async updateVideo(id, video) {
+    const { data, error } = await supabase
+      .from('banner_videos')
+      .update(video)
+      .eq('id', id)
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   },
-  async update(id, category) {
-    return await db.categories.update(id, category);
-  },
-  async delete(id) {
-    return await db.categories.delete(id);
+
+  async addVideo(video) {
+    const { data, error } = await supabase
+      .from('banner_videos')
+      .insert([video])
+      .select()
+      .single();
+    
+    if (error) throw error;
+    return data;
   }
 };
