@@ -439,14 +439,32 @@
   </main>
 
   <script type="module">
-    import { supabase } from '../src/config/supabase.js';
-    
+    import { supabase, isSupabaseConfigured } from '../src/config/supabase.js';
+
     let currentData = {};
-  
+    const supabaseReady = Boolean(isSupabaseConfigured && supabase);
+
+    const showLoadError = (message) => {
+      const results = document.getElementById('searchResults');
+      if (results) {
+        results.innerHTML = `<div class="error-message">${message}</div>`;
+        results.classList.add('active');
+      }
+    };
+
     document.addEventListener('DOMContentLoaded', async () => {
     const brandSelect = document.getElementById('brandSelect');
     const modelSelect = document.getElementById('modelSelect');
     const searchButton = document.querySelector('.search-button');
+
+    if (!supabaseReady) {
+        brandSelect.disabled = true;
+        modelSelect.disabled = true;
+        searchButton.disabled = true;
+        searchButton.innerHTML = '<i class="fas fa-triangle-exclamation"></i> Servicio no disponible';
+        showLoadError('Error al cargar las carcasas. Por favor, intenta nuevamente más tarde.');
+        return;
+    }
 
     // Cargar marcas desde la base de datos
     const { data: brands, error: brandsError } = await supabase
