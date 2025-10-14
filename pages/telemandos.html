@@ -452,10 +452,13 @@
     import { supabase } from '../src/config/supabase.js';
     import { initNavigation } from '../src/components/navigation.js';
 
-    const brandSelect = document.getElementById('brandSelect');
-    const modelSelect = document.getElementById('modelSelect');
-    const searchButton = document.querySelector('.search-button');
-    const results = document.getElementById('searchResults');
+    let brandSelect;
+    let modelSelect;
+    let searchButton;
+    let results;
+    let modal;
+    let modalImg;
+    let initialized = false;
 
     const telemandosByBrand = new Map();
 
@@ -468,6 +471,7 @@
     }
 
     function toggleResults(visible) {
+      if (!results) return;
       results.hidden = !visible;
       if (!visible) {
         results.innerHTML = '';
@@ -480,6 +484,8 @@
       const modelKey = sanitize(model);
       const modelsMap = telemandosByBrand.get(brandKey);
       const items = modelsMap ? modelsMap.get(modelKey) : undefined;
+
+      if (!results) return;
 
       results.innerHTML = '';
 
@@ -551,6 +557,8 @@
       const modelsMap = telemandosByBrand.get(brandKey) || new Map();
       const models = Array.from(modelsMap.keys());
 
+      if (!modelSelect) return;
+
       modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
 
       if (!models.length) {
@@ -573,6 +581,8 @@
     }
 
     function populateBrands() {
+      if (!brandSelect || !searchButton) return;
+
       const brands = Array.from(telemandosByBrand.keys());
 
       brandSelect.innerHTML = '<option value="">Seleccionar marca</option>';
@@ -633,26 +643,43 @@
         populateBrands();
       } catch (error) {
         console.error('Error cargando telemandos:', error);
-        brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
-        modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
-        brandSelect.disabled = true;
-        modelSelect.disabled = true;
-        searchButton.disabled = true;
+        if (brandSelect && modelSelect && searchButton) {
+          brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
+          modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
+          brandSelect.disabled = true;
+          modelSelect.disabled = true;
+          searchButton.disabled = true;
+        }
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    function initialize() {
+      if (initialized) return;
+
+      brandSelect = document.getElementById('brandSelect');
+      modelSelect = document.getElementById('modelSelect');
+      searchButton = document.querySelector('.search-button');
+      results = document.getElementById('searchResults');
+
+      if (!brandSelect || !modelSelect || !searchButton || !results) {
+        console.warn('No se encontraron los elementos del buscador de telemandos.');
+        return;
+      }
+
+      initialized = true;
+
       initNavigation('telemandos');
 
-      const modal = document.createElement('div');
+      modal = document.createElement('div');
       modal.className = 'modal';
       modal.innerHTML = '<img class="modal-content">';
+      modalImg = modal.querySelector('.modal-content');
       document.body.appendChild(modal);
+
       modal.addEventListener('click', () => modal.classList.remove('active'));
 
       document.addEventListener('click', event => {
         if (event.target.classList.contains('result-logo') && event.target.tagName === 'IMG') {
-          const modalImg = modal.querySelector('.modal-content');
           modalImg.src = event.target.src;
           modal.classList.add('active');
         }
@@ -687,7 +714,13 @@
       });
 
       loadTelemandos();
-    });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize, { once: true });
+    } else {
+      initialize();
+    }
   </script>
 
   <script type="module" src="/src/main.js"></script>

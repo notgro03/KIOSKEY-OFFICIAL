@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
-  <script type="module" src="/src/productos-dynamic.js"></script>
   <style>
     /* Product Selector Section */
     .product-selector-section {
@@ -24,6 +23,11 @@
       color: rgba(255, 255, 255, 0.9);
       margin-bottom: 32px;
       letter-spacing: -0.02em;
+    }
+
+    .product-selector-note p {
+      font-size: 16px;
+      line-height: 1.6;
     }
 
     .product-selector-grid {
@@ -794,34 +798,10 @@
           </div>
         </div>
 
-        <div class="catalog-explorer">
-          <div class="search-container">
-            <span class="search-icon" aria-hidden="true">
-              <i class="fas fa-search"></i>
-            </span>
-            <input type="search"
-              id="productSearch"
-              class="search-input"
-              placeholder="Buscar por marca, modelo o producto"
-              aria-label="Buscar productos" />
-          </div>
-
-          <div class="category-filters" data-category-filters aria-label="Filtrar por categoría"></div>
-
-          <div class="catalog-results">
-            <div class="catalog-loading" data-loading-state>
-              <i class="fas fa-spinner fa-spin" aria-hidden="true"></i>
-              <p>Cargando catálogo...</p>
-            </div>
-
-            <div class="features-grid" data-product-grid></div>
-
-            <div class="catalog-empty-state" data-empty-state hidden>
-              <i class="fas fa-box-open" aria-hidden="true"></i>
-              <h3>No encontramos coincidencias</h3>
-              <p>Probá con otro término de búsqueda o cambiá la categoría.</p>
-            </div>
-          </div>
+        <div class="product-selector-note">
+          <p style="text-align:center;color:rgba(255,255,255,0.75);max-width:720px;margin:24px auto 0;">
+            Elegí una categoría para ver los catálogos especializados con más detalles sobre cada producto.
+          </p>
         </div>
       </div>
     </section>

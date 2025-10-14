@@ -101,8 +101,13 @@ async function loadHomeProducts() {
   }).join('');
 }
 
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
+function initHome() {
   loadBannerMedia();
   loadHomeProducts();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initHome, { once: true });
+} else {
+  initHome();
+}

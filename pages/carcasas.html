@@ -443,12 +443,13 @@
     import { supabase } from '../src/config/supabase.js';
     import { initNavigation } from '../src/components/navigation.js';
 
-    const brandSelect = document.getElementById('brandSelect');
-    const modelSelect = document.getElementById('modelSelect');
-    const searchButton = document.querySelector('.search-button');
-    const results = document.getElementById('searchResults');
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modalImage');
+    let brandSelect;
+    let modelSelect;
+    let searchButton;
+    let results;
+    let modal;
+    let modalImg;
+    let initialized = false;
 
     const carcasasByBrand = new Map();
 
@@ -461,6 +462,7 @@
     }
 
     function toggleResults(visible) {
+      if (!results) return;
       results.hidden = !visible;
       if (!visible) {
         results.innerHTML = '';
@@ -473,6 +475,8 @@
       const modelKey = sanitize(model);
       const modelsMap = carcasasByBrand.get(brandKey);
       const items = modelsMap ? modelsMap.get(modelKey) : undefined;
+
+      if (!results) return;
 
       results.innerHTML = '';
 
@@ -533,6 +537,8 @@
       const modelsMap = carcasasByBrand.get(brandKey) || new Map();
       const models = Array.from(modelsMap.keys());
 
+      if (!modelSelect) return;
+
       modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
 
       if (!models.length) {
@@ -555,6 +561,8 @@
     }
 
     function populateBrands() {
+      if (!brandSelect || !searchButton) return;
+
       const brands = Array.from(carcasasByBrand.keys());
 
       brandSelect.innerHTML = '<option value="">Seleccionar marca</option>';
@@ -615,15 +623,33 @@
         populateBrands();
       } catch (error) {
         console.error('Error cargando carcasas:', error);
-        brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
-        modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
-        brandSelect.disabled = true;
-        modelSelect.disabled = true;
-        searchButton.disabled = true;
+        if (brandSelect && modelSelect && searchButton) {
+          brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
+          modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
+          brandSelect.disabled = true;
+          modelSelect.disabled = true;
+          searchButton.disabled = true;
+        }
       }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    function initialize() {
+      if (initialized) return;
+
+      brandSelect = document.getElementById('brandSelect');
+      modelSelect = document.getElementById('modelSelect');
+      searchButton = document.querySelector('.search-button');
+      results = document.getElementById('searchResults');
+      modal = document.getElementById('modal');
+      modalImg = document.getElementById('modalImage');
+
+      if (!brandSelect || !modelSelect || !searchButton || !results) {
+        console.warn('No se encontraron los elementos del buscador de carcasas.');
+        return;
+      }
+
+      initialized = true;
+
       initNavigation('carcasas');
       loadCarcasas();
 
@@ -655,17 +681,25 @@
         renderResults(brand, model);
       });
 
-      modal.addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
+      if (modal && modalImg) {
+        modal.addEventListener('click', () => {
+          modal.classList.remove('active');
+        });
 
-      document.addEventListener('click', event => {
-        if (event.target.classList.contains('model-image')) {
-          modalImg.src = event.target.src;
-          modal.classList.add('active');
-        }
-      });
-    });
+        document.addEventListener('click', event => {
+          if (event.target.classList.contains('model-image')) {
+            modalImg.src = event.target.src;
+            modal.classList.add('active');
+          }
+        });
+      }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize, { once: true });
+    } else {
+      initialize();
+    }
   </script>
 
   <div id="modal" class="modal">
