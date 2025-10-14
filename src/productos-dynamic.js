@@ -1,91 +1,116 @@
 import { supabase } from './config/supabase.js';
 
-// Cargar productos desde Supabase
-async function loadProducts() {
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('active', true)
-    .order('order_position');
+// Definición de constantes
+const CATEGORY_ICONS = {
+  llaves: 'fa-key',
+  telemandos: 'fa-wifi', 
+  carcasas: 'fa-car'
+};
 
-  if (error) {
-    console.error('Error loading products:', error);
-    return;
-  }
+const CATEGORY_LABELS = {
+  all: 'Todos',
+  llaves: 'Llaves',
+  telemandos: 'Controles',
+  carcasas: 'Carcasas'
+};
 
-  const container = document.querySelector('.features-grid');
-  if (!container) return;
+// Función para formatear productos según su categoría
+function formatProduct(product, category) {
+  const baseFeatures = [
+    `Marca: ${product.brand}`,
+    `Modelo: ${product.model}`,
+    `Precio: $${product.price.toLocaleString()}`
+  ];
 
-  container.innerHTML = products.map(product => {
-    const features = typeof product.features === 'string' ? JSON.parse(product.features) : product.features;
+  const formatConfig = {
+    llaves: {
+      title: `${product.brand} ${product.model}`,
+      description: 'Llave de auto original',
+      features: baseFeatures
+    },
+    telemandos: {
+      title: `Control ${product.brand} ${product.model}`,
+      description: 'Control remoto original',
+      features: baseFeatures
+    },
+    carcasas: {
+      title: `Carcasa ${product.brand} ${product.model}`,
+      description: 'Carcasa de repuesto original',
+      features: [...baseFeatures, `Color: ${product.color}`]
+    }
+  };
 
-    // Determinar si hay video o imagen
-    const hasVideo = product.video_url && product.video_url.trim() !== '';
-    const mediaHTML = hasVideo
-      ? `<video class="product-media" autoplay loop muted playsinline>
-           <source src="${product.video_url}" type="video/mp4">
-         </video>`
-      : `<i class="fas ${product.icon} feature-icon"></i>`;
-
-    return `
-      <a href="${product.link_url}" class="product-card" data-category="${product.category}">
-        ${mediaHTML}
-        <h3>${product.title}</h3>
-        <p class="product-description">${product.description}</p>
-        <ul class="product-details">
-          ${features.map(feature => `<li>${feature}</li>`).join('')}
-        </ul>
-        <span class="learn-more">${product.link_text} <i class="fas fa-arrow-right"></i></span>
-      </a>
-    `;
-  }).join('');
-
-  // Actualizar categorías dinámicamente
-  updateCategories(products);
+  const config = formatConfig[category];
+  
+  return {
+    ...product,
+    category,
+    title: config.title,
+    description: product.description || config.description,
+    features: config.features
+  };
 }
 
-// Actualizar filtros de categorías
+// Función para renderizar productos
+function renderProducts(products) {
+  const productGrid = document.querySelector('.products-grid');
+  if (!productGrid) return;
+
+  productGrid.innerHTML = products.map(product => `
+    <div class="product-item" data-category="${product.category}">
+      <div class="product-icon-wrapper">
+        <i class="fas ${CATEGORY_ICONS[product.category]}"></i>
+      </div>
+      <img src="${product.image_url}" alt="${product.title}" class="product-image">
+      <h3>${product.title}</h3>
+      <p>${product.description}</p>
+      <ul class="product-features">
+        ${product.features.map(feature => `<li>${feature}</li>`).join('')}
+      </ul>
+      <div class="product-actions">
+        <button class="contact-btn" onclick="window.location.href='contacto.html?product=${encodeURIComponent(product.title)}'">
+          <i class="fas fa-envelope"></i>
+          Consultar
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Función para actualizar categorías
 function updateCategories(products) {
   const categories = ['all', ...new Set(products.map(p => p.category))];
   const filtersContainer = document.querySelector('.category-filters');
-
+  
   if (!filtersContainer) return;
 
-  filtersContainer.innerHTML = categories.map((cat, index) => {
-    const label = cat === 'all' ? 'Todos' : cat.charAt(0).toUpperCase() + cat.slice(1);
-    return `
-      <button class="category-filter ${index === 0 ? 'active' : ''}" data-category="${cat}">
-        ${label}
-      </button>
-    `;
-  }).join('');
+  filtersContainer.innerHTML = categories.map((cat, index) => `
+    <button class="category-filter ${index === 0 ? 'active' : ''}" data-category="${cat}">
+      ${CATEGORY_LABELS[cat]}
+    </button>
+  `).join('');
 
-  // Reactivar event listeners
   setupFilters();
 }
 
-// Setup filtros
+// Función para configurar los filtros
 function setupFilters() {
   document.querySelectorAll('.category-filter').forEach(button => {
     button.addEventListener('click', () => {
-      document.querySelectorAll('.category-filter').forEach(btn => {
-        btn.classList.remove('active');
-      });
+      // Actualizar estados activos
+      document.querySelectorAll('.category-filter').forEach(btn => btn.classList.remove('active'));
       button.classList.add('active');
 
+      // Filtrar productos
       const category = button.dataset.category;
-      document.querySelectorAll('.product-card').forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-          card.style.display = 'flex';
-        } else {
-          card.style.display = 'none';
-        }
+      document.querySelectorAll('.product-item').forEach(card => {
+        card.style.display = (category === 'all' || card.dataset.category === category) ? 'flex' : 'none';
       });
     });
   });
 }
 
-// Búsqueda
+// Función de búsqueda
 function setupSearch() {
   const searchInput = document.getElementById('productSearch');
   if (!searchInput) return;
@@ -93,20 +118,58 @@ function setupSearch() {
   searchInput.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
 
-    document.querySelectorAll('.product-card').forEach(card => {
+    document.querySelectorAll('.product-item').forEach(card => {
       const title = card.querySelector('h3').textContent.toLowerCase();
-      const description = card.querySelector('.product-description').textContent.toLowerCase();
-      const details = Array.from(card.querySelectorAll('.product-details li'))
+      const description = card.querySelector('p').textContent.toLowerCase();
+      const features = Array.from(card.querySelectorAll('.product-features li'))
         .map(li => li.textContent.toLowerCase())
         .join(' ');
 
-      if (title.includes(searchTerm) || description.includes(searchTerm) || details.includes(searchTerm)) {
-        card.style.display = 'flex';
-      } else {
-        card.style.display = 'none';
-      }
+      const matches = title.includes(searchTerm) || 
+                     description.includes(searchTerm) || 
+                     features.includes(searchTerm);
+      
+      card.style.display = matches ? 'flex' : 'none';
     });
   });
+}
+
+// Función principal para cargar productos
+async function loadProducts() {
+  try {
+    console.log('Iniciando carga de productos...');
+    // Cargar todos los tipos de productos
+    const [llaves, telemandos, carcasas] = await Promise.all([
+      supabase.from('llaves').select('*').eq('active', true).order('brand'),
+      supabase.from('telemandos').select('*').eq('active', true).order('brand'),
+      supabase.from('carcasas').select('*').eq('active', true).order('brand')
+    ]);
+    
+    console.log('Respuestas de Supabase:', { llaves, telemandos, carcasas });
+
+    // Validar respuestas
+    if (llaves.error) throw llaves.error;
+    if (telemandos.error) throw telemandos.error;
+    if (carcasas.error) throw carcasas.error;
+
+    // Combinar y formatear todos los productos
+    const products = [
+      ...llaves.data.map(p => formatProduct(p, 'llaves')),
+      ...telemandos.data.map(p => formatProduct(p, 'telemandos')),
+      ...carcasas.data.map(p => formatProduct(p, 'carcasas'))
+    ];
+
+    // Renderizar productos y actualizar UI
+    renderProducts(products);
+    updateCategories(products);
+
+  } catch (error) {
+    console.error('Error loading products:', error);
+    const container = document.querySelector('.products-grid');
+    if (container) {
+      container.innerHTML = '<div class="error-message">Error al cargar los productos. Por favor, intente nuevamente más tarde.</div>';
+    }
+  }
 }
 
 // Inicializar

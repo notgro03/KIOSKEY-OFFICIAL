@@ -7,9 +7,10 @@
   <link rel="icon" href="/favicon.jpg">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script type="module" src="/env.js"></script>
+  <script src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/productos-dynamic.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
   <style>
     /* Product Selector Section */
     .product-selector-section {
@@ -675,6 +676,18 @@
             </a>
           </div>
         </div>
+
+        <!-- Búsqueda y Filtros -->
+        <div class="search-section">
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="productSearch" class="search-input" placeholder="Buscar productos...">
+          </div>
+          <div class="category-filters"></div>
+        </div>
+
+        <!-- Contenedor de Productos -->
+        <div class="products-grid"></div>
       </div>
     </section>
   </main>
