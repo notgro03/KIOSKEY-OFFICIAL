@@ -385,24 +385,24 @@
             <div class="search-fields">
               <div class="search-field">
                 <label for="brandSelect">Marca</label>
-                <select id="brandSelect">
-                  <option value="">Seleccionar marca</option>
+                <select id="brandSelect" disabled>
+                  <option value="">Cargando marcas...</option>
                 </select>
               </div>
               <div class="search-field">
                 <label for="modelSelect">Modelo</label>
                 <select id="modelSelect" disabled>
-                  <option value="">Seleccionar modelo</option>
+                  <option value="">Selecciona una marca primero</option>
                 </select>
               </div>
             </div>
-            <button class="search-button" onclick="searchCases()">
+            <button class="search-button" type="button" disabled>
               <i class="fas fa-search"></i>
               Buscar Carcasas Compatibles
             </button>
           </div>
 
-          <div class="search-results" id="searchResults">
+          <div class="search-results" id="searchResults" hidden>
             <!-- Los resultados se mostrarán aquí -->
           </div>
         </div>
@@ -441,172 +441,236 @@
 
   <script type="module">
     import { supabase } from '../src/config/supabase.js';
-    
-    let currentData = {};
-  
-    document.addEventListener('DOMContentLoaded', async () => {
+    import { initNavigation } from '../src/components/navigation.js';
+
     const brandSelect = document.getElementById('brandSelect');
     const modelSelect = document.getElementById('modelSelect');
     const searchButton = document.querySelector('.search-button');
-
-    // Cargar marcas desde la base de datos
-    const { data: brands, error: brandsError } = await supabase
-        .from('carcasas')
-        .select('brand')
-        .order('brand', { ascending: true });
-
-    if (!brandsError && brands.length > 0) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))]; // Eliminar marcas repetidas
-
-        uniqueBrands.forEach(brand => {
-            const option = document.createElement('option');
-            option.value = brand;
-            option.textContent = brand;
-            brandSelect.appendChild(option);
-        });
-    }
-
-    // Evento cambio de marca
-    brandSelect.addEventListener('change', async () => {
-    const brand = brandSelect.value;
-    modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-    modelSelect.disabled = !brand;
-    currentData = {};
-
-    if (brand) {
-        const { data: models, error: modelsError } = await supabase
-            .from('carcasas')
-            .select('model, image_url, description, video_url')
-            .eq('brand', brand)
-            .order('model', { ascending: true });
-
-        if (!modelsError && models.length > 0) {
-            const uniqueModels = new Set();
-
-            models.forEach(item => {
-                if (!currentData[item.model]) {
-                    currentData[item.model] = [];
-                }
-                currentData[item.model].push({
-                    image_url: item.image_url,
-                    description: item.description,
-                    video_url: item.video_url || ""
-                });
-
-                uniqueModels.add(item.model); 
-            });
-
-            // Agregar solo modelos únicos al select
-            uniqueModels.forEach(model => {
-                const option = document.createElement('option');
-                option.value = model;
-                option.textContent = model;
-                modelSelect.appendChild(option);
-            });
-        }
-    }
-});
-
-    // Evento botón buscar
-searchButton.addEventListener('click', () => {
-    const brand = brandSelect.value;
-    const model = modelSelect.value;
-
-    if (!brand || !model) {
-        alert('Selecciona marca y modelo');
-        return;
-    }
-
-    const casesData = currentData[model] || [];
-
-    showResults(brand, model, casesData);
-});
-  
-  });
-
-  function showResults(brand, model, casesData) {
     const results = document.getElementById('searchResults');
-    results.innerHTML = "";
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImage');
 
-    casesData.forEach(({ image_url, description, video_url }) => {
-        const whatsappMessage = encodeURIComponent(
-          `Hola, me interesa obtener una cotización para la siguiente carcasa:\n\n` +
-          `Marca: ${brand}\n` +
-          `Modelo: ${model}\n` +
-          `Descripción: ${description || "No disponible"}\n\n` +
-          `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+    const carcasasByBrand = new Map();
+
+    function sanitize(value = '') {
+      return String(value).trim();
+    }
+
+    function isVideo(url = '') {
+      return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+    }
+
+    function toggleResults(visible) {
+      results.hidden = !visible;
+      if (!visible) {
+        results.innerHTML = '';
+        results.classList.remove('active');
+      }
+    }
+
+    function renderResults(brand, model) {
+      const brandKey = sanitize(brand);
+      const modelKey = sanitize(model);
+      const modelsMap = carcasasByBrand.get(brandKey);
+      const items = modelsMap ? modelsMap.get(modelKey) : undefined;
+
+      results.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        results.innerHTML = '<p style="text-align:center; margin: 0;">No se encontraron carcasas para este modelo.</p>';
+        toggleResults(true);
+        return;
+      }
+
+      const whatsappBase = 'https://api.whatsapp.com/send/?phone=541157237390&text=';
+      const fallbackMedia = `
+        <div class="image-container" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);border-radius:12px;color:rgba(255,255,255,0.8);">
+          <i class="fas fa-car-side" style="font-size:48px;"></i>
+        </div>
+      `;
+
+      results.innerHTML = items.map(item => {
+        const description = sanitize(item.description);
+        const mediaUrl = sanitize(item.video_url) || sanitize(item.image_url);
+        const message = encodeURIComponent(
+          'Hola, me interesa obtener una cotización para la siguiente carcasa:\n\n' +
+          `Marca: ${brandKey}\n` +
+          `Modelo: ${modelKey}\n` +
+          `Descripción: ${description || 'No disponible'}\n\n` +
+          'Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?'
         );
-        const whatsappNumber = "541157237390";
-        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
 
-        // Determinar si hay video o imagen
-        const hasVideo = video_url && video_url.trim() !== '';
-        const mediaHTML = hasVideo
-            ? `<video class="model-image model-video" autoplay loop muted playsinline>
-                 <source src="${video_url}" type="video/mp4">
-               </video>`
-            : `<img src="${image_url || ''}" alt="Carcasa de ${brand}" class="model-image">`;
+        let mediaContent = fallbackMedia;
 
-        results.innerHTML += `
+        if (mediaUrl) {
+          mediaContent = isVideo(mediaUrl)
+            ? `<div class="image-container"><video class="model-image model-video" autoplay loop muted playsinline>
+                <source src="${mediaUrl}" type="video/mp4">
+              </video></div>`
+            : `<div class="image-container"><img src="${mediaUrl}" alt="Carcasa ${brandKey} ${modelKey}" class="model-image"></div>`;
+        }
+
+        return `
           <div class="result-item">
-            <div class="image-container">
-              ${mediaHTML}
-            </div>
+            ${mediaContent}
             <div class="result-info">
-              <h3>Carcasa ${brand} ${description ? ` ${description}` : ""}</h3>
-              <p><strong>Modelo:</strong> ${model}</p>
+              <h3>Carcasa ${brandKey}${description ? ` ${description}` : ''}</h3>
+              <p><strong>Modelo:</strong> ${modelKey}</p>
             </div>
-            <a href="${whatsappUrl}" target="_blank" class="result-button">
+            <a href="${whatsappBase + message}" target="_blank" class="result-button">
               <i class="fab fa-whatsapp"></i> Consultar
             </a>
           </div>
         `;
-      });
+      }).join('');
 
       results.classList.add('active');
+      toggleResults(true);
     }
 
-    // Función para abrir el modal con la imagen ampliada
-    function openModal(src) {
-      const modal = document.getElementById('modal');
-      const modalImg = document.getElementById('modalImage');
-      modalImg.src = src;
-      modal.classList.add('active');
-    }
+    function populateModels(brand) {
+      const brandKey = sanitize(brand);
+      const modelsMap = carcasasByBrand.get(brandKey) || new Map();
+      const models = Array.from(modelsMap.keys());
 
-    // Cerrar el modal al hacer click sobre él
-    document.getElementById('modal').addEventListener('click', () => {
-      document.getElementById('modal').classList.remove('active');
-    });
+      modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
 
-    // Detectar click en la imagen para abrir el modal (efecto zoom)
-    document.addEventListener('click', (event) => {
-      if (event.target.classList.contains('model-image')) {
-        openModal(event.target.src);
+      if (!models.length) {
+        modelSelect.disabled = true;
+        modelSelect.options[0].textContent = 'Sin modelos disponibles';
+        toggleResults(false);
+        return;
       }
-    });
-  </script>
-  
-  <div id="modal" class="modal">
-    <img id="modalImage" class="modal-content" alt="Imagen ampliada">
-  </div>
 
-  <section class="main-content" style="padding: 60px 0;">
-    <div class="content-container">
-      <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Carcasas</h2>
-      <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
-    </div>
-  </section>
+      models.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+      });
 
-  <script type="module">
-    import { loadCarcasas } from '../src/pages/carcasas-loader.js';
-    import { initNavigation } from '../src/components/navigation.js';
+      modelSelect.disabled = false;
+      modelSelect.options[0].textContent = 'Seleccionar modelo';
+      toggleResults(false);
+    }
+
+    function populateBrands() {
+      const brands = Array.from(carcasasByBrand.keys());
+
+      brandSelect.innerHTML = '<option value="">Seleccionar marca</option>';
+
+      if (!brands.length) {
+        brandSelect.disabled = true;
+        brandSelect.options[0].textContent = 'Sin marcas disponibles';
+        searchButton.disabled = true;
+        return;
+      }
+
+      brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand;
+        option.textContent = brand;
+        brandSelect.appendChild(option);
+      });
+
+      brandSelect.disabled = false;
+      searchButton.disabled = false;
+    }
+
+    async function loadCarcasas() {
+      try {
+        const { data, error } = await supabase
+          .from('carcasas')
+          .select('brand, model, description, image_url, video_url, active')
+          .eq('active', true)
+          .order('brand', { ascending: true })
+          .order('model', { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        (data || [])
+          .map(item => ({
+            brand: sanitize(item.brand),
+            model: sanitize(item.model),
+            description: item.description || '',
+            image_url: item.image_url || '',
+            video_url: item.video_url || '',
+          }))
+          .filter(item => item.brand && item.model)
+          .forEach(item => {
+            if (!carcasasByBrand.has(item.brand)) {
+              carcasasByBrand.set(item.brand, new Map());
+            }
+
+            const modelsMap = carcasasByBrand.get(item.brand);
+            if (!modelsMap.has(item.model)) {
+              modelsMap.set(item.model, []);
+            }
+
+            modelsMap.get(item.model).push(item);
+          });
+
+        populateBrands();
+      } catch (error) {
+        console.error('Error cargando carcasas:', error);
+        brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
+        modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
+        brandSelect.disabled = true;
+        modelSelect.disabled = true;
+        searchButton.disabled = true;
+      }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
       initNavigation('carcasas');
       loadCarcasas();
+
+      brandSelect.addEventListener('change', event => {
+        populateModels(event.target.value);
+      });
+
+      modelSelect.addEventListener('change', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
+
+        if (brand && model) {
+          renderResults(brand, model);
+        } else {
+          toggleResults(false);
+        }
+      });
+
+      searchButton.addEventListener('click', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
+
+        if (!brand || !model) {
+          results.innerHTML = '<p style="text-align:center; margin: 0;">Selecciona una marca y un modelo para ver los resultados.</p>';
+          toggleResults(true);
+          return;
+        }
+
+        renderResults(brand, model);
+      });
+
+      modal.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      document.addEventListener('click', event => {
+        if (event.target.classList.contains('model-image')) {
+          modalImg.src = event.target.src;
+          modal.classList.add('active');
+        }
+      });
     });
   </script>
+
+  <div id="modal" class="modal">
+    <img id="modalImage" class="modal-content" alt="Imagen ampliada">
+  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

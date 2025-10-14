@@ -326,25 +326,25 @@
             <div class="search-fields">
               <div class="search-field">
                 <label for="brandSelect">Marca</label>
-                <select id="brandSelect">
-                  <option value="">Seleccionar marca</option>
+                <select id="brandSelect" disabled>
+                  <option value="">Cargando marcas...</option>
                 </select>
               </div>
               <div class="search-field">
                 <label for="modelSelect">Modelo</label>
                 <select id="modelSelect" disabled>
-                  <option value="">Seleccionar modelo</option>
+                  <option value="">Selecciona una marca primero</option>
                 </select>
               </div>
             </div>
-            <button class="search-button">
+            <button class="search-button" type="button" disabled>
               <i class="fas fa-search"></i>
               Buscar Telemandos Compatibles
             </button>
           </div>
 
-          <div class="search-results" id="searchResults">
-            <!-- Results will be displayed here -->
+          <div class="search-results" id="searchResults" hidden>
+            <!-- Los resultados se mostrarán aquí -->
           </div>
 
           <a href="https://api.whatsapp.com/send/?phone=541157237390&text=Hola, no encuentro mi telemando en el catálogo. ¿Podrían ayudarme? Adjuntaré una foto de mi telemando." 
@@ -450,192 +450,242 @@
 
   <script type="module">
     import { supabase } from '../src/config/supabase.js';
+    import { initNavigation } from '../src/components/navigation.js';
 
-    let currentData = {};
+    const brandSelect = document.getElementById('brandSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const searchButton = document.querySelector('.search-button');
+    const results = document.getElementById('searchResults');
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Agregar el modal al body
+    const telemandosByBrand = new Map();
+
+    function sanitize(value = '') {
+      return String(value).trim();
+    }
+
+    function isVideo(url = '') {
+      return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+    }
+
+    function toggleResults(visible) {
+      results.hidden = !visible;
+      if (!visible) {
+        results.innerHTML = '';
+        results.classList.remove('active');
+      }
+    }
+
+    function renderResultCards(brand, model) {
+      const brandKey = sanitize(brand);
+      const modelKey = sanitize(model);
+      const modelsMap = telemandosByBrand.get(brandKey);
+      const items = modelsMap ? modelsMap.get(modelKey) : undefined;
+
+      results.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        results.innerHTML = '<p style="text-align:center; margin: 0;">No se encontraron telemandos para este modelo.</p>';
+        toggleResults(true);
+        return;
+      }
+
+      const whatsappBase = 'https://api.whatsapp.com/send/?phone=541157237390&text=';
+      const fallbackMedia = `
+        <div class="result-logo" style="display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.35);border-radius:12px;color:rgba(255,255,255,0.8);">
+          <i class="fas fa-car" style="font-size:48px;"></i>
+        </div>
+      `;
+
+      results.innerHTML = items.map(item => {
+        const description = sanitize(item.description);
+        const mediaUrl = sanitize(item.video_url) || sanitize(item.image_url);
+        const message = encodeURIComponent(
+          'Hola, me interesa obtener una cotización para el siguiente telemando:\n\n' +
+          `Marca: ${brandKey}\n` +
+          `Modelo: ${modelKey}\n` +
+          `Descripción: ${description || 'No disponible'}\n\n` +
+          'Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?'
+        );
+
+        let mediaContent = fallbackMedia;
+
+        if (mediaUrl) {
+          mediaContent = isVideo(mediaUrl)
+            ? `<video class="result-logo result-video" autoplay loop muted playsinline>
+                <source src="${mediaUrl}" type="video/mp4">
+              </video>`
+            : `<img src="${mediaUrl}" alt="Telemando de ${brandKey} ${modelKey}" class="result-logo">`;
+        }
+
+        return `
+          <div class="result-item">
+            ${mediaContent}
+            <div class="result-info">
+              <h3>Telemando ${brandKey}${description ? ` ${description}` : ''}</h3>
+              <p><strong>Modelo:</strong> ${modelKey}</p>
+              <div class="result-features">
+                <span class="result-feature">
+                  <i class="fas fa-check-circle"></i> Alta compatibilidad
+                </span>
+                <span class="result-feature">
+                  <i class="fas fa-shield-alt"></i> Garantía 1 año
+                </span>
+                <span class="result-feature">
+                  <i class="fas fa-tools"></i> Programación incluida
+                </span>
+              </div>
+            </div>
+            <a href="${whatsappBase + message}" target="_blank" class="result-button">
+              <i class="fab fa-whatsapp"></i> Consultar
+            </a>
+          </div>
+        `;
+      }).join('');
+
+      results.classList.add('active');
+      toggleResults(true);
+    }
+
+    function populateModels(brand) {
+      const brandKey = sanitize(brand);
+      const modelsMap = telemandosByBrand.get(brandKey) || new Map();
+      const models = Array.from(modelsMap.keys());
+
+      modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+
+      if (!models.length) {
+        modelSelect.disabled = true;
+        modelSelect.options[0].textContent = 'Sin modelos disponibles';
+        toggleResults(false);
+        return;
+      }
+
+      models.forEach(model => {
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+      });
+
+      modelSelect.disabled = false;
+      modelSelect.options[0].textContent = 'Seleccionar modelo';
+      toggleResults(false);
+    }
+
+    function populateBrands() {
+      const brands = Array.from(telemandosByBrand.keys());
+
+      brandSelect.innerHTML = '<option value="">Seleccionar marca</option>';
+
+      if (!brands.length) {
+        brandSelect.disabled = true;
+        brandSelect.options[0].textContent = 'Sin marcas disponibles';
+        searchButton.disabled = true;
+        return;
+      }
+
+      brands.forEach(brand => {
+        const option = document.createElement('option');
+        option.value = brand;
+        option.textContent = brand;
+        brandSelect.appendChild(option);
+      });
+
+      brandSelect.disabled = false;
+      searchButton.disabled = false;
+    }
+
+    async function loadTelemandos() {
+      try {
+        const { data, error } = await supabase
+          .from('telemandos')
+          .select('brand, model, description, image_url, video_url, active')
+          .eq('active', true)
+          .order('brand', { ascending: true })
+          .order('model', { ascending: true });
+
+        if (error) {
+          throw error;
+        }
+
+        (data || [])
+          .map(item => ({
+            brand: sanitize(item.brand),
+            model: sanitize(item.model),
+            description: item.description || '',
+            image_url: item.image_url || '',
+            video_url: item.video_url || '',
+          }))
+          .filter(item => item.brand && item.model)
+          .forEach(item => {
+            if (!telemandosByBrand.has(item.brand)) {
+              telemandosByBrand.set(item.brand, new Map());
+            }
+
+            const modelsMap = telemandosByBrand.get(item.brand);
+            if (!modelsMap.has(item.model)) {
+              modelsMap.set(item.model, []);
+            }
+
+            modelsMap.get(item.model).push(item);
+          });
+
+        populateBrands();
+      } catch (error) {
+        console.error('Error cargando telemandos:', error);
+        brandSelect.innerHTML = '<option value="">Error al cargar marcas</option>';
+        modelSelect.innerHTML = '<option value="">Sin modelos disponibles</option>';
+        brandSelect.disabled = true;
+        modelSelect.disabled = true;
+        searchButton.disabled = true;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initNavigation('telemandos');
+
       const modal = document.createElement('div');
       modal.className = 'modal';
       modal.innerHTML = '<img class="modal-content">';
       document.body.appendChild(modal);
+      modal.addEventListener('click', () => modal.classList.remove('active'));
 
-      // Cerrar modal al hacer clic
-      modal.addEventListener('click', () => {
-        modal.classList.remove('active');
+      document.addEventListener('click', event => {
+        if (event.target.classList.contains('result-logo') && event.target.tagName === 'IMG') {
+          const modalImg = modal.querySelector('.modal-content');
+          modalImg.src = event.target.src;
+          modal.classList.add('active');
+        }
       });
 
-      const brandSelect = document.getElementById('brandSelect');
-      const modelSelect = document.getElementById('modelSelect');
-      const searchButton = document.querySelector('.search-button');
+      brandSelect.addEventListener('change', event => {
+        populateModels(event.target.value);
+      });
 
-      // Cargar marcas desde Supabase
-      const { data: brands, error: brandsError } = await supabase
-        .from('telemandos')
-        .select('brand');
+      modelSelect.addEventListener('change', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
 
-      if (!brandsError) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
-        uniqueBrands.forEach(brand => {
-          const option = document.createElement('option');
-          option.value = brand;
-          option.textContent = brand;
-          brandSelect.appendChild(option);
-        });
-      }
-
-      // Evento cambio de marca
-      brandSelect.addEventListener('change', async () => {
-    const brand = brandSelect.value;
-    modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-    modelSelect.disabled = !brand;
-    currentData = {};
-
-    if (brand) {
-        const { data: models, error: modelsError } = await supabase
-            .from('telemandos')
-            .select('model, description, image_url, video_url')
-            .eq('brand', brand);
-
-        if (!modelsError) {
-            // Usar un Set para evitar modelos duplicados
-            const uniqueModels = new Set();
-
-            models.forEach(item => {
-                if (!uniqueModels.has(item.model)) { // Solo agregar si no está en el Set
-                    uniqueModels.add(item.model);
-
-                    const option = document.createElement('option');
-                    option.value = item.model;
-                    option.textContent = item.model;
-                    modelSelect.appendChild(option);
-
-                    currentData[item.model] = { 
-                        description: item.description, 
-                        image_url: item.image_url 
-                    };
-                }
-            });
+        if (brand && model) {
+          renderResultCards(brand, model);
+        } else {
+          toggleResults(false);
         }
-    }
-});
+      });
 
-      // Evento botón buscar
-      searchButton.addEventListener('click', async () => {
-    const brand = brandSelect.value;
-    const model = modelSelect.value;
+      searchButton.addEventListener('click', () => {
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
 
-    if (!brand || !model) {
-        alert('Selecciona una marca y modelo');
-        return;
-    }
+        if (!brand || !model) {
+          results.innerHTML = '<p style="text-align:center; margin: 0;">Selecciona una marca y un modelo para ver los resultados.</p>';
+          toggleResults(true);
+          return;
+        }
 
-    // Consulta a la base de datos para obtener TODOS los telemandos del modelo seleccionado
-    const { data: resultsData, error } = await supabase
-        .from('telemandos')
-        .select('model, description, image_url, video_url')
-        .eq('brand', brand)
-        .eq('model', model);
+        renderResultCards(brand, model);
+      });
 
-    if (error) {
-        console.error('Error obteniendo datos:', error);
-        alert('Ocurrió un error obteniendo los telemandos.');
-        return;
-    }
-
-    showResults(resultsData, brand, model);
-});
-
-    });
-
-function showResults(resultsData, brand, model) {
-    const results = document.getElementById('searchResults');
-    results.innerHTML = ''; 
-
-    if (resultsData.length === 0) {
-        results.innerHTML = `<p>No se encontraron telemandos para este modelo.</p>`;
-        return;
-    }
-
-    resultsData.forEach(item => { 
-        const whatsappMessage = encodeURIComponent(
-            `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
-            `Marca: ${brand}\n` +
-            `Modelo: ${model}\n` +
-            `Descripción: ${item.description || "No disponible"}\n\n` +
-            `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
-        );
-
-        const whatsappNumber = "541157237390";
-        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
-
-        // Determinar si hay video o imagen
-        const hasVideo = item.video_url && item.video_url.trim() !== '';
-        const mediaHTML = hasVideo
-            ? `<video class="result-logo result-video" autoplay loop muted playsinline>
-                 <source src="${item.video_url}" type="video/mp4">
-               </video>`
-            : `<img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">`;
-
-        const telemandoHTML = `
-            <div class="result-item">
-                ${mediaHTML}
-                <div class="result-info">
-                    <h3>Telemando ${brand} ${item.description ? item.description : ''}</h3>
-                    <p><strong>Modelo:</strong> ${model}</p>
-                    <div class="result-features">
-                        <span class="result-feature">
-                            <i class="fas fa-check-circle"></i> Alta compatibilidad
-                        </span>
-                        <span class="result-feature">
-                            <i class="fas fa-shield-alt"></i> Garantía 1 año
-                        </span>
-                        <span class="result-feature">
-                            <i class="fas fa-tools"></i> Programación incluida
-                        </span>
-                    </div>
-                </div>
-                <a href="${whatsappUrl}" target="_blank" class="result-button">
-                    <i class="fab fa-whatsapp"></i> Consultar
-                </a>
-            </div>
-        `;
-
-        results.innerHTML += telemandoHTML; 
-    });
-
-    results.classList.add('active'); 
-}
-
-    // Función para abrir el modal con la imagen ampliada
-    function openModal(src) {
-      const modal = document.querySelector('.modal');
-      const modalImg = modal.querySelector('.modal-content');
-      modalImg.src = src;
-      modal.classList.add('active');
-    }
-
-    // Agregar un event listener para detectar el click en la imagen del telemando
-    document.addEventListener('click', (event) => {
-      if (event.target.classList.contains('result-logo')) {
-        openModal(event.target.src);
-      }});
-
-  </script>
-
-  <section class="main-content" style="padding: 60px 0;">
-    <div class="content-container">
-      <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Telemandos</h2>
-      <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
-    </div>
-  </section>
-
-  <script type="module">
-    import { loadTelemandos } from '../src/pages/telemandos-loader.js';
-    import { initNavigation } from '../src/components/navigation.js';
-
-    document.addEventListener('DOMContentLoaded', () => {
-      initNavigation('telemandos');
       loadTelemandos();
     });
   </script>

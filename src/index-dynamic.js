@@ -1,26 +1,30 @@
 import { supabase } from './config/supabase.js';
 
-// Cargar GIFs del banner desde Supabase
-const FALLBACK_GIFS = [
+// Cargar videos/GIFs del banner desde Supabase
+const FALLBACK_MEDIA = [
   {
-    url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmZlMGJxYzZ6cTU4Y2p6bngzcDhneW1ndTR3dXoyZG50Y3YwMm9mZCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/pFgPDlQyE4pUI/giphy.gif',
-    alt_text: 'Telemando inalámbrico en funcionamiento',
+    url: 'https://cdn.pixabay.com/video/2021/08/07/84749-585778679_large.mp4',
+    alt_text: 'Programación de un control remoto',
   },
   {
-    url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGIwaGNzcnMxdXJjNWN4dnRxeWl1b2cxbmtzZjB6ZmZ3YnhqYmZwbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/q5nX9XxId6R3u/giphy.gif',
-    alt_text: 'Programación de llaves inteligentes',
+    url: 'https://cdn.pixabay.com/video/2020/04/21/36847-412684201_large.mp4',
+    alt_text: 'Técnico de llaves trabajando en un vehículo',
   },
   {
-    url: 'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjI1NHVvODN3MmpvbGh3dTlucjh4bzFnd2M1OWtsY3RycjVhMGFhOCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3oEduJ82h8xj6OrAv6/giphy.gif',
-    alt_text: 'Automóvil conectándose a servicios digitales',
+    url: 'https://cdn.pixabay.com/video/2019/10/21/28466-368181311_large.mp4',
+    alt_text: 'Llaves inteligentes listas para la entrega',
   },
 ];
 
-async function loadBannerGifs() {
-  const container = document.querySelector('.gif-gallery-grid');
+function isVideo(url = '') {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+}
+
+async function loadBannerMedia() {
+  const container = document.querySelector('[data-video-gallery]');
   if (!container) return;
 
-  let gifs = [];
+  let mediaItems = [];
 
   try {
     const { data, error } = await supabase
@@ -33,25 +37,38 @@ async function loadBannerGifs() {
       throw error;
     }
 
-    gifs = data ?? [];
+    mediaItems = data ?? [];
   } catch (error) {
-    console.error('Error loading gifs:', error);
+    console.error('Error loading banner media:', error);
   }
 
-  const hasRemoteGifs = Array.isArray(gifs) && gifs.length > 0;
-  const gifSource = hasRemoteGifs ? gifs : FALLBACK_GIFS;
+  const hasRemoteMedia = Array.isArray(mediaItems) && mediaItems.length > 0;
+  const mediaSource = hasRemoteMedia ? mediaItems : FALLBACK_MEDIA;
 
-  if (!hasRemoteGifs) {
-    console.info('[Banner] No hay GIFs activos en Supabase, se muestran ejemplos.');
+  if (!hasRemoteMedia) {
+    console.info('[Banner] No hay medios activos en Supabase, se muestran ejemplos.');
   }
 
-  container.innerHTML = gifSource.map((gif, index) => `
-    <div class="gif-card gif-card-${index + 1}" data-aos="fade-up" data-aos-delay="${index * 100}">
-      <div class="gif-card-content">
-        <img src="${gif.url}" alt="${gif.alt_text || 'GIF de Kioskeys'}" loading="lazy">
+  container.innerHTML = mediaSource.map((item, index) => {
+    const url = item.url || '';
+    const alt = item.alt_text || 'Contenido multimedia de Kioskeys';
+    const delay = index * 100;
+    const isVideoMedia = isVideo(url);
+
+    const mediaContent = isVideoMedia
+      ? `<video autoplay loop muted playsinline preload="metadata" poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23111' width='400' height='300'/%3E%3C/svg%3E'>
+            <source src="${url}" type="video/mp4">
+          </video>`
+      : `<img src="${url}" alt="${alt}" loading="lazy">`;
+
+    return `
+      <div class="video-card video-card-${index + 1}" data-aos="fade-up" data-aos-delay="${delay}">
+        <div class="video-card-content">
+          ${mediaContent}
+        </div>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 // Cargar productos para la página principal
@@ -86,6 +103,6 @@ async function loadHomeProducts() {
 
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
-  loadBannerGifs();
+  loadBannerMedia();
   loadHomeProducts();
 });
