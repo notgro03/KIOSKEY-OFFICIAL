@@ -15,8 +15,10 @@ const browserEnv = (typeof window !== 'undefined' && window.__ENV__) ? window.__
 const supabaseUrl = viteEnv.VITE_SUPABASE_URL || browserEnv.SUPABASE_URL;
 const supabaseKey = viteEnv.VITE_SUPABASE_ANON_KEY || browserEnv.SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseKey) {
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseKey);
+
+if (!isSupabaseConfigured) {
   console.warn('[Supabase] Faltan credenciales. Define VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY (Vite) o crea env.js con window.__ENV__ = { SUPABASE_URL, SUPABASE_ANON_KEY }');
 }
 
-export const supabase = createClient(supabaseUrl || '', supabaseKey || '');
+export const supabase = isSupabaseConfigured ? createClient(supabaseUrl, supabaseKey) : null;

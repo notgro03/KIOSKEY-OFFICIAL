@@ -1,8 +1,15 @@
-import { supabase } from './config/supabase.js';
+import { supabase, isSupabaseConfigured } from './config/supabase.js';
+
+const supabaseClient = isSupabaseConfigured ? supabase : null;
 
 // Cargar GIFs del banner desde Supabase
 async function loadBannerGifs() {
-  const { data: gifs, error } = await supabase
+  if (!supabaseClient) {
+    console.warn('[Supabase] Cliente no configurado. Se muestran GIFs predefinidos.');
+    return;
+  }
+
+  const { data: gifs, error } = await supabaseClient
     .from('banner_gifs')
     .select('*')
     .eq('active', true)
@@ -27,7 +34,12 @@ async function loadBannerGifs() {
 
 // Cargar productos para la página principal
 async function loadHomeProducts() {
-  const { data: products, error } = await supabase
+  if (!supabaseClient) {
+    console.warn('[Supabase] Cliente no configurado. Se muestran productos predefinidos.');
+    return;
+  }
+
+  const { data: products, error } = await supabaseClient
     .from('products')
     .select('*')
     .eq('active', true)
