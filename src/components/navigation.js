@@ -1,54 +1,746 @@
-export function renderNavigation(currentPage = '') {
-  const nav = document.querySelector('nav');
-  if (!nav) return;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Productos - Kioskeys</title>
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* Product Selector Section */
+    .product-selector-section {
+      margin-bottom: 48px;
+      padding: 32px 0;
+    }
 
-  const navHTML = `
-    <div class="logo">
-      <a href="/index.html"><img src="https://ucarecdn.com/bdf174c8-8731-47fa-a3f9-2443689099be/logokioskey.png" alt="Kioskeys" class="nav-logo-img"></a>
+    .selector-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 32px;
+      letter-spacing: -0.02em;
+    }
+
+    .product-selector-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .selector-card {
+      background: rgba(15, 15, 15, 0.4);
+      border: 2px solid rgba(0, 212, 255, 0.25);
+      border-radius: 24px;
+      padding: 32px 20px;
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+    }
+
+    .selector-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(0, 114, 188, 0.05));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .selector-card:hover::before {
+      opacity: 1;
+    }
+
+    .selector-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: rgba(0, 212, 255, 0.5);
+      background: rgba(0, 59, 142, 0.3);
+      box-shadow: 0 12px 40px rgba(0, 212, 255, 0.25),
+                  0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .selector-card-active {
+      background: linear-gradient(135deg, rgba(0, 59, 142, 0.6), rgba(0, 114, 188, 0.6));
+      border-color: rgba(0, 212, 255, 0.6);
+      box-shadow: 0 8px 32px rgba(0, 212, 255, 0.3);
+    }
+
+    .selector-card-active::before {
+      opacity: 1;
+    }
+
+    .selector-icon-box {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 114, 188, 0.15));
+      border-radius: 20px;
+      border: 2px solid rgba(0, 212, 255, 0.3);
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .selector-icon-box i {
+      font-size: 36px;
+      color: #00d4ff;
+      transition: all 0.4s ease;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    }
+
+    .selector-card:hover .selector-icon-box {
+      transform: scale(1.08) rotate(-3deg);
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.25), rgba(0, 114, 188, 0.25));
+      border-color: rgba(0, 212, 255, 0.5);
+      box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+    }
+
+    .selector-card:hover .selector-icon-box i {
+      color: #00e5ff;
+      transform: scale(1.1);
+      text-shadow: 0 0 30px rgba(0, 229, 255, 0.7);
+    }
+
+    .selector-card-active .selector-icon-box {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(0, 114, 188, 0.3));
+      border-color: rgba(0, 212, 255, 0.6);
+    }
+
+    .selector-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: white;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .selector-card:hover h3 {
+      color: #00d4ff;
+      transform: translateY(-2px);
+    }
+
+    .selector-card-active h3 {
+      color: #00d4ff;
+    }
+
+    .selector-card p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
+    .selector-card:hover p {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .selector-card-active p {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    @media (max-width: 1024px) {
+      .product-selector-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .product-selector-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .selector-card {
+        padding: 24px 16px;
+      }
+
+      .selector-icon-box {
+        width: 64px;
+        height: 64px;
+      }
+
+      .selector-icon-box i {
+        font-size: 28px;
+      }
+
+      .selector-title {
+        font-size: 20px;
+      }
+    }
+
+    .search-container {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 48px;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 163, 255, 0.3);
+      background: rgba(10, 10, 10, 0.4);
+      backdrop-filter: blur(20px);
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
+                  inset 0 0 0 1px rgba(0, 163, 255, 0.2);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: rgba(0, 163, 255, 0.6);
+      box-shadow: 0 4px 20px rgba(0, 163, 255, 0.3),
+                  inset 0 0 0 1px rgba(0, 163, 255, 0.4);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6e6e73;
+    }
+
+    .category-filters {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-filter {
+      padding: 10px 20px;
+      border-radius: 25px;
+      background: rgba(15, 15, 15, 0.4);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 188, 212, 0.3);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2),
+                  inset 0 0 0 1px rgba(0, 188, 212, 0.1);
+    }
+
+    .category-filter::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent,
+        rgba(0, 188, 212, 0.8),
+        transparent);
+      box-shadow: 0 0 15px rgba(0, 188, 212, 0.6);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .category-filter:hover {
+      border-color: rgba(0, 188, 212, 0.5);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 20px rgba(0, 188, 212, 0.3),
+                  inset 0 0 0 1px rgba(0, 188, 212, 0.15);
+      background: rgba(20, 20, 20, 0.5);
+    }
+
+    .category-filter:hover::after {
+      transform: translateX(0);
+    }
+
+    .category-filter.active {
+      background: rgba(0, 188, 212, 0.2);
+      border-color: rgba(0, 188, 212, 0.8);
+      color: rgba(0, 212, 255, 0.95);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 25px rgba(0, 188, 212, 0.4),
+                  inset 0 0 20px rgba(0, 188, 212, 0.2);
+    }
+
+    .category-filter.active::after {
+      transform: translateX(0);
+      animation: lineScanProducts 2s ease-in-out infinite;
+    }
+
+    @keyframes lineScanProducts {
+      0%, 100% { transform: translateX(-100%); opacity: 0; }
+      10%, 90% { opacity: 1; }
+      50% { transform: translateX(100%); }
+    }
+
+    .product-card {
+      background: linear-gradient(135deg,
+        rgba(0, 59, 142, 0.95) 0%,
+        rgba(0, 114, 188, 0.95) 100%);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-radius: 32px;
+      padding: 40px 36px;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5),
+                  0 6px 24px rgba(0, 59, 142, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      inset: -80px;
+      border-radius: 80px;
+      background: radial-gradient(circle at top right,
+        rgba(255, 255, 255, 0.15),
+        rgba(0, 188, 212, 0.08),
+        transparent 70%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(60px);
+      transition: all 0.8s ease;
+    }
+
+    .product-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%,
+        rgba(0, 0, 0, 0.1) 100%);
+      border-radius: 32px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .product-card:hover::before {
+      opacity: 1;
+    }
+
+    .product-card:hover::after {
+      opacity: 1;
+    }
+
+    .product-card:hover {
+      transform: translateY(-16px) scale(1.03);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6),
+                  0 12px 40px rgba(0, 188, 212, 0.5),
+                  0 0 100px rgba(0, 163, 255, 0.3),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      border-color: rgba(0, 188, 212, 0.6);
+      background: linear-gradient(135deg,
+        rgba(0, 79, 182, 1) 0%,
+        rgba(0, 134, 208, 1) 100%);
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 16px;
+      right: -32px;
+      background: #FFD700;
+      color: #000;
+      padding: 8px 40px;
+      transform: rotate(45deg);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+
+    .product-media {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 24px;
+      border-radius: 24px;
+      object-fit: cover;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 2;
+    }
+
+    .feature-icon {
+      font-size: 52px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 24px;
+      margin: 0 auto 24px;
+      color: #00d4ff;
+      text-shadow: 0 0 20px rgba(0, 212, 255, 0.5),
+                   0 0 40px rgba(0, 212, 255, 0.3);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3),
+                  0 4px 12px rgba(0, 212, 255, 0.2),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 2;
+      transition: all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .feature-icon::before {
+      content: '';
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle at center,
+        rgba(255, 255, 255, 0.2),
+        transparent 70%);
+      filter: blur(20px);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .product-card:hover .feature-icon {
+      transform: scale(1.15) rotate(-5deg) translateY(-8px);
+      box-shadow: 0 16px 48px rgba(0, 212, 255, 0.4),
+                  0 8px 24px rgba(0, 212, 255, 0.3),
+                  inset 0 2px 8px rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+      color: #00e5ff;
+      text-shadow: 0 0 30px rgba(0, 229, 255, 0.8),
+                   0 0 50px rgba(0, 229, 255, 0.5);
+    }
+
+    .product-card:hover .feature-icon::before {
+      opacity: 1;
+    }
+
+    .product-card h3 {
+      font-size: 28px;
+      margin-bottom: 16px;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 700;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 2px 16px rgba(0, 0, 0, 0.3),
+                   0 4px 24px rgba(0, 0, 0, 0.2);
+      letter-spacing: -0.02em;
+      transition: all 0.5s ease;
+    }
+
+    .product-card:hover h3 {
+      transform: translateY(-2px);
+      text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4),
+                   0 8px 32px rgba(255, 255, 255, 0.2);
+    }
+
+    .product-description {
+      margin: 16px 0 24px;
+      line-height: 1.7;
+      opacity: 0.95;
+      text-align: center;
+      font-size: 16px;
+      position: relative;
+      z-index: 2;
+      color: rgba(255, 255, 255, 0.95);
+      font-weight: 400;
+      transition: all 0.4s ease;
+    }
+
+    .product-card:hover .product-description {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+
+    .product-details {
+      margin-top: auto;
+      padding-top: 28px;
+      border-top: 2px solid rgba(255, 255, 255, 0.25);
+      list-style: none;
+      padding-left: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .product-details li {
+      margin-bottom: 14px;
+      padding-left: 32px;
+      position: relative;
+      font-size: 15px;
+      color: rgba(255, 255, 255, 0.95);
+      line-height: 1.6;
+      transition: all 0.3s ease;
+    }
+
+    .product-card:hover .product-details li {
+      transform: translateX(4px);
+    }
+
+    .product-details li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 18px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .product-card:hover .product-details li::before {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .learn-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+      font-weight: 700;
+      font-size: 16px;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: rgba(255, 255, 255, 0.25);
+      padding: 16px 32px;
+      border-radius: 50px;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2),
+                  inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      position: relative;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .learn-more::before {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.3),
+        rgba(255, 255, 255, 0.1));
+      border-radius: 50px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: -1;
+    }
+
+    .learn-more:hover {
+      background: rgba(255, 255, 255, 0.35);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3),
+                  0 4px 12px rgba(255, 255, 255, 0.3),
+                  inset 0 2px 8px rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .learn-more:hover::before {
+      opacity: 1;
+    }
+
+    .learn-more i {
+      font-size: 16px;
+      transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .product-card:hover .learn-more i {
+      transform: translateX(8px) scale(1.2);
+    }
+
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .category-filters {
+        padding-bottom: 8px;
+      }
+      
+      .product-card {
+        padding: 24px;
+      }
+      
+      .feature-icon {
+        width: 72px;
+        height: 72px;
+        font-size: 36px;
+        margin-bottom: 16px;
+      }
+
+      .product-card h3 {
+        font-size: 20px;
+      }
+
+      .product-description {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav></nav>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <h1>Nuestros Productos</h1>
+        <p>Todo lo que necesitas para tu seguridad</p>
+      </div>
+    </section>
+
+    <section class="main-content">
+      <div class="content-container">
+        <div class="product-selector-section">
+          <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
+
+          <div class="product-selector-grid">
+            <a href="/pages/llaves.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-key"></i>
+              </div>
+              <h3>Llaves</h3>
+              <p>Copias y llaves codificadas</p>
+            </a>
+
+            <a href="/pages/carcasas.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>Carcasas</h3>
+              <p>Repuestos originales</p>
+            </a>
+
+            <a href="/pages/telemandos.html" class="selector-card selector-card-active">
+              <div class="selector-icon-box">
+                <i class="fas fa-car"></i>
+              </div>
+              <h3>Telemandos</h3>
+              <p>Controles remotos</p>
+            </a>
+
+            <a href="/pages/accesorios.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-tools"></i>
+              </div>
+              <h3>Accesorios</h3>
+              <p>Baterías y más</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4 class="shiny-text">Empresa</h4>
+        <ul class="footer-links">
+          <li><a href="./pages/sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
+          <li><a href="./pages/red-servicios.html" class="shiny-text">Red de Servicios</a></li>
+          <li><a href="./pages/trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Servicios</h4>
+        <ul class="footer-links">
+          <li><a href="./pages/productos.html" class="shiny-text">Productos</a></li>
+          <li><a href="./pages/telemandos.html" class="shiny-text">Telemandos</a></li>
+          <li><a href="./pages/planes.html" class="shiny-text">Planes</a></li>
+          <li><a href="./pages/cerrajeria.html" class="shiny-text">Cerrajería</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Soporte</h4>
+        <ul class="footer-links">
+          <li><a href="./pages/contacto.html" class="shiny-text">Contacto</a></li>
+          <li><a href="./pages/faq.html" class="shiny-text">FAQ</a></li>
+          <li><a href="./pages/tutoriales.html" class="shiny-text">Tutoriales</a></li>
+          <li><a href="./pages/ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Legal</h4>
+        <ul class="footer-links">
+          <li><a href="./pages/privacidad.html" class="shiny-text">Política de Privacidad</a></li>
+          <li><a href="./pages/terminos.html" class="shiny-text">Términos y Condiciones</a></li>
+          <li><a href="./pages/cookies.html" class="shiny-text">Política de Cookies</a></li>
+          <li><a href="./pages/legal.html" class="shiny-text">Aviso Legal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Síguenos</h4>
+        <div class="footer-social">
+          <a href="https://facebook.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-facebook"></i></a>
+          <a href="https://twitter.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/company/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
     </div>
-    <div class="nav-links">
-      <a href="/index.html" class="shiny-text ${currentPage === 'inicio' ? 'active' : ''}">
-        <i class="fas fa-home"></i> <span>Inicio</span>
-      </a>
-      <a href="/pages/red-servicios.html" class="shiny-text ${currentPage === 'red-servicios' ? 'active' : ''}">
-        <i class="fas fa-map-marker-alt"></i> <span>Red de Servicios</span>
-      </a>
-      <a href="/pages/planes.html" class="shiny-text ${currentPage === 'planes' ? 'active' : ''}">
-        <i class="fas fa-crown"></i> <span>Planes</span>
-      </a>
-      <a href="/pages/productos.html" class="shiny-text ${currentPage === 'productos' ? 'active' : ''}">
-        <i class="fas fa-box"></i> <span>Productos</span>
-      </a>
-      <a href="/pages/faq.html" class="shiny-text ${currentPage === 'faq' ? 'active' : ''}">
-        <i class="fas fa-question-circle"></i> <span>FAQ</span>
-      </a>
-      <a href="/pages/contacto.html" class="shiny-text ${currentPage === 'contacto' ? 'active' : ''}">
-        <i class="fas fa-envelope"></i> <span>Contacto</span>
-      </a>
-      <a href="/pages/descarga-app.html" class="shiny-text ${currentPage === 'descarga-app' ? 'active' : ''}">
-        <i class="fas fa-mobile-alt"></i> <span>Descarga App</span>
-      </a>
+
+    <div class="footer-bottom">
+      <p class="shiny-text">&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
     </div>
-    <button class="menu-button">
-      <i class="fas fa-bars"></i>
-    </button>
-  `;
+  </footer>
 
-  nav.innerHTML = navHTML;
-
-  const menuButton = nav.querySelector('.menu-button');
-  const navLinks = nav.querySelector('.nav-links');
-
-  menuButton?.addEventListener('click', () => {
-    menuButton.classList.toggle('active');
-    navLinks?.classList.toggle('active');
-  });
-}
-
-export function initNavigation(pageName) {
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => renderNavigation(pageName));
-  } else {
-    renderNavigation(pageName);
-  }
-}
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="/js/kioskeys-scripts.js"></script>
+  
+  <script type="module">
+    // Importa la navegación desde la ruta correcta
+    import { initNavigation } from '/js/navigation.js';
+    initNavigation('productos');
+  </script>
+</body>
+</html>
