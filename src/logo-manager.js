@@ -2,9 +2,46 @@ import { api } from './api';
 import { showSuccess, showError, showLoading, hideLoading } from './ui';
 import { compressImage, validateImage } from './utils';
 
+const STORAGE_KEY = 'kioskeys_logo';
+const LEGACY_LOGOS = new Set(['/logo.svg', '/LOGO_KIOSKEYS.png']);
+const DEFAULT_LOGO = 'https://ucarecdn.com/bdf174c8-8731-47fa-a3f9-2443689099be/logokioskey.png';
+const FALLBACK_LOGO_SVG = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 48" width="180" height="48">
+    <defs>
+      <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#003B8E" />
+        <stop offset="100%" stop-color="#00A3FF" />
+      </linearGradient>
+    </defs>
+    <rect width="180" height="48" rx="12" fill="url(#gradient)" />
+    <text x="90" y="31" fill="#FFFFFF" font-family="'Poppins', 'Arial', sans-serif" font-size="24" font-weight="700" text-anchor="middle">
+      Kioskeys
+    </text>
+  </svg>
+`.trim();
+const FALLBACK_LOGO = `data:image/svg+xml;utf8,${encodeURIComponent(FALLBACK_LOGO_SVG)}`;
+
 class LogoManager {
   constructor() {
-    this.logoUrl = localStorage.getItem('kioskeys_logo') || '/logo.svg';
+    this.fallbackWarningShown = false;
+
+    let storedLogo = null;
+    try {
+      storedLogo = localStorage.getItem(STORAGE_KEY);
+    } catch (error) {
+      console.warn('[LogoManager] No se pudo leer el logo guardado:', error);
+    }
+
+    if (storedLogo && !LEGACY_LOGOS.has(storedLogo)) {
+      this.logoUrl = storedLogo;
+    } else {
+      this.logoUrl = DEFAULT_LOGO;
+      try {
+        localStorage.setItem(STORAGE_KEY, DEFAULT_LOGO);
+      } catch (error) {
+        console.warn('[LogoManager] No se pudo persistir el logo por defecto:', error);
+      }
+    }
     this.initializeUploader();
     this.initializeEventListeners();
   }
@@ -94,17 +131,11 @@ class LogoManager {
       }
 
       // Update storage
-      localStorage.setItem('kioskeys_logo', url);
+      this.persistLogo(url);
       this.logoUrl = url;
 
       // Update all logo elements
-      document.querySelectorAll('[data-logo]').forEach(img => {
-        img.src = url;
-        img.onerror = () => {
-          img.src = '/logo.svg';
-          showError('Error al cargar el logo');
-        };
-      });
+      this.updateLogoElements(url);
 
       // Update preview
       const preview = document.getElementById('logoPreview');
@@ -126,7 +157,7 @@ class LogoManager {
   async saveLogo() {
     try {
       const preview = document.getElementById('logoPreview');
-      if (!preview || !preview.src || preview.src === '/logo.svg') {
+      if (!preview || !preview.src || preview.src === DEFAULT_LOGO || preview.src === FALLBACK_LOGO) {
         throw new Error('No hay un nuevo logo para guardar');
       }
 
@@ -139,7 +170,7 @@ class LogoManager {
 
   async resetLogo() {
     try {
-      const result = await this.updateLogo('/logo.svg');
+      const result = await this.updateLogo(DEFAULT_LOGO);
       if (result) {
         showSuccess('Logo restablecido correctamente');
       }
@@ -152,6 +183,39 @@ class LogoManager {
 
   getCurrentLogo() {
     return this.logoUrl;
+  }
+
+  persistLogo(url) {
+    try {
+      localStorage.setItem(STORAGE_KEY, url);
+    } catch (error) {
+      console.warn('[LogoManager] No se pudo guardar el logo actualizado:', error);
+    }
+  }
+
+  updateLogoElements(url) {
+    document.querySelectorAll('[data-logo]').forEach(img => {
+      img.src = url;
+      img.onerror = () => {
+        this.handleLogoError(img, url);
+      };
+    });
+  }
+
+  handleLogoError(img, attemptedSource) {
+    if (attemptedSource === FALLBACK_LOGO) {
+      return;
+    }
+
+    img.onerror = null;
+    img.src = FALLBACK_LOGO;
+    this.logoUrl = FALLBACK_LOGO;
+    this.persistLogo(FALLBACK_LOGO);
+
+    if (!this.fallbackWarningShown) {
+      showError('Error al cargar el logo');
+      this.fallbackWarningShown = true;
+    }
   }
 }
 

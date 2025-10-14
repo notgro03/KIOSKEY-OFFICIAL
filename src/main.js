@@ -4,10 +4,7 @@ import { showSuccess, showError } from './ui';
 // Initialize admin interface
 document.addEventListener('DOMContentLoaded', () => {
   // Load current logo
-  const currentLogo = logoManager.getCurrentLogo();
-  document.querySelectorAll('[data-logo]').forEach(img => {
-    img.src = currentLogo;
-  });
+  logoManager.updateLogoElements(logoManager.getCurrentLogo());
 
   // Initialize menu toggle
   const menuButton = document.querySelector('.menu-button');
