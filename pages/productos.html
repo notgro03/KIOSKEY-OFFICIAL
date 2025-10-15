@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="/css/productos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="/env.js"></script>
-  <script type="module" src="/src/main.js"></script>
   <style>
     /* Product Selector Section */
     .product-selector-section {
@@ -703,14 +702,34 @@
     </div>
   </footer>
 
+  <script type="module" src="/src/main.js"></script>
   <script type="module">
     import { initNavigation } from '../src/components/navigation.js';
-    
-    document.addEventListener('DOMContentLoaded', () => {
-      // Inicializar navegación
-      initNavigation('productos');
 
-      // No adjustments required; maintain absolute paths for cross-page navigation
+    initNavigation('productos');
+
+    // Remove any legacy search or loading blocks that may still be injected
+    const legacySearchContainers = document.querySelectorAll('.search-container');
+    legacySearchContainers.forEach((container) => container.remove());
+
+    const legacySearchInputs = document.querySelectorAll('input[type="search"], input[placeholder*="Buscar"]');
+    legacySearchInputs.forEach((input) => {
+      const block = input.closest('.search-container, form') ?? input.parentElement;
+      if (block) {
+        block.remove();
+      } else {
+        input.remove();
+      }
+    });
+
+    const legacyLoadingMessages = Array.from(document.querySelectorAll('p, span, div')).filter((element) => {
+      const text = element.textContent?.trim() ?? '';
+      return text.startsWith('Cargando catálogo');
+    });
+
+    legacyLoadingMessages.forEach((message) => {
+      const loadingBlock = message.closest('.search-container, .catalog-loading, .catalog-loader') ?? message;
+      loadingBlock.remove();
     });
   </script>
 </body>
