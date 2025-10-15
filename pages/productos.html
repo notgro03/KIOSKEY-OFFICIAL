@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Productos - Kioskeys</title>
-  <link rel="icon" href="../favicon.jpg">
-  <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../css/kioskeys-styles.css">
-  <link rel="stylesheet" href="../css/productos.css">
+  <link rel="icon" href="/favicon.jpg">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/css/kioskeys-styles.css">
+  <link rel="stylesheet" href="/css/productos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script type="module" src="/env.js"></script>
+  <script src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <style>
     /* Product Selector Section */
@@ -669,7 +669,7 @@
           <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
 
           <div class="product-selector-grid">
-            <a href="./llaves.html" class="selector-card">
+            <a href="/pages/llaves.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-key"></i>
               </div>
@@ -677,7 +677,7 @@
               <p>Copias y llaves codificadas</p>
             </a>
 
-            <a href="./carcasas.html" class="selector-card">
+            <a href="/pages/carcasas.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-shield-alt"></i>
               </div>
@@ -685,7 +685,7 @@
               <p>Repuestos originales</p>
             </a>
 
-            <a href="./telemandos.html" class="selector-card">
+            <a href="/pages/telemandos.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-car"></i>
               </div>
@@ -693,7 +693,7 @@
               <p>Controles remotos</p>
             </a>
 
-            <a href="./accesorios.html" class="selector-card">
+            <a href="/pages/accesorios.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-tools"></i>
               </div>
@@ -711,39 +711,39 @@
       <div class="footer-section">
         <h4 class="shiny-text">Empresa</h4>
         <ul class="footer-links">
-          <li><a href="./sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
-          <li><a href="./red-servicios.html" class="shiny-text">Red de Servicios</a></li>
-          <li><a href="./trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
+          <li><a href="/pages/sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
+          <li><a href="/pages/red-servicios.html" class="shiny-text">Red de Servicios</a></li>
+          <li><a href="/pages/trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
         </ul>
       </div>
 
       <div class="footer-section">
         <h4 class="shiny-text">Servicios</h4>
         <ul class="footer-links">
-          <li><a href="./productos.html" class="shiny-text">Productos</a></li>
-          <li><a href="./telemandos.html" class="shiny-text">Telemandos</a></li>
-          <li><a href="./planes.html" class="shiny-text">Planes</a></li>
-          <li><a href="./cerrajeria.html" class="shiny-text">Cerrajería</a></li>
+          <li><a href="/pages/productos.html" class="shiny-text">Productos</a></li>
+          <li><a href="/pages/telemandos.html" class="shiny-text">Telemandos</a></li>
+          <li><a href="/pages/planes.html" class="shiny-text">Planes</a></li>
+          <li><a href="/pages/cerrajeria.html" class="shiny-text">Cerrajería</a></li>
         </ul>
       </div>
 
       <div class="footer-section">
         <h4 class="shiny-text">Soporte</h4>
         <ul class="footer-links">
-          <li><a href="./contacto.html" class="shiny-text">Contacto</a></li>
-          <li><a href="./faq.html" class="shiny-text">FAQ</a></li>
-          <li><a href="./tutoriales.html" class="shiny-text">Tutoriales</a></li>
-          <li><a href="./ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
+          <li><a href="/pages/contacto.html" class="shiny-text">Contacto</a></li>
+          <li><a href="/pages/faq.html" class="shiny-text">FAQ</a></li>
+          <li><a href="/pages/tutoriales.html" class="shiny-text">Tutoriales</a></li>
+          <li><a href="/pages/ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
         </ul>
       </div>
 
       <div class="footer-section">
         <h4 class="shiny-text">Legal</h4>
         <ul class="footer-links">
-          <li><a href="./privacidad.html" class="shiny-text">Política de Privacidad</a></li>
-          <li><a href="./terminos.html" class="shiny-text">Términos y Condiciones</a></li>
-          <li><a href="./cookies.html" class="shiny-text">Política de Cookies</a></li>
-          <li><a href="./legal.html" class="shiny-text">Aviso Legal</a></li>
+          <li><a href="/pages/privacidad.html" class="shiny-text">Política de Privacidad</a></li>
+          <li><a href="/pages/terminos.html" class="shiny-text">Términos y Condiciones</a></li>
+          <li><a href="/pages/cookies.html" class="shiny-text">Política de Cookies</a></li>
+          <li><a href="/pages/legal.html" class="shiny-text">Aviso Legal</a></li>
         </ul>
       </div>
 
@@ -764,19 +764,13 @@
   </footer>
 
   <script type="module">
-    import { initNavigation } from '/src/components/navigation.js';
+    import { initNavigation } from '../src/components/navigation.js';
     
     document.addEventListener('DOMContentLoaded', () => {
       // Inicializar navegación
       initNavigation('productos');
 
-      // Compatibilidad: si queda algún enlace absoluto, convertirlo en relativo
-      document.querySelectorAll('.selector-card').forEach(card => {
-        const href = card.getAttribute('href');
-        if (href && href.startsWith('/')) {
-          card.setAttribute('href', '.' + href);
-        }
-      });
+      // No adjustments required; maintain absolute paths for cross-page navigation
     });
   </script>
 </body>
