@@ -188,40 +188,6 @@
       }
     }
 
-    .search-container {
-      margin-bottom: 32px;
-      position: relative;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 16px 48px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 163, 255, 0.3);
-      background: rgba(10, 10, 10, 0.4);
-      backdrop-filter: blur(20px);
-      color: white;
-      font-size: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3),
-                  inset 0 0 0 1px rgba(0, 163, 255, 0.2);
-    }
-
-    .search-input:focus {
-      outline: none;
-      border-color: rgba(0, 163, 255, 0.6);
-      box-shadow: 0 4px 20px rgba(0, 163, 255, 0.3),
-                  inset 0 0 0 1px rgba(0, 163, 255, 0.4);
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #6e6e73;
-    }
-
     .category-filters {
       display: flex;
       gap: 12px;
@@ -627,72 +593,7 @@
   </style>
 </head>
 <body>
-  <nav>
-    <div class="logo">
-      <a href="/">
-        <img src="../LOGO_KIOSKEYS.png" alt="Kioskeys" class="nav-logo-img">
-      </a>
-    </div>
-    <div class="nav-links">
-      <a href="/" class="shiny-text" data-page="inicio">
-        <i class="fas fa-home" aria-hidden="true"></i>
-        <span>Inicio</span>
-      </a>
-      <a href="/pages/red-servicios.html" class="shiny-text" data-page="red-servicios">
-        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-        <span>Red de Servicios</span>
-      </a>
-      <a href="/pages/planes.html" class="shiny-text" data-page="planes">
-        <i class="fas fa-crown" aria-hidden="true"></i>
-        <span>Planes</span>
-      </a>
-      <a href="/pages/productos.html" class="shiny-text active" data-page="productos" aria-current="page">
-        <i class="fas fa-box" aria-hidden="true"></i>
-        <span>Productos</span>
-      </a>
-      <a href="/pages/faq.html" class="shiny-text" data-page="faq">
-        <i class="fas fa-question-circle" aria-hidden="true"></i>
-        <span>FAQ</span>
-      </a>
-      <a href="/pages/contacto.html" class="shiny-text" data-page="contacto">
-        <i class="fas fa-envelope" aria-hidden="true"></i>
-        <span>Contacto</span>
-      </a>
-      <a href="/pages/descarga-app.html" class="shiny-text" data-page="descarga-app">
-        <i class="fas fa-mobile-alt" aria-hidden="true"></i>
-        <span>Descarga App</span>
-      </a>
-    </div>
-    <button class="menu-button" type="button" aria-label="Abrir menú de navegación">
-      <i class="fas fa-bars" aria-hidden="true"></i>
-    </button>
-  </nav>
-
-  <style>
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      padding: 1rem 2rem;
-      background: rgba(10, 10, 10, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      transition: transform 0.3s ease-in-out;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    nav.nav-hidden {
-      transform: translateY(-100%);
-    }
-
-    nav .logo img {
-      height: 40px;
-      width: auto;
-    }
-  </style>
+  <nav></nav>
 
   <main>
     <section class="hero">
