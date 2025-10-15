@@ -22,21 +22,16 @@
       // Cargar marcas
       const { data: brands, error: brandsError } = await supabase
         .from('llaves')
-        .select('brand, image_url, video_url');
+        .select('brand')
+        .order('brand', { ascending: true });
 
-      if (!brandsError) {
-        const uniqueBrands = brands.reduce((acc, item) => {
-          if (!acc[item.brand]) {
-            acc[item.brand] = item.image_url;
-          }
-          return acc;
-        }, {});
+      if (!brandsError && brands) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand).filter(Boolean))];
 
-        Object.entries(uniqueBrands).forEach(([brand, image_url]) => {
+        uniqueBrands.forEach(brand => {
           const option = document.createElement('option');
           option.value = brand;
           option.textContent = brand;
-          option.dataset.image_url = image_url;
           brandSelect.appendChild(option);
         });
       }
@@ -47,14 +42,15 @@
     modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
     modelSelect.disabled = !brand;
     currentData = {};
+    const results = document.getElementById('searchResults');
+    results.innerHTML = '';
+    results.classList.remove('active');
 
     if (brand) {
         const { data: models, error: modelsError } = await supabase
             .from('llaves')
             .select('model, image_url, description, video_url')
             .eq('brand', brand);
-
-        console.log('Modelos obtenidos:', models);
 
         if (!modelsError && models.length > 0) {
             const modelData = {};
@@ -78,8 +74,6 @@
 
                 currentData[model] = modelData[model];
             });
-        } else {
-            console.log('Error obteniendo modelos o no hay modelos disponibles:', modelsError);
         }
     }
 });
@@ -101,9 +95,15 @@
 
     });
 
-    function showResults(brand, model, imagesData) {
+function showResults(brand, model, imagesData) {
     const results = document.getElementById('searchResults');
     results.innerHTML = "";
+
+    if (!imagesData || imagesData.length === 0) {
+        results.innerHTML = '<p>No se encontraron llaves para este modelo.</p>';
+        results.classList.add('active');
+        return;
+    }
 
     imagesData.forEach(({ image_url, description, video_url }) => {
         const whatsappMessage = encodeURIComponent(
