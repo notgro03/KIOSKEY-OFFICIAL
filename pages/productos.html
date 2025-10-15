@@ -642,7 +642,7 @@
           <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
 
           <div class="product-selector-grid">
-            <a href="/pages/llaves.html" class="selector-card">
+            <a href="./llaves.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-key"></i>
               </div>
@@ -650,7 +650,7 @@
               <p>Copias y llaves codificadas</p>
             </a>
 
-            <a href="/pages/carcasas.html" class="selector-card">
+            <a href="./carcasas.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-shield-alt"></i>
               </div>
@@ -658,7 +658,7 @@
               <p>Repuestos originales</p>
             </a>
 
-            <a href="/pages/telemandos.html" class="selector-card">
+            <a href="./telemandos.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-car"></i>
               </div>
@@ -666,7 +666,7 @@
               <p>Controles remotos</p>
             </a>
 
-            <a href="/pages/accesorios.html" class="selector-card">
+            <a href="./accesorios.html" class="selector-card">
               <div class="selector-icon-box">
                 <i class="fas fa-tools"></i>
               </div>
@@ -742,14 +742,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       // Inicializar navegación
       initNavigation('productos');
-
-      // Actualizar links para que sean relativos a la raíz
-      document.querySelectorAll('.selector-card').forEach(card => {
-        const href = card.getAttribute('href');
-        if (href && href.startsWith('/')) {
-          card.setAttribute('href', '.' + href);
-        }
-      });
     });
   </script>
 </body>
