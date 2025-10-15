@@ -80,7 +80,7 @@ export async function loadCarcasas() {
     document.querySelectorAll('.btn-add-cart').forEach(btn => {
       btn.addEventListener('click', () => {
         const productId = btn.dataset.productId;
-        const product = products.find(p => p.id === productId);
+        const product = products.find(p => String(p.id) === productId);
         if (product) {
           window.location.href = `https://api.whatsapp.com/send/?phone=541157237390&text=Hola,%20me%20interesa%20el%20producto:%20${encodeURIComponent(product.title)}`;
         }
