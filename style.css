@@ -1254,6 +1254,7 @@ footer::before {
 
 /* Home Videos Section */
 .videos-section {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1261,12 +1262,27 @@ footer::before {
   flex-wrap: wrap;
   padding: 60px 0;
   overflow: hidden;
-  position: relative;
+}
+
+.videos-loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #00c8ff;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.5px;
 }
 
 .video-wrapper {
+  position: relative;
   flex: 0 0 auto;
+  overflow: hidden;
+  border-radius: 16px;
   transition: transform 1s ease;
+  border: 2px solid rgba(0, 59, 142, 0.45);
+  box-shadow: 0 0 25px rgba(0, 59, 142, 0.35);
+  background: radial-gradient(circle at top, rgba(0, 102, 204, 0.15), rgba(0, 30, 60, 0.6));
 }
 
 .video-card {
@@ -1274,20 +1290,63 @@ footer::before {
   height: 180px;
   border-radius: 16px;
   object-fit: cover;
-  box-shadow: 0 0 25px rgba(0, 59, 142, 0.3);
-  border: 2px solid rgba(0, 59, 142, 0.5);
-  transition: all 0.3s ease;
   opacity: 0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: fadeIn 1s ease forwards;
 }
 
 .video-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 35px rgba(0, 150, 255, 0.6);
+  box-shadow: 0 0 35px rgba(0, 150, 255, 0.55);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.75) 100%);
+}
+
+.overlay-logo {
+  width: 100px;
+  filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.6));
+  animation: floatLogo 4s ease-in-out infinite;
+}
+
+.overlay-text {
+  color: #00c8ff;
+  font-size: 18px;
+  font-weight: 600;
+  text-shadow: 0 0 12px rgba(0, 200, 255, 0.85);
+  animation: floatText 3.5s ease-in-out infinite;
 }
 
 @keyframes fadeIn {
   to {
+    opacity: 1;
+  }
+}
+
+@keyframes floatLogo {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatText {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
     opacity: 1;
   }
 }
@@ -1300,7 +1359,6 @@ footer::before {
 
 @media (max-width: 768px) {
   .videos-section {
-    display: flex;
     flex-wrap: nowrap;
     overflow: hidden;
     width: 100%;
@@ -1309,12 +1367,25 @@ footer::before {
 
   .video-wrapper {
     min-width: 100%;
+    border-radius: 0;
   }
 
   .video-card {
     width: 100vw;
     height: 220px;
     border-radius: 0;
+  }
+
+  .overlay {
+    padding: 16px;
+  }
+
+  .overlay-logo {
+    width: 80px;
+  }
+
+  .overlay-text {
+    font-size: 16px;
   }
 }
 

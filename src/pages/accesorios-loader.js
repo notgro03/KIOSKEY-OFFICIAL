@@ -1,4 +1,4 @@
-import { supabase } from '../config/supabase.js';
+import { fetchCategoryProducts } from '../scripts/loadProducts.js';
 
 export async function loadAccesorios() {
   const container = document.getElementById('productsGrid');
@@ -8,29 +8,7 @@ export async function loadAccesorios() {
   container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p>Cargando accesorios...</p></div>';
 
   try {
-    const { data: category } = await supabase
-      .from('product_categories')
-      .select('id')
-      .eq('slug', 'accesorios')
-      .maybeSingle();
-
-    if (!category) {
-      container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><p>No se encontró la categoría de accesorios</p></div>';
-      return;
-    }
-
-    const { data: products, error } = await supabase
-      .from('products')
-      .select('*')
-      .eq('category_id', category.id)
-      .eq('is_active', true)
-      .order('display_order');
-
-    if (error) {
-      console.error('Error loading products:', error);
-      container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><p>Error al cargar los productos</p></div>';
-      return;
-    }
+    const products = await fetchCategoryProducts('accesorios');
 
     if (!products || products.length === 0) {
       container.innerHTML = `
