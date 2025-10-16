@@ -106,6 +106,66 @@
       width: fit-content;
     }
     }
+
+    .videos-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      padding: 60px 0;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .video-wrapper {
+      flex: 0 0 auto;
+      transition: transform 1s ease;
+    }
+
+    .video-card {
+      width: 320px;
+      height: 180px;
+      border-radius: 16px;
+      object-fit: cover;
+      box-shadow: 0 0 25px rgba(0, 59, 142, 0.3);
+      border: 2px solid rgba(0, 59, 142, 0.5);
+      transition: all 0.3s ease;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards;
+      display: block;
+    }
+
+    .video-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(0, 150, 255, 0.6);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (max-width: 768px) {
+    .videos-section {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow: hidden;
+      width: 100%;
+      gap: 0;
+    }
+
+    .video-wrapper {
+      min-width: 100%;
+    }
+
+    .video-card {
+      width: 100vw;
+      height: 220px;
+      border-radius: 0;
+    }
+    }
   </style>
 </head>
 <body>
@@ -166,34 +226,7 @@
       </div>
     </section>
 
-    <!-- Video Gallery Section -->
-    <section class="video-gallery-section">
-      <div class="content-container">
-        <div class="video-gallery-grid">
-          <div class="video-card video-card-1" data-aos="fade-up" data-aos-delay="0">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video1.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-          <div class="video-card video-card-2" data-aos="fade-up" data-aos-delay="100">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video2.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-          <div class="video-card video-card-3" data-aos="fade-up" data-aos-delay="200">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video3.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section id="home-videos" class="videos-section"></section>
 
     <section class="main-content">
       <div class="content-container">
@@ -312,5 +345,64 @@
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+    const supabaseUrl = 'https://ebezqrsgednjwhajddqu.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZXpxcnNnZWRuandoYWpkZHF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NTEyNzYsImV4cCI6MjA1MDAyNzI3Nn0.6UpoIFJuEGDnLlD3_8w-fyQ2qMZ7uNDUttk-4Aeavgw';
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    async function loadVideos() {
+      const container = document.getElementById('home-videos');
+      if (!container) return;
+
+      const { data, error } = await supabase
+        .from('videos_gifs')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+      if (error) {
+        console.error('Error cargando videos:', error);
+        container.innerHTML = '';
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = data.map((video, index) => {
+        const rawUrl = video?.video_url ?? '';
+        const videoUrl = rawUrl.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        const delay = index * 120;
+        const title = (video?.title || `Video ${index + 1}`).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return `
+          <div class="video-wrapper">
+            <video src="${videoUrl}" autoplay loop muted playsinline preload="metadata" class="video-card" style="animation-delay: ${delay}ms;" aria-label="${title}"></video>
+          </div>
+        `;
+      }).join('');
+
+      const wrappers = container.querySelectorAll('.video-wrapper');
+      if (window.innerWidth < 768 && wrappers.length > 1) {
+        let index = 0;
+        const applyTransform = () => {
+          wrappers.forEach((wrapper, i) => {
+            wrapper.style.transform = `translateX(${(i - index) * 100}%)`;
+          });
+        };
+
+        applyTransform();
+
+        setInterval(() => {
+          index = (index + 1) % wrappers.length;
+          applyTransform();
+        }, 4000);
+      }
+    }
+
+    loadVideos();
+  </script>
 </body>
 </html>
