@@ -112,10 +112,17 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
       padding: 60px 0;
       overflow: hidden;
+    }
+
+    .videos-grid {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      width: 100%;
     }
 
     .videos-loading {
@@ -126,6 +133,13 @@
       font-weight: 600;
       font-size: 16px;
       letter-spacing: 0.5px;
+    }
+
+    .videos-error {
+      color: rgba(255, 255, 255, 0.75);
+      font-weight: 500;
+      font-size: 16px;
+      text-align: center;
     }
 
     .video-wrapper {
@@ -204,9 +218,12 @@
 
     @media (max-width: 768px) {
       .videos-section {
+        padding: 40px 0;
+      }
+
+      .videos-grid {
         flex-wrap: nowrap;
         overflow: hidden;
-        width: 100%;
         gap: 0;
       }
 
@@ -278,10 +295,6 @@
   </div>
 
   <main>
-    <section class="videos-section">
-      <div id="videos-container" class="videos-grid"></div>
-    </section>
-    <script type="module" src="/src/scripts/homeVideos.js"></script>
     <!-- Theme Toggle Button -->
     <div class="theme-toggle" id="themeToggle">
       <i class="theme-toggle-icon fas fa-moon moon"></i>
@@ -297,7 +310,58 @@
       </div>
     </section>
 
-    <!-- Removed informational feature cards in favor of the Supabase-powered gallery -->
+    <section class="videos-section">
+      <div id="videos-container" class="videos-grid"></div>
+    </section>
+    <script type="module" src="/src/scripts/homeVideos.js"></script>
+
+    <section class="main-content">
+      <div class="content-container">
+        <a href="./pages/como-funciona.html" class="tutorial-button shiny-button">
+          <i class="fas fa-info-circle"></i>
+          <span class="shiny-text">¿Cómo funciona Kioskeys?</span>
+        </a>
+
+        <div class="features-grid">
+          <a href="./pages/planes.html" class="feature-card shiny-button">
+            <div>
+              <i class="fas fa-crown feature-icon"></i>
+              <h3 class="shiny-text">Elegí tu plan</h3>
+              <p>Planes flexibles que se adaptan a tus necesidades</p>
+            </div>
+          </a>
+
+          <a href="./pages/productos.html" class="feature-card shiny-button">
+            <div>
+              <i class="fas fa-box feature-icon"></i>
+              <h3 class="shiny-text">Nuestros productos</h3>
+              <p>Descubre nuestra gama completa de servicios</p>
+            </div>
+          </a>
+
+          <a href="./pages/red-servicios.html" class="feature-card shiny-button">
+            <div>
+              <i class="fas fa-map-marker-alt feature-icon"></i>
+              <h3 class="shiny-text">Red de servicios</h3>
+              <p>Encuentra el punto de servicio más cercano</p>
+            </div>
+          </a>
+
+          <a href="./pages/planes.html#pagos" class="feature-card shiny-button">
+            <div>
+              <i class="fas fa-credit-card feature-icon"></i>
+              <h3 class="shiny-text">Formas de pago</h3>
+              <p>Múltiples opciones de pago disponibles</p>
+            </div>
+          </a>
+        </div>
+
+        <a href="./pages/tutoriales.html" class="tutorial-button shiny-button">
+          <i class="fas fa-play-circle"></i>
+          <span class="shiny-text">Tutoriales</span>
+        </a>
+      </div>
+    </section>
   </main>
 
   <footer>

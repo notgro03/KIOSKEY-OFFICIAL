@@ -7,7 +7,7 @@
   <link rel='stylesheet' href='/style.css'>
   <link rel='stylesheet' href='/css/productos.css'>
 </head>
-<body>
+<body class='productos-page'>
   <nav>
     <div class='logo'>
       <a href='/'><img src='/LOGO_KIOSKEYS.png' alt='Kioskeys'></a>
@@ -28,30 +28,18 @@
       <h2 class='section-title'>Nuestros Productos</h2>
       <p class='section-subtitle'>Todo lo que necesitás para tu seguridad</p>
 
-      <div class='products-grid'>
-        <div class='product-card'>
-          <img src='/assets/icons/key-icon.svg' alt='Llaves' class='product-icon'>
-          <h4>Llaves</h4>
-          <p>Copias y llaves codificadas</p>
-        </div>
+      <div class='filters'>
+        <select id='brandSelect' aria-label='Seleccionar marca'>
+          <option value=''>Seleccionar marca</option>
+        </select>
+        <select id='modelSelect' aria-label='Seleccionar modelo' disabled>
+          <option value=''>Seleccionar modelo</option>
+        </select>
+        <button id='searchBtn' type='button'>Buscar productos compatibles</button>
+      </div>
 
-        <div class='product-card'>
-          <img src='/assets/icons/case-icon.svg' alt='Carcasas' class='product-icon'>
-          <h4>Carcasas</h4>
-          <p>Repuestos originales</p>
-        </div>
-
-        <div class='product-card'>
-          <img src='/assets/icons/remote-icon.svg' alt='Telemandos' class='product-icon'>
-          <h4>Telemandos</h4>
-          <p>Controles remotos</p>
-        </div>
-
-        <div class='product-card'>
-          <img src='/assets/icons/tools-icon.svg' alt='Accesorios' class='product-icon'>
-          <h4>Accesorios</h4>
-          <p>Baterías y más</p>
-        </div>
+      <div id='resultsContainer' class='results-grid'>
+        <p class='results-placeholder'>Seleccioná una marca y un modelo para ver los productos compatibles.</p>
       </div>
     </section>
   </main>
@@ -102,5 +90,6 @@
       <p>&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
     </div>
   </footer>
+  <script type='module' src='/src/scripts/productsLoader.js'></script>
 </body>
 </html>

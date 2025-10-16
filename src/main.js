@@ -12,6 +12,20 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize menu toggle
   const menuButton = document.querySelector('.menu-button');
   const navLinks = document.querySelector('.nav-links');
+  const navBar = document.querySelector('nav');
+
+  if (navBar) {
+    const toggleNavAppearance = () => {
+      if (window.scrollY > 24) {
+        navBar.classList.add('nav-scrolled');
+      } else {
+        navBar.classList.remove('nav-scrolled');
+      }
+    };
+
+    toggleNavAppearance();
+    window.addEventListener('scroll', toggleNavAppearance, { passive: true });
+  }
 
   if (menuButton && navLinks) {
     menuButton.addEventListener('click', () => {
