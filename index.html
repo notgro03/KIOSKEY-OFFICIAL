@@ -278,8 +278,10 @@
   </div>
 
   <main>
-    <div id="home-videos" class="videos-section"></div>
-    <script type="module" src="./scripts/homeVideos.js"></script>
+    <section class="videos-section">
+      <div id="videos-container" class="videos-grid"></div>
+    </section>
+    <script type="module" src="/src/scripts/homeVideos.js"></script>
     <!-- Theme Toggle Button -->
     <div class="theme-toggle" id="themeToggle">
       <i class="theme-toggle-icon fas fa-moon moon"></i>
@@ -295,53 +297,7 @@
       </div>
     </section>
 
-    <section class="main-content">
-      <div class="content-container">
-        <a href="./pages/como-funciona.html" class="tutorial-button shiny-button">
-          <i class="fas fa-info-circle"></i>
-          <span class="shiny-text">¿Cómo funciona Kioskeys?</span>
-        </a>
-
-        <div class="features-grid">
-          <a href="./pages/planes.html" class="feature-card shiny-button">
-            <div>
-              <i class="fas fa-crown feature-icon"></i>
-              <h3 class="shiny-text">Elegí tu plan</h3>
-              <p>Planes flexibles que se adaptan a tus necesidades</p>
-            </div>
-          </a>
-
-          <a href="./pages/productos.html" class="feature-card shiny-button">
-            <div>
-              <i class="fas fa-box feature-icon"></i>
-              <h3 class="shiny-text">Nuestros productos</h3>
-              <p>Descubre nuestra gama completa de servicios</p>
-            </div>
-          </a>
-
-          <a href="./pages/red-servicios.html" class="feature-card shiny-button">
-            <div>
-              <i class="fas fa-map-marker-alt feature-icon"></i>
-              <h3 class="shiny-text">Red de servicios</h3>
-              <p>Encuentra el punto de servicio más cercano</p>
-            </div>
-          </a>
-
-          <a href="./pages/planes.html#pagos" class="feature-card shiny-button">
-            <div>
-              <i class="fas fa-credit-card feature-icon"></i>
-              <h3 class="shiny-text">Formas de pago</h3>
-              <p>Múltiples opciones de pago disponibles</p>
-            </div>
-          </a>
-        </div>
-
-        <a href="./pages/tutoriales.html" class="tutorial-button shiny-button">
-          <i class="fas fa-play-circle"></i>
-          <span class="shiny-text">Tutoriales</span>
-        </a>
-      </div>
-    </section>
+    <!-- Removed informational feature cards in favor of the Supabase-powered gallery -->
   </main>
 
   <footer>

@@ -1,126 +1,106 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang='es'>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
   <title>Productos - Kioskeys</title>
-  <link rel="icon" href="/favicon.jpg">
-  <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/css/productos.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="/env.js"></script>
+  <link rel='stylesheet' href='/style.css'>
+  <link rel='stylesheet' href='/css/productos.css'>
 </head>
-<body class="productos-page">
-  <nav></nav>
+<body>
+  <nav>
+    <div class='logo'>
+      <a href='/'><img src='/LOGO_KIOSKEYS.png' alt='Kioskeys'></a>
+    </div>
+    <div class='nav-links'>
+      <a href='/'>Inicio</a>
+      <a href='/pages/red-servicios.html'>Red de Servicios</a>
+      <a href='/pages/planes.html'>Planes</a>
+      <a href='/pages/productos.html' class='active'>Productos</a>
+      <a href='/pages/faq.html'>FAQ</a>
+      <a href='/pages/contacto.html'>Contacto</a>
+      <a href='/pages/app.html' class='download-btn'>Descarga App</a>
+    </div>
+  </nav>
 
   <main>
-    <section class="hero">
-      <div class="hero-content">
-        <h1>Nuestros Productos</h1>
-        <p>Todo lo que necesitas para tu seguridad</p>
-      </div>
-    </section>
+    <section class='products-section'>
+      <h2 class='section-title'>Nuestros Productos</h2>
+      <p class='section-subtitle'>Todo lo que necesitás para tu seguridad</p>
 
-    <section class="products-section" id="nuestros-productos">
-      <div class="content-container">
-        <h2>Nuestros Productos</h2>
-        <p class="products-subtitle">Todo lo que necesitás para tu seguridad</p>
-        <div class="products-grid">
-          <a href="/pages/llaves.html" class="product-card">
-            <div class="product-card-icon">
-              <img src="/assets/icons/key-icon.svg" alt="Llaves">
-            </div>
-            <h4>Llaves</h4>
-            <p>Copias y llaves codificadas</p>
-          </a>
-          <a href="/pages/carcasas.html" class="product-card">
-            <div class="product-card-icon">
-              <img src="/assets/icons/case-icon.svg" alt="Carcasas">
-            </div>
-            <h4>Carcasas</h4>
-            <p>Repuestos originales</p>
-          </a>
-          <a href="/pages/telemandos.html" class="product-card">
-            <div class="product-card-icon">
-              <img src="/assets/icons/remote-icon.svg" alt="Telemandos">
-            </div>
-            <h4>Telemandos</h4>
-            <p>Controles remotos</p>
-          </a>
-          <a href="/pages/accesorios.html" class="product-card">
-            <div class="product-card-icon">
-              <img src="/assets/icons/tools-icon.svg" alt="Accesorios">
-            </div>
-            <h4>Accesorios</h4>
-            <p>Baterías y más</p>
-          </a>
+      <div class='products-grid'>
+        <div class='product-card'>
+          <img src='/assets/icons/key-icon.svg' alt='Llaves' class='product-icon'>
+          <h4>Llaves</h4>
+          <p>Copias y llaves codificadas</p>
+        </div>
+
+        <div class='product-card'>
+          <img src='/assets/icons/case-icon.svg' alt='Carcasas' class='product-icon'>
+          <h4>Carcasas</h4>
+          <p>Repuestos originales</p>
+        </div>
+
+        <div class='product-card'>
+          <img src='/assets/icons/remote-icon.svg' alt='Telemandos' class='product-icon'>
+          <h4>Telemandos</h4>
+          <p>Controles remotos</p>
+        </div>
+
+        <div class='product-card'>
+          <img src='/assets/icons/tools-icon.svg' alt='Accesorios' class='product-icon'>
+          <h4>Accesorios</h4>
+          <p>Baterías y más</p>
         </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4 class="shiny-text">Empresa</h4>
-        <ul class="footer-links">
-          <li><a href="/pages/sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
-          <li><a href="/pages/red-servicios.html" class="shiny-text">Red de Servicios</a></li>
-          <li><a href="/pages/trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
+    <div class='footer-content'>
+      <div class='footer-section'>
+        <h4>Empresa</h4>
+        <ul>
+          <li><a href='/pages/sobre-nosotros.html'>Sobre Nosotros</a></li>
+          <li><a href='/pages/red-servicios.html'>Red de Servicios</a></li>
+          <li><a href='/pages/trabaja-con-nosotros.html'>Trabajá con Nosotros</a></li>
         </ul>
       </div>
 
-      <div class="footer-section">
-        <h4 class="shiny-text">Servicios</h4>
-        <ul class="footer-links">
-          <li><a href="/pages/productos.html" class="shiny-text">Productos</a></li>
-          <li><a href="/pages/telemandos.html" class="shiny-text">Telemandos</a></li>
-          <li><a href="/pages/planes.html" class="shiny-text">Planes</a></li>
-          <li><a href="/pages/cerrajeria.html" class="shiny-text">Cerrajería</a></li>
+      <div class='footer-section'>
+        <h4>Servicios</h4>
+        <ul>
+          <li><a href='/pages/productos.html'>Productos</a></li>
+          <li><a href='/pages/telemandos.html'>Telemandos</a></li>
+          <li><a href='/pages/planes.html'>Planes</a></li>
+          <li><a href='/pages/cerrajeria.html'>Cerrajería</a></li>
         </ul>
       </div>
 
-      <div class="footer-section">
-        <h4 class="shiny-text">Soporte</h4>
-        <ul class="footer-links">
-          <li><a href="/pages/contacto.html" class="shiny-text">Contacto</a></li>
-          <li><a href="/pages/faq.html" class="shiny-text">FAQ</a></li>
-          <li><a href="/pages/tutoriales.html" class="shiny-text">Tutoriales</a></li>
-          <li><a href="/pages/ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
+      <div class='footer-section'>
+        <h4>Soporte</h4>
+        <ul>
+          <li><a href='/pages/contacto.html'>Contacto</a></li>
+          <li><a href='/pages/faq.html'>FAQ</a></li>
+          <li><a href='/pages/tutoriales.html'>Tutoriales</a></li>
+          <li><a href='/pages/ayuda.html'>Centro de Ayuda</a></li>
         </ul>
       </div>
 
-      <div class="footer-section">
-        <h4 class="shiny-text">Legal</h4>
-        <ul class="footer-links">
-          <li><a href="/pages/privacidad.html" class="shiny-text">Política de Privacidad</a></li>
-          <li><a href="/pages/terminos.html" class="shiny-text">Términos y Condiciones</a></li>
-          <li><a href="/pages/cookies.html" class="shiny-text">Política de Cookies</a></li>
-          <li><a href="/pages/legal.html" class="shiny-text">Aviso Legal</a></li>
+      <div class='footer-section'>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href='/pages/privacidad.html'>Política de Privacidad</a></li>
+          <li><a href='/pages/terminos.html'>Términos y Condiciones</a></li>
+          <li><a href='/pages/cookies.html'>Política de Cookies</a></li>
+          <li><a href='/pages/legal.html'>Aviso Legal</a></li>
         </ul>
-      </div>
-
-      <div class="footer-section">
-        <h4 class="shiny-text">Síguenos</h4>
-        <div class="footer-social">
-          <a href="https://facebook.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-facebook"></i></a>
-          <a href="https://twitter.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-twitter"></i></a>
-          <a href="https://instagram.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-instagram"></i></a>
-          <a href="https://linkedin.com/company/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-linkedin"></i></a>
-        </div>
       </div>
     </div>
 
-    <div class="footer-bottom">
-      <p class="shiny-text">&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
+    <div class='footer-bottom'>
+      <p>&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
     </div>
   </footer>
-
-  <script type="module" src="/src/main.js"></script>
-  <script type="module">
-    import { initNavigation } from '/src/components/navigation.js';
-
-    initNavigation('productos');
-  </script>
 </body>
 </html>
