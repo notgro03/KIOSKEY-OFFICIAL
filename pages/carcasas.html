@@ -395,7 +395,7 @@
                 </select>
               </div>
             </div>
-            <button class="search-button" onclick="searchCases()">
+            <button class="search-button">
               <i class="fas fa-search"></i>
               Buscar Carcasas Compatibles
             </button>
@@ -454,8 +454,8 @@
         .select('brand')
         .order('brand', { ascending: true });
 
-    if (!brandsError && brands.length > 0) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))]; // Eliminar marcas repetidas
+    if (!brandsError && brands && brands.length > 0) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand).filter(Boolean))];
 
         uniqueBrands.forEach(brand => {
             const option = document.createElement('option');
@@ -471,6 +471,9 @@
     modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
     modelSelect.disabled = !brand;
     currentData = {};
+    const results = document.getElementById('searchResults');
+    results.innerHTML = '';
+    results.classList.remove('active');
 
     if (brand) {
         const { data: models, error: modelsError } = await supabase
@@ -526,6 +529,12 @@ searchButton.addEventListener('click', () => {
   function showResults(brand, model, casesData) {
     const results = document.getElementById('searchResults');
     results.innerHTML = "";
+
+    if (!casesData || casesData.length === 0) {
+        results.innerHTML = '<p>No se encontraron carcasas para este modelo.</p>';
+        results.classList.add('active');
+        return;
+    }
 
     casesData.forEach(({ image_url, description, video_url }) => {
         const whatsappMessage = encodeURIComponent(

@@ -471,10 +471,11 @@
       // Cargar marcas desde Supabase
       const { data: brands, error: brandsError } = await supabase
         .from('telemandos')
-        .select('brand');
+        .select('brand')
+        .order('brand', { ascending: true });
 
-      if (!brandsError) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand))];
+      if (!brandsError && brands) {
+        const uniqueBrands = [...new Set(brands.map(item => item.brand).filter(Boolean))];
         uniqueBrands.forEach(brand => {
           const option = document.createElement('option');
           option.value = brand;
@@ -485,74 +486,85 @@
 
       // Evento cambio de marca
       brandSelect.addEventListener('change', async () => {
-    const brand = brandSelect.value;
-    modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-    modelSelect.disabled = !brand;
-    currentData = {};
+        const brand = brandSelect.value;
+        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+        modelSelect.disabled = !brand;
+        currentData = {};
+        const results = document.getElementById('searchResults');
+        results.innerHTML = '';
+        results.classList.remove('active');
 
-    if (brand) {
-        const { data: models, error: modelsError } = await supabase
+        if (brand) {
+          const { data: models, error: modelsError } = await supabase
             .from('telemandos')
             .select('model, description, image_url, video_url')
-            .eq('brand', brand);
+            .eq('brand', brand)
+            .order('model', { ascending: true });
 
-        if (!modelsError) {
-            // Usar un Set para evitar modelos duplicados
-            const uniqueModels = new Set();
+          if (!modelsError && models && models.length > 0) {
+            const modelMap = models.reduce((acc, item) => {
+              if (!acc[item.model]) {
+                acc[item.model] = [];
+              }
+              acc[item.model].push({
+                description: item.description || '',
+                image_url: item.image_url || '',
+                video_url: item.video_url || ''
+              });
+              return acc;
+            }, {});
 
-            models.forEach(item => {
-                if (!uniqueModels.has(item.model)) { // Solo agregar si no está en el Set
-                    uniqueModels.add(item.model);
-
-                    const option = document.createElement('option');
-                    option.value = item.model;
-                    option.textContent = item.model;
-                    modelSelect.appendChild(option);
-
-                    currentData[item.model] = { 
-                        description: item.description, 
-                        image_url: item.image_url 
-                    };
-                }
+            Object.keys(modelMap).forEach(model => {
+              const option = document.createElement('option');
+              option.value = model;
+              option.textContent = model;
+              modelSelect.appendChild(option);
+              currentData[model] = modelMap[model];
             });
+          }
         }
-    }
-});
+      });
 
       // Evento botón buscar
       searchButton.addEventListener('click', async () => {
-    const brand = brandSelect.value;
-    const model = modelSelect.value;
+        const brand = brandSelect.value;
+        const model = modelSelect.value;
 
-    if (!brand || !model) {
-        alert('Selecciona una marca y modelo');
-        return;
-    }
+        if (!brand || !model) {
+          alert('Selecciona una marca y modelo');
+          return;
+        }
 
-    // Consulta a la base de datos para obtener TODOS los telemandos del modelo seleccionado
-    const { data: resultsData, error } = await supabase
-        .from('telemandos')
-        .select('model, description, image_url, video_url')
-        .eq('brand', brand)
-        .eq('model', model);
+        let resultsData = currentData[model] || [];
 
-    if (error) {
-        console.error('Error obteniendo datos:', error);
-        alert('Ocurrió un error obteniendo los telemandos.');
-        return;
-    }
+        if (resultsData.length === 0) {
+          const { data, error } = await supabase
+            .from('telemandos')
+            .select('description, image_url, video_url')
+            .eq('brand', brand)
+            .eq('model', model);
 
-    showResults(resultsData, brand, model);
-});
+          if (error) {
+            console.error('Error obteniendo datos:', error);
+            alert('Ocurrió un error obteniendo los telemandos.');
+            return;
+          }
+
+          resultsData = data || [];
+        }
+
+        showResults(resultsData, brand, model);
+      });
 
     });
 
 function showResults(resultsData, brand, model) {
     const results = document.getElementById('searchResults');
-    results.innerHTML = ''; 
+    results.innerHTML = '';
 
     if (resultsData.length === 0) {
         results.innerHTML = `<p>No se encontraron telemandos para este modelo.</p>`;
+        results.classList.add('active');
         return;
     }
 
@@ -600,10 +612,10 @@ function showResults(resultsData, brand, model) {
             </div>
         `;
 
-        results.innerHTML += telemandoHTML; 
+    results.innerHTML += telemandoHTML;
     });
 
-    results.classList.add('active'); 
+    results.classList.add('active');
 }
 
     // Función para abrir el modal con la imagen ampliada
