@@ -106,150 +106,6 @@
       width: fit-content;
     }
     }
-
-    .videos-section {
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 60px 0;
-      overflow: hidden;
-    }
-
-    .videos-grid {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 24px;
-      flex-wrap: wrap;
-      width: 100%;
-    }
-
-    .videos-loading {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #00c8ff;
-      font-weight: 600;
-      font-size: 16px;
-      letter-spacing: 0.5px;
-    }
-
-    .videos-error {
-      color: rgba(255, 255, 255, 0.75);
-      font-weight: 500;
-      font-size: 16px;
-      text-align: center;
-    }
-
-    .video-wrapper {
-      position: relative;
-      flex: 0 0 auto;
-      overflow: hidden;
-      border-radius: 16px;
-      transition: transform 1s ease;
-      border: 2px solid rgba(0, 59, 142, 0.45);
-      box-shadow: 0 0 25px rgba(0, 59, 142, 0.35);
-      background: radial-gradient(circle at top, rgba(0, 102, 204, 0.15), rgba(0, 30, 60, 0.6));
-    }
-
-    .video-card {
-      width: 320px;
-      height: 180px;
-      border-radius: 16px;
-      object-fit: cover;
-      display: block;
-      opacity: 0;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      animation: fadeIn 1s ease forwards;
-    }
-
-    .video-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 35px rgba(0, 150, 255, 0.55);
-    }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      gap: 12px;
-      padding: 20px;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0.75) 100%);
-    }
-
-    .overlay-logo {
-      width: 100px;
-      filter: drop-shadow(0 0 10px rgba(0, 200, 255, 0.6));
-      animation: floatLogo 4s ease-in-out infinite;
-    }
-
-    .overlay-text {
-      color: #00c8ff;
-      font-size: 18px;
-      font-weight: 600;
-      text-shadow: 0 0 12px rgba(0, 200, 255, 0.85);
-      animation: floatText 3.5s ease-in-out infinite;
-    }
-
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes floatLogo {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
-
-    @keyframes floatText {
-      0%, 100% { opacity: 0.85; }
-      50% { opacity: 1; }
-    }
-
-    @media (max-width: 1024px) {
-      .videos-section {
-        gap: 16px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .videos-section {
-        padding: 40px 0;
-      }
-
-      .videos-grid {
-        flex-wrap: nowrap;
-        overflow: hidden;
-        gap: 0;
-      }
-
-      .video-wrapper {
-        min-width: 100%;
-        border-radius: 0;
-      }
-
-      .video-card {
-        width: 100vw;
-        height: 220px;
-        border-radius: 0;
-      }
-
-      .overlay {
-        padding: 16px;
-      }
-
-      .overlay-logo {
-        width: 80px;
-      }
-
-      .overlay-text {
-        font-size: 16px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -310,10 +166,46 @@
       </div>
     </section>
 
-    <section class="videos-section">
-      <div id="videos-container" class="videos-grid"></div>
+    <section class="videos-section" aria-label="Galería de videos">
+      <div class="content-container">
+        <div class="videos-stack" id="videos-container">
+          <article class="videos-stack-card" data-video-index="0">
+            <video
+              class="video-item"
+              src="/videos/video1.mp4"
+              autoplay
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+          </article>
+          <article class="videos-stack-card" data-video-index="1">
+            <video
+              class="video-item"
+              src="/videos/video2.mp4"
+              autoplay
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+          </article>
+          <article class="videos-stack-card" data-video-index="2">
+            <video
+              class="video-item"
+              src="/videos/video3.mp4"
+              autoplay
+              loop
+              muted
+              playsinline
+              preload="metadata"
+            ></video>
+          </article>
+        </div>
+        <p class="videos-fallback" id="videosFallback" hidden>No fue posible cargar los videos en este momento.</p>
+      </div>
     </section>
-    <script type="module" src="/src/scripts/homeVideos.js"></script>
 
     <section class="main-content">
       <div class="content-container">
@@ -431,6 +323,7 @@
 
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/scripts/homeVideos.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
 </body>
 </html>

@@ -6,24 +6,45 @@ const supabase = createClient(
 );
 
 const TABLE_NAME = 'videos_gifs';
-let sliderIntervalId = null;
 
 const container = typeof document !== 'undefined'
   ? document.getElementById('videos-container')
   : null;
 
-const wrappers = container
-  ? Array.from(container.querySelectorAll('.video-wrapper'))
+const fallbackMessage = typeof document !== 'undefined'
+  ? document.getElementById('videosFallback')
+  : null;
+
+const cards = container
+  ? Array.from(container.querySelectorAll('.videos-stack-card'))
   : [];
 
-const videoElements = wrappers
-  .map((wrapper) => wrapper.querySelector('video'))
-  .filter((video) => video);
+const videoElements = cards
+  .map((card) => card.querySelector('video'))
+  .filter(Boolean);
 
-const fallbackSources = videoElements.map((video) => video.getAttribute('src') || '');
+const defaultSources = videoElements.map((video) => {
+  const source = video.getAttribute('src') || '';
+  video.dataset.defaultSrc = source;
+  ensurePlaybackAttributes(video);
+  return source;
+});
+
+function ensurePlaybackAttributes(video) {
+  video.autoplay = true;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute('autoplay', '');
+  video.setAttribute('loop', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+}
 
 function sanitiseUrl(url) {
-  if (!url || typeof window === 'undefined') return null;
+  if (!url || typeof window === 'undefined') {
+    return null;
+  }
 
   try {
     const parsed = new URL(url, window.location.origin);
@@ -37,7 +58,42 @@ function sanitiseUrl(url) {
   return null;
 }
 
-async function fetchSupabaseSources() {
+function toggleFallback(showFallback) {
+  if (!container || !fallbackMessage) {
+    return;
+  }
+
+  fallbackMessage.hidden = !showFallback;
+  container.classList.toggle('is-hidden', showFallback);
+
+  if (showFallback) {
+    videoElements.forEach((video, index) => {
+      const fallbackSrc = defaultSources[index];
+      if (fallbackSrc) {
+        video.src = fallbackSrc;
+      }
+    });
+  }
+}
+
+function createCard(url) {
+  const card = document.createElement('article');
+  card.className = 'videos-stack-card';
+
+  const video = document.createElement('video');
+  video.className = 'video-item';
+  video.src = url;
+  ensurePlaybackAttributes(video);
+
+  card.appendChild(video);
+  return { card, video };
+}
+
+async function loadVideos() {
+  if (!container || videoElements.length === 0) {
+    return;
+  }
+
   try {
     const { data, error } = await supabase
       .from(TABLE_NAME)
@@ -45,93 +101,52 @@ async function fetchSupabaseSources() {
       .order('order_index', { ascending: true });
 
     if (error) {
-      if (error.code !== 'PGRST116') {
-        console.error('Error al cargar videos desde Supabase:', error);
+      throw error;
+    }
+
+    console.log('✅ Supabase conectado correctamente');
+
+    if (!data || data.length === 0) {
+      toggleFallback(true);
+      return;
+    }
+
+    let applied = 0;
+
+    data.forEach((item) => {
+      const cleanUrl = sanitiseUrl(item?.video_url);
+      if (!cleanUrl) {
+        return;
       }
-      return null;
+
+      let targetVideo = videoElements[applied];
+
+      if (!targetVideo) {
+        const { card, video } = createCard(cleanUrl);
+        container.appendChild(card);
+        videoElements.push(video);
+        defaultSources.push(cleanUrl);
+        targetVideo = video;
+      }
+
+      if (targetVideo.getAttribute('src') !== cleanUrl) {
+        targetVideo.src = cleanUrl;
+        targetVideo.load();
+      }
+
+      applied += 1;
+    });
+
+    if (applied === 0) {
+      toggleFallback(true);
+      return;
     }
 
-    if (!Array.isArray(data) || data.length === 0) {
-      return null;
-    }
-
-    const sources = data
-      .map((item) => sanitiseUrl(item.video_url))
-      .filter((source) => Boolean(source));
-
-    return sources.length ? sources : null;
+    toggleFallback(false);
   } catch (error) {
-    console.error('Error inesperado al consultar Supabase:', error);
-    return null;
+    console.error('Error al cargar videos desde Supabase:', error);
+    toggleFallback(true);
   }
 }
 
-function applyVideoSources(sources) {
-  sources.forEach((source, index) => {
-    const video = videoElements[index];
-    if (!video || !source) return;
-
-    if (video.src !== source) {
-      video.src = source;
-    }
-
-    video.autoplay = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.setAttribute('autoplay', '');
-    video.setAttribute('loop', '');
-    video.setAttribute('muted', '');
-    video.setAttribute('playsinline', '');
-  });
-}
-
-function startMobileSlider() {
-  if (typeof window === 'undefined') return;
-
-  if (sliderIntervalId) {
-    clearInterval(sliderIntervalId);
-    sliderIntervalId = null;
-  }
-
-  if (window.innerWidth >= 768 || wrappers.length <= 1) {
-    wrappers.forEach((wrapper) => {
-      wrapper.style.transform = '';
-    });
-    return;
-  }
-
-  wrappers.forEach((wrapper, index) => {
-    wrapper.style.transform = `translateX(${index * 100}%)`;
-    wrapper.style.transition = 'transform 0.8s ease';
-  });
-
-  let currentIndex = 0;
-  sliderIntervalId = window.setInterval(() => {
-    currentIndex = (currentIndex + 1) % wrappers.length;
-    wrappers.forEach((wrapper, index) => {
-      wrapper.style.transform = `translateX(${(index - currentIndex) * 100}%)`;
-    });
-  }, 4500);
-}
-
-async function initialiseVideos() {
-  if (!container || videoElements.length === 0) {
-    return;
-  }
-
-  const supabaseSources = await fetchSupabaseSources();
-
-  if (supabaseSources) {
-    applyVideoSources(supabaseSources);
-  } else if (fallbackSources.length) {
-    applyVideoSources(fallbackSources);
-  }
-
-  startMobileSlider();
-  if (typeof window !== 'undefined') {
-    window.addEventListener('resize', startMobileSlider);
-  }
-}
-
-initialiseVideos();
+loadVideos();
