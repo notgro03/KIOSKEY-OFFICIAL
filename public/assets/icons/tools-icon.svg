@@ -1,0 +1,16 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="toolsStroke" x1="26" y1="22" x2="70" y2="74" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00C2FF"/>
+      <stop offset="1" stop-color="#00509A"/>
+    </linearGradient>
+    <radialGradient id="toolsGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) scale(42)">
+      <stop stop-color="#00B1FF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#001020" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="url(#toolsGlow)"/>
+  <path d="M39.5 24C36.3954 24 34 26.3954 34 29.5V33.0858C34 34.2107 33.5523 35.2891 32.7574 36.084L26.084 42.7574C24.0237 44.8177 24.0237 48.1823 26.084 50.2426L45.7574 69.916C47.8177 71.9763 51.1823 71.9763 53.2426 69.916L59.916 63.2426C60.7109 62.4477 61.7893 62 62.9142 62H66.5C69.6046 62 72 59.6046 72 56.5V50.25C72 48.316 70.684 46.6 68.81 46.1167L63.5 44.75V38.5C63.5 36.0147 61.4853 34 59 34H52.75L51.3833 28.69C50.9 26.816 49.184 25.5 47.25 25.5H39.5Z" stroke="url(#toolsStroke)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M35 55L43.5 46.5" stroke="#9CE9FF" stroke-width="4" stroke-linecap="round"/>
+  <path d="M52.5 47L62 56.5" stroke="#00D4FF" stroke-width="4" stroke-linecap="round"/>
+</svg>

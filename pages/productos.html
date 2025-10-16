@@ -6,130 +6,11 @@
   <title>Productos - Kioskeys</title>
   <link rel="icon" href="/favicon.jpg">
   <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/css/kioskeys-styles.css">
   <link rel="stylesheet" href="/css/productos.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="/env.js"></script>
-  <style>
-    .content-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .product-selector-section {
-      padding: 48px 0 64px;
-    }
-
-    .selector-title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: 600;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 36px;
-      letter-spacing: -0.01em;
-    }
-
-    .product-selector-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 24px;
-    }
-
-    .selector-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 32px 24px;
-      border-radius: 24px;
-      text-decoration: none;
-      color: #ffffff;
-      background: rgba(15, 15, 15, 0.45);
-      border: 1px solid rgba(0, 212, 255, 0.25);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(12px);
-      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-      text-align: center;
-    }
-
-    .selector-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(0, 212, 255, 0.6);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-    }
-
-    .selector-icon-box {
-      display: grid;
-      place-items: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, rgba(0, 212, 255, 0.18), rgba(0, 114, 188, 0.18));
-      border: 2px solid rgba(0, 212, 255, 0.35);
-      box-shadow: 0 10px 24px rgba(0, 212, 255, 0.25);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .selector-card:hover .selector-icon-box {
-      transform: scale(1.05);
-      box-shadow: 0 16px 32px rgba(0, 212, 255, 0.3);
-    }
-
-    .selector-icon-box i {
-      font-size: 34px;
-      color: #00d4ff;
-    }
-
-    .selector-card h3 {
-      font-size: 20px;
-      font-weight: 600;
-      margin: 0;
-    }
-
-    .selector-card p {
-      margin: 0;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.75);
-    }
-
-    @media (max-width: 1024px) {
-      .product-selector-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .product-selector-section {
-        padding: 32px 0 48px;
-      }
-
-      .product-selector-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .selector-card {
-        padding: 24px 20px;
-      }
-
-      .selector-icon-box {
-        width: 68px;
-        height: 68px;
-      }
-
-      .selector-icon-box i {
-        font-size: 28px;
-      }
-
-      .selector-title {
-        font-size: 21px;
-      }
-    }
-</style>
 </head>
-<body>
+<body class="productos-page">
   <nav></nav>
 
   <main>
@@ -140,44 +21,39 @@
       </div>
     </section>
 
-    <section class="main-content">
+    <section class="products-section" id="nuestros-productos">
       <div class="content-container">
-        <div class="product-selector-section">
-          <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
-
-          <div class="product-selector-grid">
-            <a href="/pages/llaves.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-key"></i>
-              </div>
-              <h3>Llaves</h3>
-              <p>Copias y llaves codificadas</p>
-            </a>
-
-            <a href="/pages/carcasas.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <h3>Carcasas</h3>
-              <p>Repuestos originales</p>
-            </a>
-
-            <a href="/pages/telemandos.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-car"></i>
-              </div>
-              <h3>Telemandos</h3>
-              <p>Controles remotos</p>
-            </a>
-
-            <a href="/pages/accesorios.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-tools"></i>
-              </div>
-              <h3>Accesorios</h3>
-              <p>Baterías y más</p>
-            </a>
-          </div>
+        <h2>Nuestros Productos</h2>
+        <p class="products-subtitle">Todo lo que necesitás para tu seguridad</p>
+        <div class="products-grid">
+          <a href="/pages/llaves.html" class="product-card">
+            <div class="product-card-icon">
+              <img src="/assets/icons/key-icon.svg" alt="Llaves">
+            </div>
+            <h4>Llaves</h4>
+            <p>Copias y llaves codificadas</p>
+          </a>
+          <a href="/pages/carcasas.html" class="product-card">
+            <div class="product-card-icon">
+              <img src="/assets/icons/case-icon.svg" alt="Carcasas">
+            </div>
+            <h4>Carcasas</h4>
+            <p>Repuestos originales</p>
+          </a>
+          <a href="/pages/telemandos.html" class="product-card">
+            <div class="product-card-icon">
+              <img src="/assets/icons/remote-icon.svg" alt="Telemandos">
+            </div>
+            <h4>Telemandos</h4>
+            <p>Controles remotos</p>
+          </a>
+          <a href="/pages/accesorios.html" class="product-card">
+            <div class="product-card-icon">
+              <img src="/assets/icons/tools-icon.svg" alt="Accesorios">
+            </div>
+            <h4>Accesorios</h4>
+            <p>Baterías y más</p>
+          </a>
         </div>
       </div>
     </section>

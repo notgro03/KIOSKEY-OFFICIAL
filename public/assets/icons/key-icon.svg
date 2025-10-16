@@ -1,0 +1,15 @@
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="keyGlow" x1="18" y1="18" x2="78" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00B7FF"/>
+      <stop offset="1" stop-color="#004A8F"/>
+    </linearGradient>
+    <radialGradient id="keyAura" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) scale(42)">
+      <stop stop-color="#00D4FF" stop-opacity="0.8"/>
+      <stop offset="1" stop-color="#001828" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="48" cy="48" r="44" fill="url(#keyAura)"/>
+  <path d="M57 26C47.0589 26 39 34.0589 39 44C39 46.4701 39.5155 48.814 40.4472 50.9396L29.9393 61.4472C28.4081 62.9785 28.4081 65.5 29.9393 67.0312L34.9688 72.0607C36.5 73.592 39.0215 73.592 40.5527 72.0607L42 70.6133V74.5C42 76.9853 44.0147 79 46.5 79H51.5C53.9853 79 56 76.9853 56 74.5V66.5H64.5C66.9853 66.5 69 64.4853 69 62V54.5H73.5C75.9853 54.5 78 52.4853 78 50V44C78 34.0589 69.9411 26 60 26H57Z" stroke="url(#keyGlow)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="57" cy="44" r="7" stroke="#9CEBFF" stroke-width="4"/>
+</svg>
