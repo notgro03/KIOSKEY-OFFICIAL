@@ -5,7 +5,7 @@ const supabase = createClient(
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZXpxcnNnZWRuandoYWpkZHF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NTEyNzYsImV4cCI6MjA1MDAyNzI3Nn0.6UpoIFJuEGDnLlD3_8w-fyQ2qMZ7uNDUttk-4Aeavgw'
 );
 
-const TABLE_NAME = 'videos_gifs';
+const TABLE_CANDIDATES = ['videos gifs', 'videos_gifs'];
 
 const container = typeof document !== 'undefined'
   ? document.getElementById('videos-container')
@@ -23,11 +23,8 @@ const videoElements = cards
   .map((card) => card.querySelector('video'))
   .filter(Boolean);
 
-const defaultSources = videoElements.map((video) => {
-  const source = video.getAttribute('src') || '';
-  video.dataset.defaultSrc = source;
+videoElements.forEach((video) => {
   ensurePlaybackAttributes(video);
-  return source;
 });
 
 function ensurePlaybackAttributes(video) {
@@ -59,34 +56,108 @@ function sanitiseUrl(url) {
 }
 
 function toggleFallback(showFallback) {
-  if (!container || !fallbackMessage) {
+  if (!fallbackMessage) {
     return;
   }
 
   fallbackMessage.hidden = !showFallback;
-  container.classList.toggle('is-hidden', showFallback);
+}
 
-  if (showFallback) {
-    videoElements.forEach((video, index) => {
-      const fallbackSrc = defaultSources[index];
-      if (fallbackSrc) {
-        video.src = fallbackSrc;
-      }
-    });
+function ensurePlaceholder(card, message) {
+  if (!card) {
+    return;
+  }
+
+  const video = card.querySelector('video');
+  if (video) {
+    video.pause();
+    video.removeAttribute('src');
+    if (typeof video.load === 'function') {
+      video.load();
+    }
+    video.style.display = 'none';
+  }
+
+  let placeholder = card.querySelector('.videos-stack-card__placeholder');
+  if (!placeholder) {
+    placeholder = document.createElement('div');
+    placeholder.className = 'videos-stack-card__placeholder';
+    placeholder.style.display = 'flex';
+    placeholder.style.alignItems = 'center';
+    placeholder.style.justifyContent = 'center';
+    placeholder.style.height = '100%';
+    placeholder.style.minHeight = '180px';
+    placeholder.style.color = 'rgba(255, 255, 255, 0.8)';
+    placeholder.style.fontWeight = '600';
+    placeholder.style.letterSpacing = '0.4px';
+    placeholder.style.textTransform = 'uppercase';
+    placeholder.style.background = 'linear-gradient(160deg, rgba(0, 30, 60, 0.65), rgba(0, 10, 20, 0.85))';
+  }
+
+  placeholder.textContent = message;
+  if (!placeholder.parentElement) {
+    card.appendChild(placeholder);
   }
 }
 
-function createCard(url) {
-  const card = document.createElement('article');
-  card.className = 'videos-stack-card';
+function clearPlaceholder(card) {
+  if (!card) {
+    return;
+  }
 
-  const video = document.createElement('video');
-  video.className = 'video-item';
-  video.src = url;
+  const placeholder = card.querySelector('.videos-stack-card__placeholder');
+  if (placeholder) {
+    placeholder.remove();
+  }
+
+  const video = card.querySelector('video');
+  if (video) {
+    video.style.display = '';
+  }
+}
+
+async function querySupabase() {
+  let lastError = null;
+
+  for (const tableName of TABLE_CANDIDATES) {
+    try {
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('video_url, title')
+        .order('order_index', { ascending: true });
+
+      if (error) {
+        lastError = error;
+        continue;
+      }
+
+      return data || [];
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (lastError) {
+    throw lastError;
+  }
+
+  return [];
+}
+
+function applyVideo(card, video, url) {
+  if (!video || !url) {
+    return;
+  }
+
+  clearPlaceholder(card);
+  const currentSrc = video.getAttribute('src');
+  if (currentSrc !== url) {
+    video.src = url;
+    if (typeof video.load === 'function') {
+      video.load();
+    }
+  }
   ensurePlaybackAttributes(video);
-
-  card.appendChild(video);
-  return { card, video };
 }
 
 async function loadVideos() {
@@ -95,18 +166,12 @@ async function loadVideos() {
   }
 
   try {
-    const { data, error } = await supabase
-      .from(TABLE_NAME)
-      .select('video_url')
-      .order('order_index', { ascending: true });
+    const data = await querySupabase();
 
-    if (error) {
-      throw error;
-    }
-
-    console.log('✅ Supabase conectado correctamente');
-
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
+      videoElements.forEach((video, index) => {
+        ensurePlaceholder(cards[index], 'Video no disponible');
+      });
       toggleFallback(true);
       return;
     }
@@ -119,32 +184,36 @@ async function loadVideos() {
         return;
       }
 
-      let targetVideo = videoElements[applied];
+      const targetVideo = videoElements[applied];
+      const targetCard = cards[applied];
 
-      if (!targetVideo) {
-        const { card, video } = createCard(cleanUrl);
-        container.appendChild(card);
-        videoElements.push(video);
-        defaultSources.push(cleanUrl);
-        targetVideo = video;
+      if (targetVideo && targetCard) {
+        applyVideo(targetCard, targetVideo, cleanUrl);
+        applied += 1;
       }
-
-      if (targetVideo.getAttribute('src') !== cleanUrl) {
-        targetVideo.src = cleanUrl;
-        targetVideo.load();
-      }
-
-      applied += 1;
     });
 
     if (applied === 0) {
+      videoElements.forEach((_, index) => {
+        ensurePlaceholder(cards[index], 'Video no disponible');
+      });
       toggleFallback(true);
       return;
     }
 
+    videoElements.forEach((video, index) => {
+      if (index >= applied) {
+        ensurePlaceholder(cards[index], 'Video no disponible');
+      }
+    });
+
+    console.log('✅ Supabase conectado correctamente');
     toggleFallback(false);
   } catch (error) {
     console.error('Error al cargar videos desde Supabase:', error);
+    videoElements.forEach((_, index) => {
+      ensurePlaceholder(cards[index], 'Video no disponible');
+    });
     toggleFallback(true);
   }
 }
