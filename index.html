@@ -122,9 +122,13 @@
       <a href="./pages/contacto.html" class="shiny-text"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
       <a href="./pages/descarga-app.html" class="shiny-text"><i class="fas fa-mobile-alt"></i> <span>Descarga App</span></a>
     </div>
-    <button class="menu-button">
-      <i class="fas fa-bars"></i>
-    </button>
+    <button class="menu-button"><i class="fas fa-bars"></i></button>
+    <script>
+      const btn = document.querySelector('.menu-button');
+      btn.addEventListener('click', () => {
+        document.querySelector('.nav-links').classList.toggle('active');
+      });
+    </script>
   </nav>
 
   <div class="app-download">
