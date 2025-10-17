@@ -1886,3 +1886,26 @@ footer::before {
     width: 90%;
   }
 }
+
+.result-card {
+  background: rgba(0, 30, 50, 0.6);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 12px 0;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 18px rgba(0, 150, 255, 0.45);
+}
+
+.result-card img {
+  width: 120px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
