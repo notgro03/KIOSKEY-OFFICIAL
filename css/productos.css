@@ -79,6 +79,14 @@
   z-index: 1;
 }
 
+.selector-icon-box img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 16px rgba(0, 208, 255, 0.55));
+  transition: transform 0.35s ease, filter 0.35s ease;
+}
+
 .selector-icon-box i {
   font-size: 34px;
   color: #00d4ff;
@@ -89,6 +97,11 @@
 .selector-card:hover .selector-icon-box {
   transform: scale(1.08) rotate(-4deg);
   box-shadow: 0 18px 35px rgba(0, 212, 255, 0.35);
+}
+
+.selector-card:hover .selector-icon-box img {
+  transform: scale(1.08);
+  filter: drop-shadow(0 0 22px rgba(0, 220, 255, 0.75));
 }
 
 .selector-card:hover .selector-icon-box i {

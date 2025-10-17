@@ -1,3 +1,31 @@
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: #041b2d;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+  scroll-behavior: smooth;
+}
+
+section {
+  background: transparent !important;
+}
+
+.hero,
+.videos-section,
+.main-content,
+footer {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[class*='gradient'],
+[class*='bg-gradient'] {
+  background: none !important;
+}
+
 .videos-section {
   display: flex;
   justify-content: center;

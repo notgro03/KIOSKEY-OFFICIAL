@@ -24,6 +24,33 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
+body {
+  background-color: #041b2d !important;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+}
+
+section,
+.hero,
+.videos-section,
+.main-content,
+footer {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[class*='gradient'],
+[class*='bg-gradient'] {
+  background: none !important;
+}
+
+body::before,
+body::after {
+  background: none !important;
+  display: none !important;
+}
+
 /* Mejora de performance para animaciones */
 .tutorial-button,
 .feature-card {
