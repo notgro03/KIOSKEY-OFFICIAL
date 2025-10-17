@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#003B8E">
+  <meta name="theme-color" content="#000814">
   <meta name="description" content="Kioskeys - La manera más inteligente de gestionar tus copias de llaves. Servicios de duplicado, telemandos y cerrajería profesional.">
   <meta name="keywords" content="llaves, cerrajería, telemandos, duplicados, seguridad, cerrajero">
-  <meta property="og:title" content="Kioskeys aaa - Tus llaves seguras siempre">
+  <meta property="og:title" content="Kioskeys - Tus llaves seguras siempre">
   <meta property="og:description" content="La manera más inteligente de gestionar tus copias de llaves">
   <meta property="og:image" content="/og-image.jpg">
   <meta property="og:url" content="https://kioskeys.com">
@@ -17,101 +17,64 @@
   <link rel="stylesheet" href="./style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    .app-download {
-    position: fixed;
-    top: calc(var(--nav-height) + 40px);
-    right: 20px;
-    z-index: 99;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    background: rgba(20, 20, 20, 0.95);
-    padding: 18px;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
-    align-items: center;
-  }
-
-    .app-download::before {
-      content: '';
-      position: absolute;
-      inset: -30px;
-      border-radius: 40px;
-      background: radial-gradient(circle at center,
-        rgba(0, 163, 255, 0.08),
-        rgba(0, 163, 255, 0.03),
-        transparent);
-      opacity: 0;
-      pointer-events: none;
-      z-index: -1;
-      filter: blur(60px);
+    body {
+      background: radial-gradient(circle at top, #00172d 0%, #000814 70%, #000 100%);
+      color: #e0f0ff;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      overflow-x: hidden;
     }
 
-    .app-download-item {
-      text-align: center;
-      position: relative;
-    }
-
-    .qr-wrapper {
-      background: #ffffff;
-      padding: 8px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      margin-bottom: 8px;
-    }
-
-    .qr-wrapper:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(0, 59, 142, 0.3);
-    }
-
-    .app-download img {
-      width: 80px;
-      height: 80px;
-      border-radius: 4px;
-      display: block;
-      transition: transform 0.3s ease;
-    }
-
-    .app-download-label {
-      font-size: 13px;
-      color: var(--text-color);
-      font-weight: 600;
+    .video-gallery-grid {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
+      gap: 25px;
+      padding: 40px 0;
     }
 
-    .app-download-label i {
-      font-size: 16px;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .app-download-label {
-      color: #ffffff;
-    }
-
-    @media (max-width: 768px) {
-    .app-download {
+    .video-card {
       position: relative;
-      top: 0;
-      right: 0;
-      flex-direction: row;
-      justify-content: center;
-      margin: 20px auto;
-      width: fit-content;
+      border-radius: 20px;
+      overflow: hidden;
+      width: 85%;
+      max-width: 400px;
+      box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
+      border: 1px solid rgba(0, 150, 255, 0.4);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(0, 10, 20, 0.8);
     }
+
+    .video-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 40px rgba(0, 150, 255, 0.6);
+    }
+
+    .video-card video {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 20px;
+    }
+
+    nav {
+      background: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
+    }
+
+    footer {
+      background: #000814;
+      border-top: 1px solid rgba(0, 150, 255, 0.2);
+      color: #b0cfff;
     }
   </style>
 </head>
 <body>
   <nav>
     <div class="logo">
-      <a href="./index.html"><img src="https://ucarecdn.com/bdf174c8-8731-47fa-a3f9-2443689099be/logokioskey.png" alt="Kioskeys" class="nav-logo-img"></a>
+      <a href="./index.html">
+        <img src="https://ucarecdn.com/bdf174c8-8731-47fa-a3f9-2443689099be/logokioskey.png" alt="Kioskeys" class="nav-logo-img">
+      </a>
     </div>
     <div class="nav-links">
       <a href="./index.html" class="shiny-text"><i class="fas fa-home"></i> <span>Inicio</span></a>
@@ -127,35 +90,7 @@
     </button>
   </nav>
 
-  <div class="app-download">
-    <div class="app-download-item">
-      <a href="https://apps.apple.com/id/app/kioskeys/id1632084137" target="_blank" rel="noopener">
-        <div class="qr-wrapper">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://apps.apple.com/id/app/kioskeys/id1632084137" alt="App Store QR">
-        </div>
-        <div class="app-download-label">
-          <i class="fab fa-apple"></i> App Store
-        </div>
-      </a>
-    </div>
-    <div class="app-download-item">
-      <a href="https://play.google.com/store/apps/details?id=com.imagosur.keymanager_app&hl=es" target="_blank" rel="noopener">
-        <div class="qr-wrapper">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://play.google.com/store/apps/details?id=com.imagosur.keymanager_app" alt="Play Store QR">
-        </div>
-        <div class="app-download-label">
-          <i class="fab fa-google-play"></i> Play Store
-        </div>
-      </a>
-    </div>
-  </div>
-
   <main>
-    <!-- Theme Toggle Button -->
-    <div class="theme-toggle" id="themeToggle">
-      <i class="theme-toggle-icon fas fa-moon moon"></i>
-    </div>
-
     <section class="hero">
       <div class="hero-content">
         <div class="hero-logo">
@@ -166,32 +101,10 @@
       </div>
     </section>
 
-    <!-- Video Gallery Section -->
+    <!-- 📹 Sección de videos dinámica -->
     <section class="video-gallery-section">
       <div class="content-container">
-        <div class="video-gallery-grid">
-          <div class="video-card video-card-1" data-aos="fade-up" data-aos-delay="0">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video1.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-          <div class="video-card video-card-2" data-aos="fade-up" data-aos-delay="100">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video2.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-          <div class="video-card video-card-3" data-aos="fade-up" data-aos-delay="200">
-            <div class="video-card-content">
-              <video autoplay loop muted playsinline preload="metadata">
-                <source src="/videos/video3.mp4" type="video/mp4">
-              </video>
-            </div>
-          </div>
-        </div>
+        <div class="video-gallery-grid"></div>
       </div>
     </section>
 
@@ -213,9 +126,9 @@
 
           <a href="./pages/productos.html" class="feature-card shiny-button">
             <div>
-              <i class="fas fa-box feature-icon"></i>
+              <i class="fas fa-car feature-icon"></i>
               <h3 class="shiny-text">Nuestros productos</h3>
-              <p>Descubre nuestra gama completa de servicios</p>
+              <p>Telemandos, llaves y carcasas de automóvil</p>
             </div>
           </a>
 
@@ -245,72 +158,14 @@
   </main>
 
   <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h4 class="shiny-text">Empresa</h4>
-        <ul class="footer-links">
-          <li><a href="#sobre-nosotros" class="shiny-text footer-link">Sobre Nosotros</a></li>
-          <li><a href="./pages/red-servicios.html" class="shiny-text footer-link">Red de Servicios</a></li>
-          <li><a href="#trabaja-con-nosotros" class="shiny-text footer-link">Trabaja con Nosotros</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h4 class="shiny-text">Servicios</h4>
-        <ul class="footer-links">
-          <li><a href="./pages/productos.html" class="shiny-text footer-link">Productos</a></li>
-          <li><a href="./pages/telemandos.html" class="shiny-text footer-link">Telemandos</a></li>
-          <li><a href="./pages/planes.html" class="shiny-text footer-link">Planes</a></li>
-          <li><a href="./pages/llaves.html" class="shiny-text footer-link">Llaves</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h4 class="shiny-text">Soporte</h4>
-        <ul class="footer-links">
-          <li><a href="./pages/contacto.html" class="shiny-text footer-link">Contacto</a></li>
-          <li><a href="./pages/faq.html" class="shiny-text footer-link">FAQ</a></li>
-          <li><a href="./pages/tutoriales.html" class="shiny-text footer-link">Tutoriales</a></li>
-          <li><a href="#centro-de-ayuda" class="shiny-text footer-link">Centro de Ayuda</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h4 class="shiny-text">Legal</h4>
-        <ul class="footer-links">
-          <li><a href="./pages/privacidad.html" class="shiny-text footer-link">Política de Privacidad</a></li>
-          <li><a href="./pages/terminos.html" class="shiny-text footer-link">Términos y Condiciones</a></li>
-          <li><a href="#politica-cookies" class="shiny-text footer-link">Política de Cookies</a></li>
-          <li><a href="#aviso-legal" class="shiny-text footer-link">Aviso Legal</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-section">
-        <h4 class="shiny-text">Síguenos</h4>
-        <div class="footer-social">
-          <a href="https://facebook.com/kioskeys" target="_blank" rel="noopener" class="social-icon-link" aria-label="Facebook">
-            <i class="fab fa-facebook"></i>
-          </a>
-          <a href="https://twitter.com/kioskeys" target="_blank" rel="noopener" class="social-icon-link" aria-label="Twitter">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="https://instagram.com/kioskeys" target="_blank" rel="noopener" class="social-icon-link" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://linkedin.com/company/kioskeys" target="_blank" rel="noopener" class="social-icon-link" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-
     <div class="footer-bottom">
-      <p class="shiny-text">&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
+      <p class="shiny-text">&copy; 2025 Kioskeys. Todos los derechos reservados.</p>
     </div>
   </footer>
 
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
+  <script type="module" src="/src/pages/videos-loader.js"></script>
 </body>
 </html>
