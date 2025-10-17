@@ -1,1 +1,1 @@
-import '../src/scripts/homeVideos.js';
+import '../src/pages/videos-loader.js';

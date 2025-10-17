@@ -167,44 +167,7 @@
     </section>
 
     <section class="videos-section" aria-label="Galería de videos">
-      <div class="content-container">
-        <div class="videos-stack" id="videos-container">
-          <article class="videos-stack-card" data-video-index="0">
-            <video
-              class="video-item"
-              src="/videos/video1.mp4"
-              autoplay
-              loop
-              muted
-              playsinline
-              preload="metadata"
-            ></video>
-          </article>
-          <article class="videos-stack-card" data-video-index="1">
-            <video
-              class="video-item"
-              src="/videos/video2.mp4"
-              autoplay
-              loop
-              muted
-              playsinline
-              preload="metadata"
-            ></video>
-          </article>
-          <article class="videos-stack-card" data-video-index="2">
-            <video
-              class="video-item"
-              src="/videos/video3.mp4"
-              autoplay
-              loop
-              muted
-              playsinline
-              preload="metadata"
-            ></video>
-          </article>
-        </div>
-        <p class="videos-fallback" id="videosFallback" hidden>No fue posible cargar los videos en este momento.</p>
-      </div>
+      <div id="videosContainer" class="videos-container"></div>
     </section>
 
     <section class="main-content">
@@ -323,7 +286,7 @@
 
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
-  <script type="module" src="/src/scripts/homeVideos.js"></script>
+  <script type="module" src="/src/pages/videos-loader.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
 </body>
 </html>
