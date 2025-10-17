@@ -5,66 +5,16 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const container = document.getElementById('videosContainer');
-const FALLBACK_MESSAGE = 'No fue posible cargar los videos en este momento.';
+const LOADING_TEXT = 'Cargando video...';
+const FALLBACK_TEXT = 'Video no disponible';
 
-function renderBoxes(content = []) {
-  if (!container) {
-    return;
-  }
-
-  container.innerHTML = '';
-
-  const boxes = content.slice(0, 3);
-  while (boxes.length < 3) {
-    boxes.push({ type: 'placeholder', text: 'Video no disponible' });
-  }
-
-  boxes.forEach((item) => {
-    const box = document.createElement('div');
-    box.classList.add('video-box');
-
-    if (item.type === 'video' && item.url) {
-      const video = document.createElement('video');
-      video.src = item.url;
-      video.autoplay = true;
-      video.loop = true;
-      video.muted = true;
-      video.playsInline = true;
-      video.setAttribute('autoplay', '');
-      video.setAttribute('loop', '');
-      video.setAttribute('muted', '');
-      video.setAttribute('playsinline', '');
-      video.onerror = () => {
-        box.innerHTML = '<p>Video no disponible</p>';
-      };
-      box.appendChild(video);
-    } else {
-      const message = document.createElement('p');
-      message.textContent = item.text || 'Video no disponible';
-      box.appendChild(message);
-    }
-
-    container.appendChild(box);
-  });
-}
-
-function renderError() {
-  renderBoxes([{ type: 'placeholder', text: 'Video no disponible' }]);
-
-  const fallback = document.createElement('p');
-  fallback.style.textAlign = 'center';
-  fallback.style.color = '#888';
-  fallback.textContent = FALLBACK_MESSAGE;
-  container.appendChild(fallback);
-}
-
-function sanitiseUrl(url) {
+function normaliseUrl(url) {
   if (!url) {
     return null;
   }
 
   try {
-    const parsed = new URL(url, window.location.origin);
+    const parsed = new URL(url, window.location.href);
     if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
       return parsed.href;
     }
@@ -75,66 +25,123 @@ function sanitiseUrl(url) {
   return null;
 }
 
+function createMessageBox(message) {
+  const box = document.createElement('div');
+  box.classList.add('video-box');
+  const text = document.createElement('p');
+  text.textContent = message;
+  box.appendChild(text);
+  return box;
+}
+
+function createVideoBox(url) {
+  if (!url) {
+    return createMessageBox(FALLBACK_TEXT);
+  }
+
+  const box = document.createElement('div');
+  box.classList.add('video-box');
+
+  const video = document.createElement('video');
+  video.src = url;
+  video.autoplay = true;
+  video.loop = true;
+  video.muted = true;
+  video.playsInline = true;
+  video.setAttribute('autoplay', '');
+  video.setAttribute('loop', '');
+  video.setAttribute('muted', '');
+  video.setAttribute('playsinline', '');
+  video.onerror = () => {
+    box.innerHTML = '';
+    const fallback = document.createElement('p');
+    fallback.textContent = FALLBACK_TEXT;
+    box.appendChild(fallback);
+  };
+
+  box.appendChild(video);
+  return box;
+}
+
+function renderLoading() {
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = '';
+  for (let i = 0; i < 3; i += 1) {
+    container.appendChild(createMessageBox(LOADING_TEXT));
+  }
+}
+
+function renderPlaceholders() {
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = '';
+  for (let i = 0; i < 3; i += 1) {
+    container.appendChild(createMessageBox(FALLBACK_TEXT));
+  }
+}
+
+function renderVideos(items) {
+  if (!container) {
+    return;
+  }
+
+  container.innerHTML = '';
+
+  const boxes = items.slice(0, 3).map((item) => {
+    const videoUrl = normaliseUrl(item.video_url);
+    return createVideoBox(videoUrl);
+  });
+
+  while (boxes.length < 3) {
+    boxes.push(createMessageBox(FALLBACK_TEXT));
+  }
+
+  boxes.forEach((box) => container.appendChild(box));
+}
+
 async function loadVideos() {
   if (!container) {
     return;
   }
 
-  renderBoxes([
-    { type: 'placeholder', text: 'Cargando…' },
-    { type: 'placeholder', text: 'Cargando…' },
-    { type: 'placeholder', text: 'Cargando…' },
-  ]);
+  renderLoading();
 
   try {
     const tableCandidates = ['videos gifs', 'videos_gifs'];
-    let response = { data: null, error: null };
+    let videos = null;
 
     for (const table of tableCandidates) {
-      response = await supabase
+      const { data, error } = await supabase
         .from(table)
         .select('title, video_url, order_index')
         .order('order_index', { ascending: true });
 
-      if (response.error) {
-        console.warn(`⚠️ Error al consultar "${table}":`, response.error.message);
+      if (error) {
+        console.warn(`⚠️ Error al consultar "${table}":`, error.message);
         continue;
       }
 
-      if (Array.isArray(response.data) && response.data.length > 0) {
+      if (Array.isArray(data) && data.length > 0) {
+        videos = data;
         break;
       }
     }
 
-    if (response.error) {
-      throw response.error;
-    }
-
-    const { data } = response;
-
-    if (!Array.isArray(data) || data.length === 0) {
-      renderError();
+    if (!Array.isArray(videos) || videos.length === 0) {
+      renderPlaceholders();
       return;
     }
 
-    console.log('✅ Videos obtenidos:', data);
-
-    const items = data
-      .map((video) => ({
-        type: 'video',
-        url: sanitiseUrl(video.video_url),
-      }))
-      .filter((item) => Boolean(item.url));
-
-    if (items.length === 0) {
-      renderError();
-      return;
-    }
-
-    renderBoxes(items);
-  } catch (err) {
-    console.error('❌ Error al cargar videos:', err.message);
-    renderError();
+    console.log('✅ Videos cargados correctamente:', videos);
+    renderVideos(videos);
+  } catch (error) {
+    console.error('❌ Error al cargar videos:', error.message);
+    renderPlaceholders();
   }
 }
 
