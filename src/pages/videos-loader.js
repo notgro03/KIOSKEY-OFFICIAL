@@ -81,38 +81,43 @@ async function loadVideos() {
   }
 
   renderBoxes([
-    { type: 'placeholder', text: 'Cargando video…' },
-    { type: 'placeholder', text: 'Cargando video…' },
-    { type: 'placeholder', text: 'Cargando video…' },
+    { type: 'placeholder', text: 'Cargando…' },
+    { type: 'placeholder', text: 'Cargando…' },
+    { type: 'placeholder', text: 'Cargando…' },
   ]);
 
   try {
-    let data;
-    let error;
+    const tableCandidates = ['videos gifs', 'videos_gifs'];
+    let response = { data: null, error: null };
 
-    try {
-      ({ data, error } = await supabase
-        .from('videos gifs')
+    for (const table of tableCandidates) {
+      response = await supabase
+        .from(table)
         .select('title, video_url, order_index')
-        .order('order_index', { ascending: true }));
-    } catch (tableError) {
-      console.warn('⚠️ Error al acceder con espacio, intentando fallback con nombre sin espacio...');
-      ({ data, error } = await supabase
-        .from('videos_gifs')
-        .select('title, video_url, order_index')
-        .order('order_index', { ascending: true }));
+        .order('order_index', { ascending: true });
+
+      if (response.error) {
+        console.warn(`⚠️ Error al consultar "${table}":`, response.error.message);
+        continue;
+      }
+
+      if (Array.isArray(response.data) && response.data.length > 0) {
+        break;
+      }
     }
 
-    if (error) {
-      throw error;
+    if (response.error) {
+      throw response.error;
     }
 
-    console.log('✅ Videos obtenidos:', data);
+    const { data } = response;
 
-    if (!data || data.length === 0) {
+    if (!Array.isArray(data) || data.length === 0) {
       renderError();
       return;
     }
+
+    console.log('✅ Videos obtenidos:', data);
 
     const items = data
       .map((video) => ({
