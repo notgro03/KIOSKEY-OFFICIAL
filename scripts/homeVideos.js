@@ -1,1 +1,1 @@
-import '../src/pages/videos-loader.js';
+import '../src/pages/index-loader.js';

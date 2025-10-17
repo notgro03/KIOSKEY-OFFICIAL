@@ -2,22 +2,16 @@ body,
 html {
   margin: 0;
   padding: 0;
-  background-color: #041b2d;
+  background-color: #041b2d !important;
   color: #ffffff;
   font-family: 'Poppins', sans-serif;
   min-height: 100vh;
   scroll-behavior: smooth;
 }
 
-section {
-  background: transparent !important;
-}
-
-.hero,
-.videos-section,
-.main-content,
+section,
 footer {
-  background: transparent !important;
+  background: none !important;
   box-shadow: none !important;
 }
 
@@ -29,49 +23,35 @@ footer {
 .videos-section {
   display: flex;
   justify-content: center;
-  flex-direction: column;
   align-items: center;
-  padding: 60px 0;
-  background: transparent;
+  gap: 40px;
+  padding: 40px 0;
 }
 
-.videos-container {
+.video-card {
+  width: 280px;
+  height: 160px;
+  background: rgba(0, 20, 40, 0.85);
+  border: 2px solid #00bfff;
+  border-radius: 14px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  width: 100%;
-  max-width: 1000px;
-}
-
-.video-box {
-  width: 300px;
-  height: 200px;
-  background: rgba(0, 25, 50, 0.6);
-  border: 1px solid rgba(0, 150, 255, 0.3);
-  border-radius: 18px;
-  box-shadow: 0 0 15px rgba(0, 150, 255, 0.4);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #66ccff;
+  color: #00bfff;
   font-weight: 600;
-  text-transform: uppercase;
-  font-size: 14px;
   text-align: center;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
 }
 
-.video-box:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 25px rgba(0, 180, 255, 0.6);
-}
-
-.video-box video {
+.video-card video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 18px;
+}
+
+.video-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 191, 255, 0.7);
 }
