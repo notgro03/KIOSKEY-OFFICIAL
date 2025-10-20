@@ -6,6 +6,7 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabase = createClient(supabaseUrl, supabaseKey);
 const section = document.querySelector('.videos-section');
 const PLACEHOLDER_TEXT = 'VIDEO NO DISPONIBLE';
+let teardownCarousel;
 
 function sanitiseVideoUrl(url) {
   if (!url) {
@@ -68,6 +69,82 @@ function renderPlaceholders() {
   for (let index = 0; index < 3; index += 1) {
     section.appendChild(createPlaceholderCard());
   }
+
+  refreshCarousel();
+}
+
+function refreshCarousel() {
+  if (!section) {
+    return;
+  }
+
+  if (typeof teardownCarousel === 'function') {
+    teardownCarousel();
+    teardownCarousel = null;
+  }
+
+  const cards = Array.from(section.querySelectorAll('.video-card'));
+  if (!cards.length) {
+    return;
+  }
+
+  const mediaQuery = window.matchMedia('(max-width: 768px)');
+  let currentIndex = 0;
+  let timerId = null;
+
+  const applyVisibility = () => {
+    if (!mediaQuery.matches) {
+      cards.forEach((card) => card.classList.add('is-active'));
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+      return;
+    }
+
+    cards.forEach((card, index) => {
+      card.classList.toggle('is-active', index === currentIndex);
+    });
+
+    if (!timerId && cards.length > 1) {
+      timerId = window.setInterval(() => {
+        currentIndex = (currentIndex + 1) % cards.length;
+        applyVisibility();
+      }, 5000);
+    }
+  };
+
+  const handleChange = () => {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+    currentIndex = 0;
+    applyVisibility();
+  };
+
+  if (typeof mediaQuery.addEventListener === 'function') {
+    mediaQuery.addEventListener('change', handleChange);
+  } else {
+    mediaQuery.addListener(handleChange);
+  }
+
+  applyVisibility();
+
+  teardownCarousel = () => {
+    if (timerId) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+
+    if (typeof mediaQuery.removeEventListener === 'function') {
+      mediaQuery.removeEventListener('change', handleChange);
+    } else {
+      mediaQuery.removeListener(handleChange);
+    }
+
+    cards.forEach((card) => card.classList.add('is-active'));
+  };
 }
 
 async function loadVideos() {
@@ -114,10 +191,16 @@ async function loadVideos() {
     while (section.children.length < 3) {
       section.appendChild(createPlaceholderCard());
     }
+
+    refreshCarousel();
   } catch (error) {
     console.error('❌ Error al cargar videos:', error.message);
     renderPlaceholders();
   }
+}
+
+if (section) {
+  refreshCarousel();
 }
 
 if (document.readyState === 'loading') {

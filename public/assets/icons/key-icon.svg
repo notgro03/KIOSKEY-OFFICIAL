@@ -1,27 +1,7 @@
 <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="autoKeyStroke" x1="28" y1="16" x2="72" y2="80" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#27D7FF" />
-      <stop offset="1" stop-color="#0067B6" />
-    </linearGradient>
-    <radialGradient id="autoKeyAura" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(48 48) scale(44)">
-      <stop stop-color="#10C6FF" stop-opacity="0.85" />
-      <stop offset="1" stop-color="#041B2D" stop-opacity="0" />
-    </radialGradient>
-    <filter id="autoKeyGlow" x="14" y="4" width="68" height="88" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="blur" />
-      <feMerge>
-        <feMergeNode in="blur" />
-        <feMergeNode in="SourceGraphic" />
-      </feMerge>
-    </filter>
-  </defs>
-  <circle cx="48" cy="48" r="44" fill="url(#autoKeyAura)" />
-  <g filter="url(#autoKeyGlow)">
-    <rect x="28" y="16" width="40" height="34" rx="12" fill="rgba(4,27,45,0.65)" stroke="url(#autoKeyStroke)" stroke-width="4" />
-    <circle cx="40" cy="33" r="5" fill="#0B2C4D" stroke="#48E4FF" stroke-width="2" />
-    <circle cx="56" cy="33" r="5" fill="#0B2C4D" stroke="#48E4FF" stroke-width="2" />
-    <path d="M48 50V70.5C48 72.985 50.015 75 52.5 75H56.5C58.985 75 61 72.985 61 70.5V66H66C68.485 66 70.5 63.985 70.5 61.5V57H74C76.485 57 78.5 54.985 78.5 52.5V45.5" stroke="url(#autoKeyStroke)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
-  </g>
-  <path d="M33 52L41 44" stroke="#22D2FF" stroke-width="3.5" stroke-linecap="round" />
+  <rect x="26" y="14" width="40" height="48" rx="12" fill="#0C1A2B" stroke="#5AA7E6" stroke-width="3" />
+  <circle cx="42" cy="30" r="6" fill="#13283D" stroke="#6FC3FF" stroke-width="2" />
+  <circle cx="50" cy="44" r="4" fill="#13283D" stroke="#6FC3FF" stroke-width="1.5" />
+  <path d="M46 62L62 62C63.6569 62 65 63.3431 65 65V67C65 68.1046 65.8954 69 67 69H69C70.1046 69 71 69.8954 71 71V73" stroke="#5AA7E6" stroke-width="4" stroke-linecap="round" />
+  <path d="M52 44V58C52 60.2091 53.7909 62 56 62H62" stroke="#5AA7E6" stroke-width="4" stroke-linecap="round" />
 </svg>
