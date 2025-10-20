@@ -1,9 +1,4 @@
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-const supabase = createClient(
-  'https://ebezqrsgednjwhajddqu.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImViZXpxcnNnZWRuandoYWpkZHF1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NTEyNzYsImV4cCI6MjA1MDAyNzI3Nn0.6UpoIFJuEGDnLlD3_8w-fyQ2qMZ7uNDUttk-4Aeavgw'
-);
+import { supabase } from '../config/supabase.js';
 
 const brandSelect = document.getElementById('brandSelect');
 const modelSelect = document.getElementById('modelSelect');
@@ -44,7 +39,7 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
   showPlaceholder('Seleccioná una marca y un modelo para ver los productos compatibles.');
 
   const getUniqueSorted = (items = []) => {
-    return Array.from(new Set(items.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'es')); 
+    return Array.from(new Set(items.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'es'));
   };
 
   async function loadBrands() {
@@ -65,9 +60,9 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
       return;
     }
 
-    const brands = getUniqueSorted((data || []).map(item => item.brand));
+    const brands = getUniqueSorted((data || []).map((item) => item.brand));
     brandSelect.innerHTML = "<option value=''>Seleccionar marca</option>" +
-      brands.map(brand => `<option value='${escapeHtml(brand)}'>${escapeHtml(brand)}</option>`).join('');
+      brands.map((brand) => `<option value='${escapeHtml(brand)}'>${escapeHtml(brand)}</option>`).join('');
 
     brandSelect.disabled = false;
   }
@@ -97,9 +92,9 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
       return;
     }
 
-    const models = getUniqueSorted((data || []).map(item => item.model));
+    const models = getUniqueSorted((data || []).map((item) => item.model));
     modelSelect.innerHTML = "<option value=''>Seleccionar modelo</option>" +
-      models.map(model => `<option value='${escapeHtml(model)}'>${escapeHtml(model)}</option>`).join('');
+      models.map((model) => `<option value='${escapeHtml(model)}'>${escapeHtml(model)}</option>`).join('');
     modelSelect.disabled = models.length === 0;
 
     if (!models.length) {
@@ -117,7 +112,6 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
       .eq('model', model);
 
     if (response.error && fallback) {
-      // Intento adicional para tablas con nombre alternativo
       response = await supabase
         .from(fallback)
         .select('*')
@@ -132,7 +126,7 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
       return [];
     }
 
-    return (response.data || []).map(item => ({ ...item, table: table.label }));
+    return (response.data || []).map((item) => ({ ...item, table: table.label }));
   }
 
   async function searchProducts() {
@@ -161,13 +155,14 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
       return;
     }
 
-    const cards = results.map((item) => {
-      const imageSrc = item.image_url ? escapeHtml(item.image_url) : NO_IMAGE;
-      const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : '';
-      const origin = item.table ? `<span class="product-origin">${escapeHtml(item.table)}</span>` : '';
-      const title = `${escapeHtml(item.brand || '')} ${escapeHtml(item.model || '')}`.trim();
+    const cards = results
+      .map((item) => {
+        const imageSrc = item.image_url ? escapeHtml(item.image_url) : NO_IMAGE;
+        const description = item.description ? `<p>${escapeHtml(item.description)}</p>` : '';
+        const origin = item.table ? `<span class="product-origin">${escapeHtml(item.table)}</span>` : '';
+        const title = `${escapeHtml(item.brand || '')} ${escapeHtml(item.model || '')}`.trim();
 
-      return `
+        return `
         <div class="product-card">
           ${origin}
           <img src="${imageSrc}" alt="${title || 'Producto'}" loading="lazy">
@@ -175,7 +170,8 @@ if (brandSelect && modelSelect && searchBtn && resultsContainer) {
           ${description}
         </div>
       `;
-    }).join('');
+      })
+      .join('');
 
     setResultsContent(cards);
   }
