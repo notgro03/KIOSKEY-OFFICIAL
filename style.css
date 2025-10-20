@@ -2010,22 +2010,26 @@ body::after {
 body::before {
   z-index: -2;
   background:
-    radial-gradient(circle at 20% 15%, rgba(0, 172, 255, 0.28), transparent 55%),
-    radial-gradient(circle at 78% 22%, rgba(0, 118, 255, 0.2), transparent 60%),
-    radial-gradient(circle at 52% 82%, rgba(0, 196, 255, 0.25), transparent 65%);
+    radial-gradient(circle at 18% 12%, rgba(0, 204, 255, 0.34), transparent 60%),
+    radial-gradient(circle at 80% 18%, rgba(0, 148, 255, 0.26), transparent 64%),
+    radial-gradient(circle at 52% 82%, rgba(0, 212, 255, 0.28), transparent 68%);
+  filter: blur(12px);
   animation: auroraShift 36s ease-in-out infinite alternate;
 }
 
 body::after {
   z-index: -1;
-  background:
-    radial-gradient(3px 3px at 12% 18%, rgba(124, 234, 255, 0.55), transparent 60%),
-    radial-gradient(2px 2px at 38% 68%, rgba(124, 234, 255, 0.45), transparent 60%),
-    radial-gradient(2px 2px at 74% 42%, rgba(124, 234, 255, 0.4), transparent 60%),
-    radial-gradient(1.5px 1.5px at 56% 26%, rgba(124, 234, 255, 0.5), transparent 60%);
-  background-size: 420px 420px, 560px 560px, 360px 360px, 640px 640px;
-  animation: particleFloat 48s linear infinite;
-  opacity: 0.6;
+  background-image:
+    radial-gradient(8px 8px at 12% 24%, rgba(124, 234, 255, 0.65), transparent 65%),
+    radial-gradient(6px 6px at 42% 68%, rgba(124, 234, 255, 0.55), transparent 65%),
+    radial-gradient(5px 5px at 78% 36%, rgba(124, 234, 255, 0.48), transparent 65%),
+    radial-gradient(4px 4px at 60% 26%, rgba(124, 234, 255, 0.6), transparent 65%),
+    radial-gradient(3px 3px at 28% 80%, rgba(124, 234, 255, 0.5), transparent 65%);
+  background-size: 520px 520px, 640px 640px, 480px 480px, 560px 560px, 600px 600px;
+  animation: particleFloat 46s linear infinite;
+  opacity: 0.68;
+  mix-blend-mode: screen;
+  will-change: transform, background-position;
 }
 
 @keyframes auroraShift {
@@ -2044,42 +2048,49 @@ body::after {
 
 @keyframes particleFloat {
   0% {
-    background-position: 0 0, 0 0, 0 0, 0 0;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    transform: translate3d(-1%, -1%, 0);
   }
 
   50% {
-    background-position: 160px -90px, -140px 120px, 100px 140px, -80px -70px;
+    background-position: 180px -140px, -160px 150px, 120px 130px, -140px -110px, 90px 150px;
+    transform: translate3d(1%, 1%, 0);
   }
 
   100% {
-    background-position: 0 0, 0 0, 0 0, 0 0;
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    transform: translate3d(-1%, -1%, 0);
   }
 }
 
 .videos-section {
   position: relative;
-  max-width: 1280px;
-  gap: 40px;
-  padding: 64px 24px 68px;
+  max-width: 1320px;
+  gap: 48px;
+  padding: 68px 24px 72px;
+  flex-wrap: nowrap;
+  align-items: stretch;
 }
 
 .videos-section::before {
   content: '';
   position: absolute;
-  inset: -28% -22% -32%;
-  background: radial-gradient(circle at 50% 25%, rgba(0, 180, 255, 0.22) 0%, rgba(0, 120, 255, 0.1) 35%, transparent 70%);
-  filter: blur(18px);
+  inset: -30% -24% -34%;
+  background:
+    radial-gradient(circle at 30% 15%, rgba(0, 196, 255, 0.18), transparent 70%),
+    radial-gradient(circle at 70% 18%, rgba(0, 140, 255, 0.14), transparent 72%);
+  filter: blur(20px);
   z-index: -1;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .video-card {
-  width: clamp(360px, 28vw, 520px);
+  width: clamp(380px, 27vw, 480px);
   aspect-ratio: 9 / 16;
-  padding: 22px;
-  background: linear-gradient(180deg, rgba(4, 12, 24, 0.92) 0%, rgba(2, 8, 18, 0.88) 100%);
-  border: 1.5px solid rgba(0, 184, 255, 0.28);
-  box-shadow: 0 30px 60px rgba(0, 16, 30, 0.55), 0 0 44px rgba(0, 168, 255, 0.2);
+  padding: 24px;
+  background: linear-gradient(180deg, rgba(4, 12, 24, 0.94) 0%, rgba(2, 8, 18, 0.9) 100%);
+  border: 1.5px solid rgba(0, 184, 255, 0.3);
+  box-shadow: 0 32px 64px rgba(0, 16, 30, 0.6), 0 0 48px rgba(0, 176, 255, 0.24);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
@@ -2089,8 +2100,21 @@ body::after {
 }
 
 .video-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 36px 72px rgba(0, 18, 32, 0.6), 0 0 56px rgba(0, 190, 255, 0.28);
+  transform: translateY(-12px);
+  box-shadow: 0 42px 80px rgba(0, 18, 32, 0.62), 0 0 60px rgba(0, 196, 255, 0.32);
+}
+
+@media (max-width: 1200px) {
+  .videos-section {
+    flex-wrap: wrap;
+    gap: 36px;
+    padding: 60px 20px 64px;
+  }
+
+  .video-card {
+    width: clamp(320px, 40vw, 380px);
+    padding: 20px;
+  }
 }
 
 @media (max-width: 1024px) {
@@ -2100,8 +2124,7 @@ body::after {
   }
 
   .video-card {
-    width: clamp(320px, 42vw, 380px);
-    padding: 18px;
+    width: clamp(300px, 44vw, 360px);
   }
 }
 
