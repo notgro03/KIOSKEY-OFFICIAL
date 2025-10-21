@@ -619,3 +619,112 @@ body::after {
   transform: translateY(-6px);
   box-shadow: 0 30px 56px rgba(0, 18, 32, 0.48);
 }
+
+/* --- Refined techno-night backdrop and celeste cards --- */
+html,
+body {
+  background: radial-gradient(circle at 12% -10%, rgba(0, 198, 255, 0.15), transparent 55%),
+              radial-gradient(circle at 88% -6%, rgba(0, 140, 255, 0.12), transparent 58%),
+              linear-gradient(180deg, #00060f 0%, #000c1a 46%, #000712 100%) !important;
+  color: #eff6ff;
+}
+
+body {
+  position: relative;
+}
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -2;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(0, 214, 255, 0.22), transparent 62%),
+    radial-gradient(circle at 78% 16%, rgba(0, 166, 255, 0.18), transparent 66%),
+    radial-gradient(circle at 48% 88%, rgba(0, 182, 255, 0.18), transparent 68%),
+    linear-gradient(180deg, rgba(0, 10, 22, 0.92), rgba(0, 6, 16, 0.96));
+  filter: blur(70px);
+  opacity: 0.9;
+  animation: auroraRibbon 50s ease-in-out infinite;
+}
+
+body::after {
+  z-index: -1;
+  background-image:
+    radial-gradient(4px 4px at 14% 24%, rgba(0, 224, 255, 0.85), transparent 68%),
+    radial-gradient(3px 3px at 36% 68%, rgba(102, 232, 255, 0.8), transparent 70%),
+    radial-gradient(3px 3px at 70% 32%, rgba(0, 210, 255, 0.78), transparent 70%),
+    radial-gradient(2px 2px at 58% 14%, rgba(160, 244, 255, 0.82), transparent 70%),
+    radial-gradient(4px 4px at 88% 64%, rgba(0, 198, 255, 0.75), transparent 70%);
+  background-size: 520px 520px, 620px 620px, 540px 540px, 500px 500px, 600px 600px;
+  animation: particleDrift 46s linear infinite;
+  opacity: 0.82;
+  mix-blend-mode: screen;
+}
+
+@keyframes auroraRibbon {
+  0% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(3%, 2%, 0) scale(1.05);
+  }
+
+  100% {
+    transform: translate3d(-3%, -2%, 0) scale(1);
+  }
+}
+
+@keyframes particleDrift {
+  0% {
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    transform: translate3d(-1%, -1%, 0);
+  }
+
+  50% {
+    background-position: 160px -140px, -180px 180px, 140px 120px, -160px -120px, 120px 140px;
+    transform: translate3d(1%, 1%, 0);
+  }
+
+  100% {
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+    transform: translate3d(-1%, -1%, 0);
+  }
+}
+
+.tutorial-button,
+.features-grid .feature-card,
+.plan-card,
+.faq-item {
+  background: linear-gradient(150deg, rgba(0, 190, 255, 0.32), rgba(0, 120, 220, 0.22)) !important;
+  border: 1px solid rgba(0, 210, 255, 0.38) !important;
+  box-shadow: 0 22px 44px rgba(0, 42, 84, 0.45) !important;
+  color: #f5fbff !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.tutorial-button:hover,
+.features-grid .feature-card:hover,
+.plan-card:hover,
+.faq-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 52px rgba(0, 56, 110, 0.48) !important;
+}
+
+.tutorial-button .shiny-text,
+.features-grid .feature-card .shiny-text,
+.features-grid .feature-card h3,
+.features-grid .feature-card p,
+.features-grid .feature-card .feature-icon,
+.tutorial-button span,
+.tutorial-button i {
+  color: #f6fbff !important;
+  text-shadow: none;
+}
