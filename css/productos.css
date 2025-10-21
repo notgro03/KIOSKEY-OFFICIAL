@@ -27,14 +27,15 @@
 }
 
 
+
 .producto-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   gap: 14px;
-  background: linear-gradient(180deg, rgba(5, 14, 26, 0.92) 0%, rgba(3, 9, 18, 0.9) 100%);
-  border: 1.5px solid rgba(0, 184, 255, 0.26);
+  background: rgba(6, 16, 28, 0.58);
+  border: 1px solid rgba(0, 184, 255, 0.18);
   border-radius: 20px;
   padding: 32px 26px;
   width: 230px;
@@ -42,7 +43,8 @@
   color: #e3f3ff;
   text-decoration: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 20px 44px rgba(0, 14, 26, 0.55);
+  box-shadow: 0 22px 46px rgba(0, 12, 24, 0.42);
+  backdrop-filter: blur(18px);
 }
 
 .producto-item img {
@@ -50,7 +52,7 @@
   height: 70px;
   object-fit: contain;
   margin-bottom: 6px;
-  filter: drop-shadow(0 0 14px rgba(0, 196, 255, 0.32));
+  filter: drop-shadow(0 8px 16px rgba(0, 170, 255, 0.2));
   transition: transform 0.3s ease;
 }
 
@@ -68,8 +70,8 @@
 
 
 .producto-item:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 28px 58px rgba(0, 16, 30, 0.6);
+  transform: translateY(-6px);
+  box-shadow: 0 30px 56px rgba(0, 18, 32, 0.48);
 }
 
 .producto-item:hover img {
