@@ -257,7 +257,7 @@ export async function loadCarcasas() {
 
     try {
       const { data, error } = await runCarcasasQuery(
-        'brand, model, description, image_url, video_url',
+        '*',
         (query) => query.eq('brand', brand).eq('model', model)
       );
 

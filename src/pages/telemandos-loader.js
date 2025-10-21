@@ -256,7 +256,7 @@ export async function loadTelemandos() {
 
     try {
       const { data, error } = await runTelemandosQuery(
-        'brand, model, description, image_url, video_url',
+        '*',
         (query) => query.eq('brand', brand).eq('model', model)
       );
 

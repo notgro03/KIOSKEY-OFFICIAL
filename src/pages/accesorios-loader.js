@@ -2,6 +2,59 @@ import { supabase } from '../config/supabase.js';
 
 const WHATSAPP_NUMBER = '541157237390';
 
+function getOrCreateModal() {
+  let modal = document.querySelector('.modal');
+  let modalImage = modal?.querySelector('.modal-content');
+
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = '<img class="modal-content" alt="Imagen ampliada">';
+    document.body.appendChild(modal);
+    modalImage = modal.querySelector('.modal-content');
+  }
+
+  if (modal && !modal.dataset.bound) {
+    modal.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    modal.dataset.bound = 'true';
+  }
+
+  return { modal, modalImage };
+}
+
+function bindImagePreview(container) {
+  if (!container || container.dataset.previewBound) {
+    return;
+  }
+
+  const { modal, modalImage } = getOrCreateModal();
+
+  if (!modal || !modalImage) {
+    return;
+  }
+
+  container.addEventListener('click', (event) => {
+    const target = event.target.closest('.result-media--image');
+
+    if (!target || !container.contains(target)) {
+      return;
+    }
+
+    const fullSrc = target.getAttribute('data-full') || target.getAttribute('src');
+
+    if (!fullSrc) {
+      return;
+    }
+
+    modalImage.src = fullSrc;
+    modal.classList.add('active');
+  });
+
+  container.dataset.previewBound = 'true';
+}
+
 function escapeHtml(value) {
   return value
     ? value
@@ -18,8 +71,10 @@ function createResultCard(item, categoryLabel) {
   const model = escapeHtml(item.model ?? '');
   const description = escapeHtml(item.description ?? '');
 
-  const imageMarkup = item.image_url
-    ? `<img src="${escapeHtml(item.image_url)}" alt="${categoryLabel} ${brand} ${model}" class="result-logo">`
+  const imageUrl = escapeHtml(item.image_url ?? '');
+
+  const imageMarkup = imageUrl
+    ? `<img src="${imageUrl}" data-full="${imageUrl}" alt="${categoryLabel} ${brand} ${model}" class="result-logo result-media result-media--image">`
     : `<div class="result-logo result-logo--empty"><i class="fas fa-image"></i></div>`;
 
   const whatsappMessage = encodeURIComponent(
@@ -66,6 +121,8 @@ export async function loadAccesorios() {
 
   brandSelect.disabled = true;
   modelSelect.disabled = true;
+
+  bindImagePreview(resultsContainer);
 
   try {
     const { data, error } = await supabase
