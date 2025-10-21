@@ -1,6 +1,90 @@
 import { supabase } from '../config/supabase.js';
 
 const WHATSAPP_NUMBER = '541157237390';
+const TELEMANDOS_TABLES = ['telemandos', 'telemando'];
+
+function runTelemandosQuery(select, configure) {
+  return executeWithFallback(TELEMANDOS_TABLES, select, configure);
+}
+
+async function executeWithFallback(tables, select, configure) {
+  let lastError = null;
+
+  for (const table of tables) {
+    let query = supabase.from(table).select(select);
+
+    if (typeof configure === 'function') {
+      query = configure(query);
+    }
+
+    const { data, error } = await query;
+
+    if (!error) {
+      return { data, error: null };
+    }
+
+    lastError = error;
+
+    if (error.code !== 'PGRST116') {
+      return { data: null, error };
+    }
+  }
+
+  return { data: null, error: lastError };
+}
+
+function getOrCreateModal() {
+  let modal = document.querySelector('.modal');
+  let modalImage = modal?.querySelector('.modal-content');
+
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = '<img class="modal-content" alt="Imagen ampliada">';
+    document.body.appendChild(modal);
+    modalImage = modal.querySelector('.modal-content');
+  }
+
+  if (modal && !modal.dataset.bound) {
+    modal.addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    modal.dataset.bound = 'true';
+  }
+
+  return { modal, modalImage };
+}
+
+function bindImagePreview(container) {
+  if (!container || container.dataset.previewBound) {
+    return;
+  }
+
+  const { modal, modalImage } = getOrCreateModal();
+
+  if (!modal || !modalImage) {
+    return;
+  }
+
+  container.addEventListener('click', (event) => {
+    const target = event.target.closest('.result-media--image');
+
+    if (!target || !container.contains(target)) {
+      return;
+    }
+
+    const fullSrc = target.getAttribute('data-full') || target.getAttribute('src');
+
+    if (!fullSrc) {
+      return;
+    }
+
+    modalImage.src = fullSrc;
+    modal.classList.add('active');
+  });
+
+  container.dataset.previewBound = 'true';
+}
 
 function escapeHtml(value) {
   return value
@@ -17,10 +101,26 @@ function createResultCard(item, categoryLabel) {
   const brand = escapeHtml(item.brand ?? '');
   const model = escapeHtml(item.model ?? '');
   const description = escapeHtml(item.description ?? '');
+  const videoUrl = typeof item.video_url === 'string' ? item.video_url.trim() : '';
+  const hasVideo = Boolean(videoUrl);
+  const sanitizedVideo = escapeHtml(videoUrl);
+  const imageUrl = escapeHtml(item.image_url ?? '');
 
-  const imageMarkup = item.image_url
-    ? `<img src="${escapeHtml(item.image_url)}" alt="${categoryLabel} ${brand} ${model}" class="result-logo">`
-    : `<div class="result-logo result-logo--empty"><i class="fas fa-image"></i></div>`;
+  let mediaMarkup = '';
+
+  if (hasVideo) {
+    mediaMarkup = `
+      <video class="result-logo result-media result-media--video" autoplay loop muted playsinline>
+        <source src="${sanitizedVideo}" type="video/mp4">
+      </video>
+    `;
+  } else if (imageUrl) {
+    mediaMarkup = `
+      <img src="${imageUrl}" data-full="${imageUrl}" alt="${categoryLabel} ${brand} ${model}" class="result-logo result-media result-media--image">
+    `;
+  } else {
+    mediaMarkup = '<div class="result-logo result-logo--empty"><i class="fas fa-image"></i></div>';
+  }
 
   const whatsappMessage = encodeURIComponent(
     `Hola, me interesa consultar por el ${categoryLabel.toLowerCase()} ${item.brand ?? ''} ${item.model ?? ''}.` +
@@ -30,7 +130,7 @@ function createResultCard(item, categoryLabel) {
   return `
     <div class="result-item">
       <div class="image-container">
-        ${imageMarkup}
+        ${mediaMarkup}
       </div>
       <div class="result-info">
         <h3>${categoryLabel} ${brand} ${model}</h3>
@@ -67,11 +167,12 @@ export async function loadTelemandos() {
   brandSelect.disabled = true;
   modelSelect.disabled = true;
 
+  bindImagePreview(resultsContainer);
+
   try {
-    const { data, error } = await supabase
-      .from('telemando')
-      .select('brand')
-      .order('brand', { ascending: true });
+    const { data, error } = await runTelemandosQuery('brand', (query) =>
+      query.order('brand', { ascending: true })
+    );
 
     if (error) {
       throw error;
@@ -79,10 +180,9 @@ export async function loadTelemandos() {
 
     console.log('✅ Supabase conectado correctamente');
 
-    const brands = Array.from(new Set((data ?? [])
-      .map((item) => item.brand)
-      .filter(Boolean)))
-      .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+    const brands = Array.from(
+      new Set((data ?? []).map((item) => item.brand).filter(Boolean))
+    ).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
 
     brands.forEach((brand) => {
       const option = document.createElement('option');
@@ -111,20 +211,17 @@ export async function loadTelemandos() {
     modelSelect.disabled = true;
 
     try {
-      const { data, error } = await supabase
-        .from('telemando')
-        .select('model')
-        .eq('brand', selectedBrand)
-        .order('model', { ascending: true });
+      const { data, error } = await runTelemandosQuery('model', (query) =>
+        query.eq('brand', selectedBrand).order('model', { ascending: true })
+      );
 
       if (error) {
         throw error;
       }
 
-      const models = Array.from(new Set((data ?? [])
-        .map((item) => item.model)
-        .filter(Boolean)))
-        .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+      const models = Array.from(
+        new Set((data ?? []).map((item) => item.model).filter(Boolean))
+      ).sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
 
       models.forEach((model) => {
         const option = document.createElement('option');
@@ -158,11 +255,10 @@ export async function loadTelemandos() {
     `;
 
     try {
-      const { data, error } = await supabase
-        .from('telemando')
-        .select('brand, model, description, image_url')
-        .eq('brand', brand)
-        .eq('model', model);
+      const { data, error } = await runTelemandosQuery(
+        'brand, model, description, image_url, video_url',
+        (query) => query.eq('brand', brand).eq('model', model)
+      );
 
       if (error) {
         throw error;
@@ -176,6 +272,7 @@ export async function loadTelemandos() {
       resultsContainer.innerHTML = data
         .map((item) => createResultCard(item, 'Telemando'))
         .join('');
+      resultsContainer.classList.add('active');
     } catch (error) {
       console.error('Error al buscar telemandos:', error);
       showMessage(resultsContainer, 'Ocurrió un error al buscar los telemandos.', true);
