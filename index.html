@@ -122,13 +122,9 @@
       <a href="./pages/contacto.html" class="shiny-text"><i class="fas fa-envelope"></i> <span>Contacto</span></a>
       <a href="./pages/descarga-app.html" class="shiny-text"><i class="fas fa-mobile-alt"></i> <span>Descarga App</span></a>
     </div>
-    <button class="menu-button"><i class="fas fa-bars"></i></button>
-    <script>
-      const btn = document.querySelector('.menu-button');
-      btn.addEventListener('click', () => {
-        document.querySelector('.nav-links').classList.toggle('active');
-      });
-    </script>
+    <button class="menu-button">
+      <i class="fas fa-bars"></i>
+    </button>
   </nav>
 
   <div class="app-download">
@@ -170,10 +166,33 @@
       </div>
     </section>
 
-    <section class="videos-section" aria-label="Galería de videos">
-      <div class="video-card">Cargando video...</div>
-      <div class="video-card">Cargando video...</div>
-      <div class="video-card">Cargando video...</div>
+    <!-- Video Gallery Section -->
+    <section class="video-gallery-section">
+      <div class="content-container">
+        <div class="video-gallery-grid">
+          <div class="video-card video-card-1" data-aos="fade-up" data-aos-delay="0">
+            <div class="video-card-content">
+              <video autoplay loop muted playsinline preload="metadata">
+                <source src="/videos/video1.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="video-card video-card-2" data-aos="fade-up" data-aos-delay="100">
+            <div class="video-card-content">
+              <video autoplay loop muted playsinline preload="metadata">
+                <source src="/videos/video2.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+          <div class="video-card video-card-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="video-card-content">
+              <video autoplay loop muted playsinline preload="metadata">
+                <source src="/videos/video3.mp4" type="video/mp4">
+              </video>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="main-content">
@@ -292,7 +311,6 @@
 
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
-  <script type="module" src="/src/pages/index-loader.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
 </body>
 </html>
