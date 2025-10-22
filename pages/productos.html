@@ -163,11 +163,11 @@
         <h2 class="selector-title">Catálogo de productos</h2>
 
         <div class="category-filters">
-          <button class="category-filter active" data-category="all">Todos</button>
-          <button class="category-filter" data-category="llaves">Llaves</button>
-          <button class="category-filter" data-category="carcasas">Carcasas</button>
-          <button class="category-filter" data-category="telemandos">Telemandos</button>
-          <button class="category-filter" data-category="accesorios">Accesorios</button>
+          <button class="category-filter active" data-type="">Todos</button>
+          <button class="category-filter" data-type="llave">Llaves</button>
+          <button class="category-filter" data-type="carcasa">Carcasas</button>
+          <button class="category-filter" data-type="telemando">Telemandos</button>
+          <button class="category-filter" data-type="accesorio">Accesorios</button>
         </div>
 
         <div id="productsList" class="results-container"></div>
@@ -181,6 +181,11 @@
     </div>
   </footer>
 
+  <script type="module">
+    import { initNavigation } from '/src/components/navigation.js';
+
+    initNavigation('productos');
+  </script>
   <script type="module" src="/src/products.js"></script>
 </body>
 </html>
