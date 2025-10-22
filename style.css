@@ -2262,20 +2262,21 @@ body::after {
   position: absolute;
   inset: -25% -18% -30%;
   background:
-    radial-gradient(circle at 35% 18%, rgba(0, 186, 255, 0.18), transparent 72%),
-    radial-gradient(circle at 68% 24%, rgba(0, 140, 255, 0.12), transparent 74%);
-  filter: blur(22px);
+    radial-gradient(circle at 35% 18%, rgba(0, 160, 255, 0.14), transparent 76%),
+    radial-gradient(circle at 68% 24%, rgba(0, 130, 220, 0.1), transparent 78%);
+  filter: blur(28px);
   z-index: -1;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .video-card {
-  width: clamp(360px, 30vw, 460px);
+  width: clamp(380px, 32vw, 500px);
   aspect-ratio: 9 / 16;
-  padding: 26px;
-  background: linear-gradient(180deg, rgba(4, 14, 26, 0.78) 0%, rgba(2, 8, 18, 0.74) 100%);
-  border: 1.5px solid rgba(0, 184, 255, 0.28);
-  box-shadow: 0 30px 58px rgba(0, 14, 28, 0.55), 0 0 38px rgba(0, 170, 255, 0.22);
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.88) 0%, rgba(2, 8, 16, 0.82) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 35px 68px rgba(0, 0, 0, 0.65), 0 0 42px rgba(0, 152, 255, 0.18);
+  color: rgba(236, 244, 255, 0.78);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
   display: flex;
   justify-content: center;
@@ -2287,12 +2288,14 @@ body::after {
   height: 100%;
   border-radius: 20px;
   object-fit: cover;
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.35);
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
 }
 
 .video-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 36px 64px rgba(0, 16, 30, 0.58), 0 0 42px rgba(0, 176, 255, 0.28);
+  box-shadow: 0 40px 72px rgba(0, 0, 0, 0.7), 0 0 48px rgba(0, 160, 255, 0.24);
 }
 
 @media (max-width: 1200px) {
@@ -2572,10 +2575,10 @@ body::after {
 html,
 body {
   background:
-    radial-gradient(1400px circle at 18% -18%, rgba(0, 170, 255, 0.08), transparent 68%),
-    radial-gradient(1100px circle at 82% -8%, rgba(0, 128, 255, 0.07), transparent 66%),
-    radial-gradient(900px circle at 45% 110%, rgba(0, 148, 255, 0.06), transparent 70%),
-    linear-gradient(180deg, #00040b 0%, #000a16 32%, #001226 68%, #00060f 100%) !important;
+    radial-gradient(1400px circle at 18% -18%, rgba(0, 120, 200, 0.05), transparent 68%),
+    radial-gradient(1100px circle at 82% -8%, rgba(0, 110, 210, 0.04), transparent 66%),
+    radial-gradient(900px circle at 45% 110%, rgba(0, 130, 220, 0.04), transparent 70%),
+    linear-gradient(180deg, #000000 0%, #00060f 38%, #000b1d 72%, #000001 100%) !important;
   color: #f3f8ff;
 }
 
@@ -2594,27 +2597,27 @@ body::after {
 body::before {
   z-index: -2;
   background:
-    radial-gradient(circle at 20% 12%, rgba(0, 214, 255, 0.22), transparent 58%),
-    radial-gradient(circle at 78% 18%, rgba(0, 168, 255, 0.18), transparent 62%),
-    radial-gradient(circle at 48% 88%, rgba(0, 190, 255, 0.16), transparent 64%),
-    linear-gradient(180deg, rgba(0, 10, 22, 0.92), rgba(0, 6, 16, 0.96));
-  filter: blur(80px);
-  opacity: 0.9;
+    radial-gradient(circle at 20% 12%, rgba(0, 190, 255, 0.12), transparent 58%),
+    radial-gradient(circle at 78% 18%, rgba(0, 150, 240, 0.1), transparent 62%),
+    radial-gradient(circle at 48% 88%, rgba(0, 150, 230, 0.1), transparent 64%),
+    linear-gradient(180deg, rgba(0, 4, 12, 0.94), rgba(0, 6, 16, 0.97));
+  filter: blur(90px);
+  opacity: 0.72;
   animation: auroraVeil 52s ease-in-out infinite alternate;
 }
 
 body::after {
   z-index: -1;
   background-image:
-    radial-gradient(7px 7px at 12% 22%, rgba(132, 234, 255, 0.65), transparent 65%),
-    radial-gradient(6px 6px at 40% 70%, rgba(132, 234, 255, 0.55), transparent 65%),
-    radial-gradient(5px 5px at 78% 34%, rgba(132, 234, 255, 0.48), transparent 65%),
-    radial-gradient(4px 4px at 58% 26%, rgba(132, 234, 255, 0.52), transparent 65%),
-    radial-gradient(3px 3px at 28% 82%, rgba(132, 234, 255, 0.46), transparent 65%),
-    radial-gradient(2.5px 2.5px at 8% 74%, rgba(132, 234, 255, 0.42), transparent 65%);
+    radial-gradient(7px 7px at 12% 22%, rgba(130, 224, 255, 0.8), transparent 65%),
+    radial-gradient(6px 6px at 40% 70%, rgba(120, 214, 255, 0.7), transparent 65%),
+    radial-gradient(5px 5px at 78% 34%, rgba(120, 214, 255, 0.6), transparent 65%),
+    radial-gradient(4px 4px at 58% 26%, rgba(120, 214, 255, 0.58), transparent 65%),
+    radial-gradient(3px 3px at 28% 82%, rgba(120, 214, 255, 0.5), transparent 65%),
+    radial-gradient(2.5px 2.5px at 8% 74%, rgba(120, 214, 255, 0.45), transparent 65%);
   background-size: 520px 520px, 640px 640px, 480px 480px, 560px 560px, 620px 620px, 700px 700px;
   animation: particleGlide 56s linear infinite;
-  opacity: 0.72;
+  opacity: 0.82;
   mix-blend-mode: screen;
   will-change: transform, background-position;
 }
@@ -2673,9 +2676,9 @@ body::after {
 .plan-card,
 .faq-item,
 .result-card {
-  background: linear-gradient(160deg, rgba(6, 18, 32, 0.72) 0%, rgba(3, 10, 22, 0.5) 100%);
-  border: 1px solid rgba(120, 210, 255, 0.32);
-  box-shadow: 0 24px 46px rgba(0, 10, 20, 0.55);
+  background: linear-gradient(165deg, rgba(2, 4, 8, 0.88) 0%, rgba(2, 10, 18, 0.74) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(18px);
 }
 
@@ -2684,5 +2687,68 @@ body::after {
 .plan-card:hover,
 .faq-item:hover,
 .result-card:hover {
-  box-shadow: 0 32px 60px rgba(0, 12, 24, 0.62);
+  box-shadow: 0 36px 70px rgba(0, 0, 0, 0.7);
+}
+
+/* --- Final overrides for hero video gallery --- */
+.videos-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: clamp(36px, 3vw, 56px);
+  padding: 72px 24px 84px;
+  max-width: 1280px;
+  margin: 0 auto;
+  perspective: 1500px;
+}
+
+.videos-section::before {
+  content: '';
+  position: absolute;
+  inset: -28% -22% -26%;
+  background:
+    radial-gradient(circle at 40% 20%, rgba(0, 170, 255, 0.18), transparent 76%),
+    radial-gradient(circle at 68% 26%, rgba(0, 124, 232, 0.12), transparent 78%);
+  filter: blur(30px);
+  z-index: -1;
+  opacity: 0.9;
+}
+
+.video-card {
+  --tilt-angle: -8deg;
+  flex: 0 1 clamp(360px, 30vw, 480px);
+  aspect-ratio: 9 / 16;
+  padding: 28px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(2, 8, 16, 0.82) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  box-shadow: 0 40px 78px rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgba(236, 244, 255, 0.82);
+  font-weight: 600;
+  text-align: center;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--tilt-angle));
+}
+
+.video-card:nth-child(2) {
+  --tilt-angle: 0deg;
+}
+
+.video-card:nth-child(3) {
+  --tilt-angle: 8deg;
+}
+
+.video-card video {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.6);
 }
