@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js';
+import { bindZoomableMedia } from '../utils/media-modal.js';
 
 const WHATSAPP_NUMBER = '541157237390';
 
@@ -18,7 +19,7 @@ function renderEmpty(message) {
 
 function createMedia({ image_url }) {
   if (image_url && image_url.trim() !== '') {
-    return `<img src="${image_url}" alt="Accesorio Kioskeys">`;
+    return `<img src="${image_url}" alt="Accesorio Kioskeys" data-image="${image_url}">`;
   }
 
   return `<div class="catalog-card__placeholder">
@@ -100,6 +101,8 @@ export async function loadAccesorios() {
         </article>
       `;
     }).join('');
+
+    bindZoomableMedia(container, '.catalog-card__media img');
   } catch (error) {
     console.error('Error:', error);
     container.innerHTML = renderEmpty('Error al cargar los accesorios.');

@@ -1,25 +1,7 @@
 import { supabase } from '../config/supabase.js';
+import { bindZoomableMedia } from '../utils/media-modal.js';
 
 const DEFAULT_WHATSAPP_NUMBER = '541157237390';
-
-function ensureModal() {
-  let modal = document.querySelector('.modal');
-  if (!modal) {
-    modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = '<img class="modal-content" alt="Vista ampliada del producto" />';
-    document.body.appendChild(modal);
-  }
-
-  if (!modal.dataset.bound) {
-    modal.addEventListener('click', () => {
-      modal.classList.remove('active');
-    });
-    modal.dataset.bound = 'true';
-  }
-
-  return modal;
-}
 
 function renderMedia({ image_url, video_url, brand, model, fallbackIcon }) {
   const hasVideo = Boolean(video_url && video_url.trim());
@@ -96,15 +78,20 @@ export function setupCategorySearch(options) {
     return;
   }
 
-  const modal = ensureModal();
-  const modalImage = modal.querySelector('.modal-content');
   const cache = new Map();
+  const requiresActiveFilter = ['telemandos', 'carcasas', 'llaves'].includes(table);
 
   async function loadBrands() {
-    const { data, error } = await supabase
+    let query = supabase
       .from(table)
       .select('brand')
       .order('brand', { ascending: true });
+
+    if (requiresActiveFilter) {
+      query = query.eq('active', true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error(`[setupCategorySearch] Error loading brands for ${table}:`, error);
@@ -124,11 +111,17 @@ export function setupCategorySearch(options) {
   }
 
   async function loadModelsForBrand(brand) {
-    const { data, error } = await supabase
+    let query = supabase
       .from(table)
       .select('brand, model, description, image_url, video_url')
       .eq('brand', brand)
       .order('model', { ascending: true });
+
+    if (requiresActiveFilter) {
+      query = query.eq('active', true);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       console.error(`[setupCategorySearch] Error loading models for ${table}:`, error);
@@ -185,6 +178,9 @@ export function setupCategorySearch(options) {
         ? buildMeta({ brand, model, item, modelLabel })
         : model;
 
+      const brandValue = brand || 'Sin marca';
+      const metaValue = meta || model || 'No disponible';
+
       const whatsappMessage = (buildWhatsappMessage || defaultWhatsappMessage)({
         brand,
         model,
@@ -201,12 +197,19 @@ export function setupCategorySearch(options) {
         return features;
       });
 
+      const detailsMarkup = `
+        <div class="result-details">
+          <p class="result-detail"><span>Marca:</span> ${brandValue}</p>
+          <p class="result-detail"><span>${modelLabel}:</span> ${metaValue}</p>
+        </div>
+      `;
+
       return `
         <article class="result-item">
           ${renderMedia({ ...item, fallbackIcon })}
           <div class="result-info">
             <h3>${title}</h3>
-            <p class="result-meta"><strong>${modelLabel}:</strong> ${meta}</p>
+            ${detailsMarkup}
             ${item.description ? `<p>${item.description}</p>` : ''}
             ${featureMarkup}
           </div>
@@ -220,16 +223,7 @@ export function setupCategorySearch(options) {
 
     resultsContainer.innerHTML = cards;
     resultsContainer.classList.add('active');
-
-    resultsContainer.querySelectorAll('.result-media[data-type="image"]').forEach(media => {
-      media.addEventListener('click', () => {
-        if (!modalImage) return;
-        const imageSrc = media.dataset.image || media.querySelector('img')?.getAttribute('src');
-        if (!imageSrc) return;
-        modalImage.src = imageSrc;
-        modal.classList.add('active');
-      });
-    });
+    bindZoomableMedia(resultsContainer, '.result-media[data-type="image"]');
   }
 
   brandSelect.addEventListener('change', async () => {

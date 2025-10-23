@@ -31,8 +31,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-section,
-footer {
+section {
   background: none !important;
   box-shadow: none !important;
 }
@@ -1393,6 +1392,7 @@ footer::before {
   gap: 40px;
   position: relative;
   z-index: 1;
+  align-items: flex-start;
 }
 
 .footer-section {

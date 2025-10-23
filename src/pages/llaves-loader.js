@@ -1,4 +1,5 @@
 import { supabase } from '../config/supabase.js';
+import { bindZoomableMedia } from '../utils/media-modal.js';
 
 const WHATSAPP_NUMBER = '541157237390';
 
@@ -26,7 +27,7 @@ function createMedia({ image_url, video_url, brand, model }) {
   }
 
   if (image_url && image_url.trim() !== '') {
-    return `<img src="${image_url}" alt="Llave ${brand} ${model}">`;
+    return `<img src="${image_url}" alt="Llave ${brand} ${model}" data-image="${image_url}">`;
   }
 
   return `<div class="catalog-card__placeholder">
@@ -50,6 +51,7 @@ export async function loadLlaves() {
     const { data, error } = await supabase
       .from('llaves')
       .select('id, brand, model, description, image_url, video_url')
+      .eq('active', true)
       .order('brand', { ascending: true })
       .order('model', { ascending: true });
 
@@ -82,6 +84,8 @@ export async function loadLlaves() {
         </article>
       `;
     }).join('');
+
+    bindZoomableMedia(container, '.catalog-card__media img');
   } catch (err) {
     console.error('Unexpected error:', err);
     container.innerHTML = renderEmpty('Error al cargar las llaves');
