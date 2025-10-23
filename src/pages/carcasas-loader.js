@@ -51,7 +51,6 @@ export async function loadCarcasas() {
     const { data, error } = await supabase
       .from('carcasas')
       .select('id, brand, model, description, image_url, video_url')
-      .eq('active', true)
       .order('brand', { ascending: true })
       .order('model', { ascending: true });
 

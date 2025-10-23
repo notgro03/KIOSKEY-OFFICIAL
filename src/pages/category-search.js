@@ -79,19 +79,11 @@ export function setupCategorySearch(options) {
   }
 
   const cache = new Map();
-  const requiresActiveFilter = ['telemandos', 'carcasas', 'llaves'].includes(table);
-
   async function loadBrands() {
-    let query = supabase
+    const { data, error } = await supabase
       .from(table)
       .select('brand')
       .order('brand', { ascending: true });
-
-    if (requiresActiveFilter) {
-      query = query.eq('active', true);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error(`[setupCategorySearch] Error loading brands for ${table}:`, error);
@@ -111,17 +103,11 @@ export function setupCategorySearch(options) {
   }
 
   async function loadModelsForBrand(brand) {
-    let query = supabase
+    const { data, error } = await supabase
       .from(table)
       .select('brand, model, description, image_url, video_url')
       .eq('brand', brand)
       .order('model', { ascending: true });
-
-    if (requiresActiveFilter) {
-      query = query.eq('active', true);
-    }
-
-    const { data, error } = await query;
 
     if (error) {
       console.error(`[setupCategorySearch] Error loading models for ${table}:`, error);
