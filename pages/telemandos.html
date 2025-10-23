@@ -6,351 +6,53 @@
   <title>Telemandos - Kioskeys</title>
   <link rel="icon" href="/favicon.jpg">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/css/productos-categoria.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    .search-container {
-      max-width: 800px;
-      margin: 0 auto 32px;
-    }
-
-    .info-section {
-      background: white;
-      border-radius: 18px;
-      padding: 32px;
-      margin: 32px 0;
-      box-shadow: 0 8px 32px rgba(0, 59, 142, 0.15);
-      border: 1px solid rgba(0, 59, 142, 0.1);
-    }
-
-    .info-section h2 {
-      color: var(--primary-blue);
-      margin-bottom: 24px;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    .search-box {
-      background: var(--card-background);
-      border-radius: 18px;
-      box-shadow: 0 8px 32px var(--shadow-color);
-      padding: 32px;
-      margin-bottom: 32px;
-      border: 1px solid var(--border-color);
-    }
-
-    .search-title {
-      text-align: center;
-      margin-bottom: 24px;
-      color: var(--primary-blue);
-    }
-
-    .search-title h2 {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .search-title p {
-      color: #666;
-      font-size: 15px;
-    }
-
-    .search-fields {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
-    }
-
-    .search-field {
-      position: relative;
-    }
-
-    .search-field label {
-      display: block;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 8px;
-      color: var(--text-color);
-    }
-
-    .search-field select {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 12px;
-     border: 2px solid var(--border-color);
-     background: var(--card-background);
-     color: var(--text-color);
-      font-size: 15px;
-      transition: all 0.3s ease;
-      -webkit-appearance: none;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23003B8E' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 16px center;
-      background-size: 16px;
-    }
-
-    .search-field select:focus {
-      outline: none;
-      border-color: var(--primary-blue);
-      box-shadow: 0 0 0 3px rgba(0, 59, 142, 0.1);
-    }
-
-    .search-button {
-      width: 100%;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      background: var(--card-gradient);
-      color: white;
-      font-weight: 500;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .search-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
-    }
-
-    .search-results {
-      display: none;
-     background: var(--card-background);
-      border-radius: 18px;
-      padding: 32px;
-      margin-top: 24px;
-     box-shadow: 0 8px 32px var(--shadow-color);
-     border: 1px solid var(--border-color);
-    }
-
-    .search-results.active {
-      display: block;
-    }
-
-    .result-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 24px;
-      padding: 24px;
-    }
-
-    .result-logo {
-      width: 200px;
-      height: 200px;
-      object-fit: contain;
-      background: white;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .result-video {
-      object-fit: cover;
-      padding: 0;
-    }
-
-    .result-logo:hover {
-      transform: scale(1.05);
-    }
-
-    .result-info {
-      flex: 1;
-    }
-
-    .result-info h3 {
-      color: var(--primary-blue);
-      font-size: 24px;
-      margin-bottom: 12px;
-    }
-
-    .result-info p {
-      color: #666;
-      margin-bottom: 16px;
-    }
-
-    .result-features {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      margin: 16px 0;
-    }
-
-    .result-feature {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      color: #666;
-      background: rgba(0, 59, 142, 0.05);
-      padding: 8px 16px;
-      border-radius: 100px;
-    }
-
-    .result-feature i {
-      color: var(--primary-blue);
-    }
-
-    .result-button {
-      padding: 12px 32px;
-      border-radius: 100px;
-      background: var(--card-gradient);
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .result-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
-    }
-
-    /* Modal styles */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .modal.active {
-      display: flex;
-    }
-
-    .modal-content {
-      max-width: 90%;
-      max-height: 90vh;
-      object-fit: contain;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      transform: scale(0.9);
-      transition: transform 0.3s ease;
-    }
-
-    .modal.active .modal-content {
-      transform: scale(1);
-    }
-
-    .not-found-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--card-gradient);
-      color: white;
-      padding: 16px 32px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 500;
-      margin: 24px auto;
-      width: fit-content;
-      transition: all 0.3s ease;
-    }
-
-    .not-found-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 59, 142, 0.2);
-    }
-
-    @media (max-width: 768px) {
-      .search-fields {
-        grid-template-columns: 1fr;
-      }
-
-      .result-features {
-        justify-content: center;
-      }
-    }
-  </style>
 </head>
-<body>
-  <nav>
-    <div class="logo">
-      <a href="/"><img src="../LOGO_KIOSKEYS.png" alt="Kioskeys"></a>
-    </div>
-    <div class="nav-links">
-      <a href="/">Inicio</a>
-      <a href="/pages/red-servicios.html">Red de Servicios</a>
-      <a href="/pages/planes.html">Planes</a>
-      <a href="/pages/productos.html">Productos</a>
-      <a href="/pages/faq.html">FAQ</a>
-      <a href="/pages/contacto.html">Contacto</a>
-    </div>
-    <button class="menu-button">
-      <i class="fas fa-bars"></i>
-    </button>
-  </nav>
+<body class="category-page">
+  <nav></nav>
 
   <main>
-    <!-- Theme Toggle Button -->
-    <div class="theme-toggle" id="themeToggle">
-      <i class="theme-toggle-icon fas fa-moon moon"></i>
-    </div>
-
-    <section class="hero">
+    <section class="hero category-hero">
       <div class="hero-content">
         <h1>Telemandos</h1>
         <p>Encuentra el telemando perfecto para tu vehículo</p>
       </div>
     </section>
 
-    <section class="main-content">
+    <section class="category-search">
       <div class="content-container">
         <div class="search-container">
-          <div class="search-box">
+          <article class="search-box">
             <div class="search-title">
               <h2>Buscador de Telemandos</h2>
-              <p>Selecciona tu vehículo para encontrar los telemandos compatibles</p>
+              <p>Seleccioná tu vehículo para descubrir los telemandos compatibles</p>
             </div>
             <div class="search-fields">
               <div class="search-field">
                 <label for="brandSelect">Marca</label>
                 <select id="brandSelect">
-                  <option value="">Seleccionar marca</option>
+                  <option value="">Seleccioná la marca</option>
                 </select>
               </div>
               <div class="search-field">
                 <label for="modelSelect">Modelo</label>
                 <select id="modelSelect" disabled>
-                  <option value="">Seleccionar modelo</option>
+                  <option value="">Seleccioná el modelo</option>
                 </select>
               </div>
             </div>
-            <button class="search-button">
+            <button id="telemandosSearchButton" type="button" class="search-button">
               <i class="fas fa-search"></i>
               Buscar Telemandos Compatibles
             </button>
-          </div>
+          </article>
 
-          <div class="search-results" id="searchResults">
-            <!-- Results will be displayed here -->
-          </div>
+          <div id="searchResults" class="search-results"></div>
 
-          <a href="https://api.whatsapp.com/send/?phone=541157237390&text=Hola, no encuentro mi telemando en el catálogo. ¿Podrían ayudarme? Adjuntaré una foto de mi telemando." 
-             target="_blank" 
-             class="not-found-button">
+          <a href="https://api.whatsapp.com/send/?phone=541157237390&text=Hola,%20no%20encuentro%20mi%20telemando%20en%20el%20cat%C3%A1logo.%20%C2%BFPodr%C3%ADan%20ayudarme?%20Adjuntar%C3%A9%20una%20foto%20de%20mi%20telemando." target="_blank" rel="noopener" class="not-found-button">
             <i class="fas fa-search"></i>
-            ¿No encuentras tu telemando? Contáctanos
+            ¿No encontrás tu telemando? Escribinos
           </a>
         </div>
       </div>
@@ -361,31 +63,35 @@
         <div class="info-section">
           <h2>¿Por qué elegir nuestros telemandos?</h2>
           <div class="features-grid">
-            <div class="feature-card">
+            <article class="feature-card">
               <i class="fas fa-shield-alt feature-icon"></i>
-              <h3>Calidad Garantizada</h3>
-              <p>Telemandos originales y alternativos de la más alta calidad, con garantía de funcionamiento.</p>
-            </div>
-
-            <div class="feature-card">
+              <h3>Calidad garantizada</h3>
+              <p>Telemandos originales y alternativos con garantía de funcionamiento y soporte oficial.</p>
+            </article>
+            <article class="feature-card">
               <i class="fas fa-tools feature-icon"></i>
-              <h3>Programación Profesional</h3>
-              <p>Servicio de programación incluido realizado por técnicos certificados.</p>
-            </div>
-
-            <div class="feature-card">
+              <h3>Programación profesional</h3>
+              <p>Servicio de programación incluido realizado por técnicos certificados en el acto.</p>
+            </article>
+            <article class="feature-card">
               <i class="fas fa-clock feature-icon"></i>
-              <h3>Servicio Express</h3>
-              <p>Programación en el momento y servicio de urgencia disponible 24/7.</p>
-            </div>
-
-            <div class="feature-card">
+              <h3>Respuesta inmediata</h3>
+              <p>Atención express para emergencias y soporte permanente en todo el país.</p>
+            </article>
+            <article class="feature-card">
               <i class="fas fa-tag feature-icon"></i>
-              <h3>Precios Competitivos</h3>
-              <p>Mejores precios del mercado con opciones para todos los presupuestos.</p>
-            </div>
+              <h3>Precios competitivos</h3>
+              <p>Opciones para todos los presupuestos con promociones exclusivas para talleres.</p>
+            </article>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="catalog-section">
+      <div class="content-container">
+        <h2 class="catalog-title">Catálogo de Telemandos</h2>
+        <div id="productsGrid" class="catalog-grid"></div>
       </div>
     </section>
   </main>
@@ -448,209 +154,36 @@
   </footer>
 
   <script type="module">
-    import { supabase } from '../src/config/supabase.js';
-
-    let currentData = {};
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      // Agregar el modal al body
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = '<img class="modal-content">';
-      document.body.appendChild(modal);
-
-      // Cerrar modal al hacer clic
-      modal.addEventListener('click', () => {
-        modal.classList.remove('active');
-      });
-
-      const brandSelect = document.getElementById('brandSelect');
-      const modelSelect = document.getElementById('modelSelect');
-      const searchButton = document.querySelector('.search-button');
-
-      // Cargar marcas desde Supabase
-      const { data: brands, error: brandsError } = await supabase
-        .from('telemandos')
-        .select('brand')
-        .order('brand', { ascending: true });
-
-      if (!brandsError && brands) {
-        const uniqueBrands = [...new Set(brands.map(item => item.brand).filter(Boolean))];
-        uniqueBrands.forEach(brand => {
-          const option = document.createElement('option');
-          option.value = brand;
-          option.textContent = brand;
-          brandSelect.appendChild(option);
-        });
-      }
-
-      // Evento cambio de marca
-      brandSelect.addEventListener('change', async () => {
-        const brand = brandSelect.value;
-        modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
-        modelSelect.disabled = !brand;
-        currentData = {};
-        const results = document.getElementById('searchResults');
-        results.innerHTML = '';
-        results.classList.remove('active');
-
-        if (brand) {
-          const { data: models, error: modelsError } = await supabase
-            .from('telemandos')
-            .select('model, description, image_url, video_url')
-            .eq('brand', brand)
-            .order('model', { ascending: true });
-
-          if (!modelsError && models && models.length > 0) {
-            const modelMap = models.reduce((acc, item) => {
-              if (!acc[item.model]) {
-                acc[item.model] = [];
-              }
-              acc[item.model].push({
-                description: item.description || '',
-                image_url: item.image_url || '',
-                video_url: item.video_url || ''
-              });
-              return acc;
-            }, {});
-
-            Object.keys(modelMap).forEach(model => {
-              const option = document.createElement('option');
-              option.value = model;
-              option.textContent = model;
-              modelSelect.appendChild(option);
-              currentData[model] = modelMap[model];
-            });
-          }
-        }
-      });
-
-      // Evento botón buscar
-      searchButton.addEventListener('click', async () => {
-        const brand = brandSelect.value;
-        const model = modelSelect.value;
-
-        if (!brand || !model) {
-          alert('Selecciona una marca y modelo');
-          return;
-        }
-
-        let resultsData = currentData[model] || [];
-
-        if (resultsData.length === 0) {
-          const { data, error } = await supabase
-            .from('telemandos')
-            .select('description, image_url, video_url')
-            .eq('brand', brand)
-            .eq('model', model);
-
-          if (error) {
-            console.error('Error obteniendo datos:', error);
-            alert('Ocurrió un error obteniendo los telemandos.');
-            return;
-          }
-
-          resultsData = data || [];
-        }
-
-        showResults(resultsData, brand, model);
-      });
-
-    });
-
-function showResults(resultsData, brand, model) {
-    const results = document.getElementById('searchResults');
-    results.innerHTML = '';
-
-    if (resultsData.length === 0) {
-        results.innerHTML = `<p>No se encontraron telemandos para este modelo.</p>`;
-        results.classList.add('active');
-        return;
-    }
-
-    resultsData.forEach(item => { 
-        const whatsappMessage = encodeURIComponent(
-            `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
-            `Marca: ${brand}\n` +
-            `Modelo: ${model}\n` +
-            `Descripción: ${item.description || "No disponible"}\n\n` +
-            `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
-        );
-
-        const whatsappNumber = "541157237390";
-        const whatsappUrl = `https://api.whatsapp.com/send/?phone=${whatsappNumber}&text=${whatsappMessage}&type=phone_number&app_absent=0`;
-
-        // Determinar si hay video o imagen
-        const hasVideo = item.video_url && item.video_url.trim() !== '';
-        const mediaHTML = hasVideo
-            ? `<video class="result-logo result-video" autoplay loop muted playsinline>
-                 <source src="${item.video_url}" type="video/mp4">
-               </video>`
-            : `<img src="${item.image_url}" alt="Telemando de ${brand} ${model}" class="result-logo">`;
-
-        const telemandoHTML = `
-            <div class="result-item">
-                ${mediaHTML}
-                <div class="result-info">
-                    <h3>Telemando ${brand} ${item.description ? item.description : ''}</h3>
-                    <p><strong>Modelo:</strong> ${model}</p>
-                    <div class="result-features">
-                        <span class="result-feature">
-                            <i class="fas fa-check-circle"></i> Alta compatibilidad
-                        </span>
-                        <span class="result-feature">
-                            <i class="fas fa-shield-alt"></i> Garantía 1 año
-                        </span>
-                        <span class="result-feature">
-                            <i class="fas fa-tools"></i> Programación incluida
-                        </span>
-                    </div>
-                </div>
-                <a href="${whatsappUrl}" target="_blank" class="result-button">
-                    <i class="fab fa-whatsapp"></i> Consultar
-                </a>
-            </div>
-        `;
-
-    results.innerHTML += telemandoHTML;
-    });
-
-    results.classList.add('active');
-}
-
-    // Función para abrir el modal con la imagen ampliada
-    function openModal(src) {
-      const modal = document.querySelector('.modal');
-      const modalImg = modal.querySelector('.modal-content');
-      modalImg.src = src;
-      modal.classList.add('active');
-    }
-
-    // Agregar un event listener para detectar el click en la imagen del telemando
-    document.addEventListener('click', (event) => {
-      if (event.target.classList.contains('result-logo')) {
-        openModal(event.target.src);
-      }});
-
-  </script>
-
-  <section class="main-content" style="padding: 60px 0;">
-    <div class="content-container">
-      <h2 style="text-align: center; color: white; font-size: 32px; margin-bottom: 40px;">Catálogo de Telemandos</h2>
-      <div id="productsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;"></div>
-    </div>
-  </section>
-
-  <script type="module">
-    import { loadTelemandos } from '../src/pages/telemandos-loader.js';
     import { initNavigation } from '../src/components/navigation.js';
+    import { setupCategorySearch } from '../src/pages/category-search.js';
+    import { loadTelemandos } from '../src/pages/telemandos-loader.js';
 
     document.addEventListener('DOMContentLoaded', () => {
       initNavigation('telemandos');
+
+      setupCategorySearch({
+        table: 'telemandos',
+        brandSelectId: 'brandSelect',
+        modelSelectId: 'modelSelect',
+        resultsContainerId: 'searchResults',
+        searchButtonSelector: '#telemandosSearchButton',
+        whatsappNumber: '541157237390',
+        productLabel: 'telemando',
+        modelLabel: 'Modelo',
+        fallbackIcon: 'fas fa-car',
+        emptyMessage: 'No se encontraron telemandos para este modelo.',
+        features: [
+          { icon: 'fas fa-check-circle', text: 'Alta compatibilidad' },
+          { icon: 'fas fa-shield-alt', text: 'Garantía 1 año' },
+          { icon: 'fas fa-tools', text: 'Programación incluida' }
+        ],
+        buildTitle: ({ brand, model, item }) => `Telemando ${brand} ${item.description ? item.description : model}`,
+        buildWhatsappMessage: ({ brand, model, item, productLabel }) => `Hola, me interesa obtener una cotización para el siguiente ${productLabel}:\n\nMarca: ${brand}\nModelo: ${model}\nDescripción: ${item.description || 'No disponible'}\n\n¿Podrían brindarme información sobre el precio y disponibilidad?`
+      });
+
       loadTelemandos();
     });
   </script>
-
   <script type="module" src="/src/main.js"></script>
 </body>
 </html>

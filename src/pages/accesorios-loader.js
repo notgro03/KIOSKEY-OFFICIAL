@@ -1,11 +1,45 @@
 import { supabase } from '../config/supabase.js';
 
+const WHATSAPP_NUMBER = '541157237390';
+
+function renderLoading(message) {
+  return `<div class="search-message" style="grid-column: 1/-1; padding: 40px;">
+    <i class="fas fa-spinner fa-spin" style="font-size: 28px; margin-bottom: 12px; display: block;"></i>
+    ${message}
+  </div>`;
+}
+
+function renderEmpty(message) {
+  return `<div class="search-message" style="grid-column: 1/-1; padding: 48px 20px;">
+    <i class="fas fa-tools" style="font-size: 56px; margin-bottom: 16px; display: block; opacity: 0.55;"></i>
+    ${message}
+  </div>`;
+}
+
+function createMedia({ image_url }) {
+  if (image_url && image_url.trim() !== '') {
+    return `<img src="${image_url}" alt="Accesorio Kioskeys">`;
+  }
+
+  return `<div class="catalog-card__placeholder">
+    <i class="fas fa-toolbox"></i>
+  </div>`;
+}
+
+function createWhatsappUrl(product) {
+  const details = [product.title, product.brand, product.model]
+    .filter(Boolean)
+    .join(' ');
+  const message = `Hola, me interesa el siguiente accesorio: ${details}. ¿Podrían brindarme información sobre precio y disponibilidad?`;
+  return `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
+}
+
 export async function loadAccesorios() {
   const container = document.getElementById('productsGrid');
 
   if (!container) return;
 
-  container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i><p>Cargando accesorios...</p></div>';
+  container.innerHTML = renderLoading('Cargando accesorios...');
 
   try {
     const { data: category } = await supabase
@@ -15,7 +49,7 @@ export async function loadAccesorios() {
       .maybeSingle();
 
     if (!category) {
-      container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><p>No se encontró la categoría de accesorios</p></div>';
+      container.innerHTML = renderEmpty('No se encontró la categoría de accesorios.');
       return;
     }
 
@@ -28,80 +62,46 @@ export async function loadAccesorios() {
 
     if (error) {
       console.error('Error loading products:', error);
-      container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><p>Error al cargar los productos</p></div>';
+      container.innerHTML = renderEmpty('Error al cargar los accesorios.');
       return;
     }
 
     if (!products || products.length === 0) {
-      container.innerHTML = `
-        <div style="text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.7); grid-column: 1/-1;">
-          <i class="fas fa-tools" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i>
-          <h3 style="font-size: 24px; margin-bottom: 12px;">No hay accesorios disponibles</h3>
-          <p>Pronto agregaremos productos a esta categoría</p>
-        </div>
-      `;
+      container.innerHTML = renderEmpty('No hay accesorios disponibles en este momento.');
       return;
     }
 
-    container.innerHTML = products.map(product => `
-      <div class="product-card" style="background: linear-gradient(135deg, rgba(15, 15, 15, 0.9), rgba(25, 25, 25, 0.8)); border-radius: 20px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); transition: all 0.4s ease;">
-        <div class="product-image" style="height: 250px; overflow: hidden; position: relative; background: rgba(0,0,0,0.3);">
-          ${product.image_url
-            ? `<img src="${product.image_url}" alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">`
-            : `<div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.05);"><i class="fas fa-tools" style="font-size: 64px; color: rgba(255,255,255,0.2);"></i></div>`
-          }
-          ${product.stock > 0
-            ? '<span style="position: absolute; top: 12px; right: 12px; background: rgba(34, 197, 94, 0.9); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Disponible</span>'
-            : '<span style="position: absolute; top: 12px; right: 12px; background: rgba(239, 68, 68, 0.9); color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;"><i class="fas fa-times-circle"></i> Agotado</span>'
-          }
-        </div>
-        <div class="product-info" style="padding: 24px;">
-          <h3 style="color: white; font-size: 20px; margin-bottom: 12px; font-weight: 600;">${product.title}</h3>
-          ${product.brand || product.model ? `
-            <p style="color: rgba(255,255,255,0.6); font-size: 14px; margin-bottom: 12px;">
-              <i class="fas fa-tag"></i> ${product.brand || ''} ${product.model || ''}
-            </p>
-          ` : ''}
-          ${product.description ? `
-            <p style="color: rgba(255,255,255,0.7); font-size: 14px; line-height: 1.6; margin-bottom: 16px;">${product.description.substring(0, 100)}${product.description.length > 100 ? '...' : ''}</p>
-          ` : ''}
-          ${product.price > 0 ? `
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-              <span style="color: #00a3ff; font-size: 24px; font-weight: 700;">$${parseFloat(product.price).toLocaleString('es-AR')}</span>
-              <button class="btn-add-cart" data-product-id="${product.id}" style="background: linear-gradient(135deg, rgba(0, 59, 142, 0.9), rgba(0, 114, 188, 0.9)); color: white; border: none; padding: 10px 20px; border-radius: 50px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
-                <i class="fas fa-shopping-cart"></i> Consultar
-              </button>
+    container.innerHTML = products.map(product => {
+      const whatsappUrl = createWhatsappUrl(product);
+      const hasStock = typeof product.stock === 'number' ? product.stock > 0 : true;
+      const price = Number(product.price || 0);
+
+      return `
+        <article class="catalog-card">
+          <div class="catalog-card__media">
+            ${createMedia(product)}
+            <span class="catalog-card__status ${hasStock ? 'catalog-card__status--available' : 'catalog-card__status--soldout'}">
+              <i class="fas ${hasStock ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+              ${hasStock ? 'Disponible' : 'Agotado'}
+            </span>
+          </div>
+          <div class="catalog-card__body">
+            <h3 class="catalog-card__title">${product.title}</h3>
+            ${product.brand || product.model ? `<p class="catalog-card__meta"><i class="fas fa-tag"></i>${product.brand || ''} ${product.model || ''}</p>` : ''}
+            ${product.description ? `<p class="catalog-card__description">${product.description}</p>` : ''}
+            <div class="catalog-card__footer">
+              ${price > 0 ? `<span class="catalog-card__price">$${price.toLocaleString('es-AR')}</span>` : '<span class="catalog-card__meta"><i class="fas fa-comment"></i> Consultar precio</span>'}
+              <a href="${whatsappUrl}" target="_blank" rel="noopener" class="catalog-card__cta">
+                <i class="fab fa-whatsapp"></i>
+                Consultar
+              </a>
             </div>
-          ` : ''}
-        </div>
-      </div>
-    `).join('');
-
-    document.querySelectorAll('.btn-add-cart').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const productId = btn.dataset.productId;
-        const product = products.find(p => p.id === productId);
-        if (product) {
-          window.location.href = `https://api.whatsapp.com/send/?phone=541157237390&text=Hola,%20me%20interesa%20el%20producto:%20${encodeURIComponent(product.title)}`;
-        }
-      });
-    });
-
-    document.querySelectorAll('.product-card').forEach(card => {
-      card.addEventListener('mouseenter', () => {
-        card.style.transform = 'translateY(-8px)';
-        card.style.boxShadow = '0 12px 40px rgba(0, 163, 255, 0.3)';
-        card.style.borderColor = 'rgba(0, 163, 255, 0.5)';
-      });
-      card.addEventListener('mouseleave', () => {
-        card.style.transform = 'translateY(0)';
-        card.style.boxShadow = 'none';
-        card.style.borderColor = 'rgba(255,255,255,0.1)';
-      });
-    });
-
+          </div>
+        </article>
+      `;
+    }).join('');
   } catch (error) {
     console.error('Error:', error);
-    container.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><p>Error al cargar los productos</p></div>';
+    container.innerHTML = renderEmpty('Error al cargar los accesorios.');
   }
 }
