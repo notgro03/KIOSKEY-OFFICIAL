@@ -10,142 +10,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
-  <style>
-    body {
-      background: radial-gradient(circle at center, #020611 0%, #0b0e23 100%);
-      color: white;
-      font-family: "Poppins", sans-serif;
-    }
-
-    .results-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 28px;
-      margin-top: 32px;
-      align-items: stretch;
-    }
-
-    .results-message {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 48px 24px;
-      border-radius: 24px;
-      background: rgba(10, 20, 40, 0.65);
-      border: 1px solid rgba(0, 180, 255, 0.25);
-      color: rgba(255, 255, 255, 0.8);
-      box-shadow: 0 0 30px rgba(0, 150, 255, 0.18);
-    }
-
-    .results-message i {
-      display: block;
-      font-size: 36px;
-      margin-bottom: 12px;
-      color: #00d4ff;
-    }
-
-    .results-message--error {
-      border-color: rgba(255, 107, 107, 0.4);
-      box-shadow: 0 0 30px rgba(255, 107, 107, 0.18);
-    }
-
-    .results-message--error i {
-      color: #ff6b6b;
-    }
-
-    .results-message--loading i {
-      animation: spin 1.2s linear infinite;
-    }
-
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    .product-card {
-      background: linear-gradient(135deg, rgba(5, 10, 25, 0.95), rgba(0, 70, 120, 0.95));
-      border-radius: 24px;
-      padding: 32px;
-      color: white;
-      border: 1px solid rgba(0, 180, 255, 0.3);
-      transition: all 0.3s ease;
-      box-shadow: 0 0 20px rgba(0, 150, 255, 0.2);
-    }
-
-    .product-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 40px rgba(0, 180, 255, 0.4);
-      border-color: rgba(0, 220, 255, 0.6);
-    }
-
-    .product-media {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 16px;
-      margin-bottom: 16px;
-    }
-
-    .product-placeholder {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.05);
-      color: rgba(255, 255, 255, 0.3);
-      font-size: 48px;
-    }
-
-    .category-filters {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      margin-top: 32px;
-      flex-wrap: wrap;
-    }
-
-    .category-filter {
-      padding: 10px 20px;
-      border-radius: 25px;
-      border: 1px solid rgba(0, 180, 255, 0.4);
-      background: rgba(10, 20, 40, 0.7);
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .category-filter:hover, .category-filter.active {
-      background: rgba(0, 150, 255, 0.3);
-      border-color: rgba(0, 220, 255, 0.6);
-      box-shadow: 0 0 10px rgba(0, 180, 255, 0.4);
-    }
-
-    .category-filter:disabled,
-    .category-filter.disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      box-shadow: none;
-      border-color: rgba(0, 180, 255, 0.2);
-    }
-
-    .learn-more {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 20px;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.2);
-      padding: 10px 20px;
-      border-radius: 25px;
-      transition: all 0.3s ease;
-    }
-
-    .learn-more:hover {
-      background: rgba(0, 180, 255, 0.4);
-      transform: scale(1.05);
-    }
-
-  </style>
 </head>
 <body>
   <nav></nav>
@@ -160,26 +24,229 @@
 
     <section class="main-content">
       <div class="content-container">
-        <h2 class="selector-title">Catálogo de productos</h2>
+        <div class="product-selector-section">
+          <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
 
-        <div class="category-filters">
-          <button class="category-filter active" data-type="">Todos</button>
-          <button class="category-filter" data-type="llave">Llaves</button>
-          <button class="category-filter" data-type="carcasa">Carcasas</button>
-          <button class="category-filter" data-type="telemando">Telemandos</button>
-          <button class="category-filter" data-type="accesorio">Accesorios</button>
+          <div class="product-selector-grid">
+            <a href="./llaves.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-key"></i>
+              </div>
+              <h3>Llaves</h3>
+              <p>Copias y llaves codificadas</p>
+            </a>
+
+            <a href="./carcasas.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <h3>Carcasas</h3>
+              <p>Repuestos originales</p>
+            </a>
+
+            <a href="./telemandos.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-car"></i>
+              </div>
+              <h3>Telemandos</h3>
+              <p>Controles remotos</p>
+            </a>
+
+            <a href="./accesorios.html" class="selector-card">
+              <div class="selector-icon-box">
+                <i class="fas fa-tools"></i>
+              </div>
+              <h3>Accesorios</h3>
+              <p>Baterías y más</p>
+            </a>
+          </div>
         </div>
 
-        <div id="productsList" class="results-container"></div>
+        <div class="product-search-sections">
+          <article class="product-search-section" id="telemandos-section">
+            <div class="search-container">
+              <div class="search-box">
+                <div class="search-title">
+                  <h2>Buscador de Telemandos</h2>
+                  <p>Seleccioná tu vehículo para encontrar telemandos compatibles.</p>
+                </div>
+                <div class="search-fields">
+                  <div class="search-field">
+                    <label for="telemandosBrand">Marca</label>
+                    <select id="telemandosBrand">
+                      <option value="">Seleccionar marca</option>
+                    </select>
+                  </div>
+                  <div class="search-field">
+                    <label for="telemandosModel">Modelo</label>
+                    <select id="telemandosModel" disabled>
+                      <option value="">Seleccionar modelo</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="telemandosSearchBtn" class="search-button">
+                  <i class="fas fa-search"></i>
+                  Buscar Telemandos Compatibles
+                </button>
+              </div>
+              <div id="telemandosResults" class="search-results"></div>
+            </div>
+          </article>
+
+          <article class="product-search-section" id="carcasas-section">
+            <div class="search-container">
+              <div class="search-box">
+                <div class="search-title">
+                  <h2>Buscador de Carcasas</h2>
+                  <p>Seleccioná tu vehículo para encontrar carcasas compatibles.</p>
+                </div>
+                <div class="search-fields">
+                  <div class="search-field">
+                    <label for="carcasasBrand">Marca</label>
+                    <select id="carcasasBrand">
+                      <option value="">Seleccionar marca</option>
+                    </select>
+                  </div>
+                  <div class="search-field">
+                    <label for="carcasasModel">Modelo</label>
+                    <select id="carcasasModel" disabled>
+                      <option value="">Seleccionar modelo</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="carcasasSearchBtn" class="search-button">
+                  <i class="fas fa-search"></i>
+                  Buscar Carcasas Compatibles
+                </button>
+              </div>
+              <div id="carcasasResults" class="search-results"></div>
+            </div>
+          </article>
+
+          <article class="product-search-section" id="llaves-section">
+            <div class="search-container">
+              <div class="search-box">
+                <div class="search-title">
+                  <h2>Buscador de Llaves</h2>
+                  <p>Seleccioná tu vehículo para encontrar llaves compatibles.</p>
+                </div>
+                <div class="search-fields">
+                  <div class="search-field">
+                    <label for="llavesBrand">Marca</label>
+                    <select id="llavesBrand">
+                      <option value="">Seleccionar marca</option>
+                    </select>
+                  </div>
+                  <div class="search-field">
+                    <label for="llavesModel">Modelo</label>
+                    <select id="llavesModel" disabled>
+                      <option value="">Seleccionar modelo</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="llavesSearchBtn" class="search-button">
+                  <i class="fas fa-search"></i>
+                  Buscar Llaves Compatibles
+                </button>
+              </div>
+              <div id="llavesResults" class="search-results"></div>
+            </div>
+          </article>
+
+          <article class="product-search-section" id="accesorios-section">
+            <div class="search-container">
+              <div class="search-box">
+                <div class="search-title">
+                  <h2>Buscador de Accesorios</h2>
+                  <p>Filtrá por marca y modelo para encontrar los accesorios disponibles.</p>
+                </div>
+                <div class="search-fields">
+                  <div class="search-field">
+                    <label for="accesoriosBrand">Marca</label>
+                    <select id="accesoriosBrand">
+                      <option value="">Seleccionar marca</option>
+                    </select>
+                  </div>
+                  <div class="search-field">
+                    <label for="accesoriosModel">Modelo</label>
+                    <select id="accesoriosModel" disabled>
+                      <option value="">Seleccionar modelo</option>
+                    </select>
+                  </div>
+                </div>
+                <button id="accesoriosSearchBtn" class="search-button">
+                  <i class="fas fa-search"></i>
+                  Buscar Accesorios Disponibles
+                </button>
+              </div>
+              <div id="accesoriosResults" class="search-results"></div>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4 class="shiny-text">Empresa</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
+          <li><a href="/pages/red-servicios.html" class="shiny-text">Red de Servicios</a></li>
+          <li><a href="/pages/trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Servicios</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/productos.html" class="shiny-text">Productos</a></li>
+          <li><a href="/pages/telemandos.html" class="shiny-text">Telemandos</a></li>
+          <li><a href="/pages/planes.html" class="shiny-text">Planes</a></li>
+          <li><a href="/pages/cerrajeria.html" class="shiny-text">Cerrajería</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Soporte</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/contacto.html" class="shiny-text">Contacto</a></li>
+          <li><a href="/pages/faq.html" class="shiny-text">FAQ</a></li>
+          <li><a href="/pages/tutoriales.html" class="shiny-text">Tutoriales</a></li>
+          <li><a href="/pages/ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Legal</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/privacidad.html" class="shiny-text">Política de Privacidad</a></li>
+          <li><a href="/pages/terminos.html" class="shiny-text">Términos y Condiciones</a></li>
+          <li><a href="/pages/cookies.html" class="shiny-text">Política de Cookies</a></li>
+          <li><a href="/pages/legal.html" class="shiny-text">Aviso Legal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Síguenos</h4>
+        <div class="footer-social">
+          <a href="https://facebook.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-facebook"></i></a>
+          <a href="https://twitter.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/company/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-bottom">
       <p class="shiny-text">&copy; 2024 Kioskeys. Todos los derechos reservados.</p>
     </div>
   </footer>
+
+  <div id="productMediaModal" class="modal" aria-hidden="true" role="dialog">
+    <img id="productMediaModalImage" class="modal-content" alt="Vista ampliada del producto" />
+  </div>
 
   <script type="module">
     import { initNavigation } from '/src/components/navigation.js';

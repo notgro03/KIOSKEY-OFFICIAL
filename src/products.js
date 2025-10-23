@@ -2,273 +2,629 @@ import { supabase } from './config/supabase.js';
 
 const WHATSAPP_NUMBER = '541157237390';
 
-class ProductsShowcase {
-  constructor() {
-    this.container = document.getElementById('productsList');
-    this.filterButtons = Array.from(document.querySelectorAll('.category-filter'));
-    this.allProducts = [];
-    this.currentType = '';
-
-    this.handleFilterClick = this.handleFilterClick.bind(this);
-
-    this.initializeEventListeners();
-    this.loadProducts();
-  }
-
-  initializeEventListeners() {
-    this.filterButtons.forEach((button) => {
-      button.addEventListener('click', this.handleFilterClick);
-    });
-  }
-
-  handleFilterClick(event) {
-    const button = event.currentTarget;
-    const type = (button.dataset.type || '').trim().toLowerCase();
-
-    this.filterButtons.forEach((btn) => btn.classList.remove('active'));
-    button.classList.add('active');
-
-    this.currentType = type;
-    this.applyFilter();
-  }
-
-  async loadProducts() {
-    if (!this.container) {
-      return;
-    }
-
-    this.showLoading();
-
-    try {
+const sections = [
+  {
+    name: 'telemandos',
+    brandSelectId: 'telemandosBrand',
+    modelSelectId: 'telemandosModel',
+    searchButtonId: 'telemandosSearchBtn',
+    resultsContainerId: 'telemandosResults',
+    emptyMessage: 'No se encontraron telemandos para este modelo.',
+    noModelsMessage: 'No hay modelos disponibles para esta marca.',
+    async fetchBrands() {
       const { data, error } = await supabase
-        .from('productos')
-        .select('*')
-        .order('id', { ascending: true });
+        .from('telemandos')
+        .select('brand')
+        .order('brand', { ascending: true });
 
       if (error) {
         throw error;
       }
 
-      this.allProducts = Array.isArray(data) ? data : [];
-      this.applyFilter();
-    } catch (error) {
-      console.error('Error al cargar productos:', error);
-      this.showError('Error al cargar los productos desde Supabase.');
-    }
-  }
+      return extractUniqueStrings(data?.map((item) => item?.brand));
+    },
+    async fetchModels(brand) {
+      const { data, error } = await supabase
+        .from('telemandos')
+        .select('model, description, image_url, video_url')
+        .eq('brand', brand)
+        .order('model', { ascending: true });
 
-  applyFilter() {
-    if (!this.container) {
-      return;
-    }
+      if (error) {
+        throw error;
+      }
 
-    const filteredProducts = this.currentType
-      ? this.allProducts.filter((product) => this.normalizeType(product?.tipo) === this.currentType)
-      : this.allProducts;
+      return groupByModel(data);
+    },
+    buildResults({ brand, model, items }) {
+      return items
+        .map((item) => {
+          const description = item?.description?.trim() || '';
+          const whatsappMessage = encodeURIComponent(
+            `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
+              `Marca: ${brand}\n` +
+              `Modelo: ${model}\n` +
+              `Descripción: ${description || 'No disponible'}\n\n` +
+              `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+          );
+          const whatsappUrl = escapeAttribute(
+            `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${whatsappMessage}&type=phone_number&app_absent=0`
+          );
+          const mediaMarkup = buildMediaMarkup({
+            brand,
+            model,
+            imageUrl: item?.image_url,
+            videoUrl: item?.video_url,
+          });
 
-    this.renderProducts(filteredProducts);
-  }
+          return `
+            <div class="result-item">
+              ${mediaMarkup}
+              <div class="result-info">
+                <h3>Telemando ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                <div class="result-features">
+                  <span class="result-feature"><i class="fas fa-check-circle"></i> Alta compatibilidad</span>
+                  <span class="result-feature"><i class="fas fa-shield-alt"></i> Garantía 1 año</span>
+                  <span class="result-feature"><i class="fas fa-tools"></i> Programación incluida</span>
+                </div>
+              </div>
+              <a href="${whatsappUrl}" target="_blank" rel="noopener" class="result-button">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          `;
+        })
+        .join('');
+    },
+  },
+  {
+    name: 'carcasas',
+    brandSelectId: 'carcasasBrand',
+    modelSelectId: 'carcasasModel',
+    searchButtonId: 'carcasasSearchBtn',
+    resultsContainerId: 'carcasasResults',
+    emptyMessage: 'No se encontraron carcasas para este modelo.',
+    noModelsMessage: 'No hay modelos disponibles para esta marca.',
+    async fetchBrands() {
+      const { data, error } = await supabase
+        .from('carcasas')
+        .select('brand')
+        .order('brand', { ascending: true });
 
-  normalizeType(value) {
-    return typeof value === 'string' ? value.trim().toLowerCase() : '';
-  }
+      if (error) {
+        throw error;
+      }
 
-  showLoading() {
-    if (!this.container) {
-      return;
-    }
+      return extractUniqueStrings(data?.map((item) => item?.brand));
+    },
+    async fetchModels(brand) {
+      const { data, error } = await supabase
+        .from('carcasas')
+        .select('model, description, image_url, video_url')
+        .eq('brand', brand)
+        .order('model', { ascending: true });
 
-    this.container.innerHTML = `
-      <div class="results-message results-message--loading">
-        <i class="fas fa-spinner"></i>
-        <p>Cargando productos...</p>
-      </div>
-    `;
-  }
+      if (error) {
+        throw error;
+      }
 
-  showError(message) {
-    if (!this.container) {
-      return;
-    }
+      return groupByModel(data);
+    },
+    buildResults({ brand, model, items }) {
+      return items
+        .map((item) => {
+          const description = item?.description?.trim() || '';
+          const whatsappMessage = encodeURIComponent(
+            `Hola, me interesa obtener una cotización para la siguiente carcasa:\n\n` +
+              `Marca: ${brand}\n` +
+              `Modelo: ${model}\n` +
+              `Descripción: ${description || 'No disponible'}\n\n` +
+              `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+          );
+          const whatsappUrl = escapeAttribute(
+            `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${whatsappMessage}&type=phone_number&app_absent=0`
+          );
+          const mediaMarkup = buildMediaMarkup({
+            brand,
+            model,
+            imageUrl: item?.image_url,
+            videoUrl: item?.video_url,
+            labelPrefix: 'Carcasa',
+          });
 
-    this.container.innerHTML = `
-      <div class="results-message results-message--error">
-        <i class="fas fa-triangle-exclamation"></i>
-        <p>${this.escapeHtml(message)}</p>
-      </div>
-    `;
-  }
+          return `
+            <div class="result-item">
+              ${mediaMarkup}
+              <div class="result-info">
+                <h3>Carcasa ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                <div class="result-features">
+                  <span class="result-feature"><i class="fas fa-shield-alt"></i> Protección reforzada</span>
+                  <span class="result-feature"><i class="fas fa-tools"></i> Instalación profesional</span>
+                </div>
+              </div>
+              <a href="${whatsappUrl}" target="_blank" rel="noopener" class="result-button">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          `;
+        })
+        .join('');
+    },
+  },
+  {
+    name: 'llaves',
+    brandSelectId: 'llavesBrand',
+    modelSelectId: 'llavesModel',
+    searchButtonId: 'llavesSearchBtn',
+    resultsContainerId: 'llavesResults',
+    emptyMessage: 'No se encontraron llaves para este modelo.',
+    noModelsMessage: 'No hay modelos disponibles para esta marca.',
+    async fetchBrands() {
+      const { data, error } = await supabase
+        .from('llaves')
+        .select('brand')
+        .order('brand', { ascending: true });
 
-  showEmpty() {
-    if (!this.container) {
-      return;
-    }
+      if (error) {
+        throw error;
+      }
 
-    this.container.innerHTML = `
-      <div class="results-message">
-        <i class="fas fa-box-open"></i>
-        <p>No hay productos disponibles en esta categoría por el momento.</p>
-      </div>
-    `;
-  }
+      return extractUniqueStrings(data?.map((item) => item?.brand));
+    },
+    async fetchModels(brand) {
+      const { data, error } = await supabase
+        .from('llaves')
+        .select('model, description, image_url, video_url')
+        .eq('brand', brand)
+        .order('model', { ascending: true });
 
-  renderProducts(products = []) {
-    if (!this.container) {
-      return;
-    }
+      if (error) {
+        throw error;
+      }
 
-    if (!products.length) {
-      this.showEmpty();
-      return;
-    }
+      return groupByModel(data);
+    },
+    buildResults({ brand, model, items }) {
+      return items
+        .map((item) => {
+          const description = item?.description?.trim() || '';
+          const whatsappMessage = encodeURIComponent(
+            `Hola, me interesa obtener una cotización para la siguiente llave:\n\n` +
+              `Marca: ${brand}\n` +
+              `Modelo: ${model}\n` +
+              `Descripción: ${description || 'No disponible'}\n\n` +
+              `Por favor, ¿podrían brindarme información sobre el precio y disponibilidad?`
+          );
+          const whatsappUrl = escapeAttribute(
+            `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${whatsappMessage}&type=phone_number&app_absent=0`
+          );
+          const mediaMarkup = buildMediaMarkup({
+            brand,
+            model,
+            imageUrl: item?.image_url,
+            videoUrl: item?.video_url,
+            labelPrefix: 'Llave',
+          });
 
-    this.container.innerHTML = products
-      .map((product) => this.createProductCard(product))
-      .join('');
+          return `
+            <div class="result-item">
+              ${mediaMarkup}
+              <div class="result-info">
+                <h3>Llave ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                <div class="result-features">
+                  <span class="result-feature"><i class="fas fa-check-circle"></i> Original de fábrica</span>
+                  <span class="result-feature"><i class="fas fa-shield-alt"></i> Garantía 1 año</span>
+                </div>
+              </div>
+              <a href="${whatsappUrl}" target="_blank" rel="noopener" class="result-button">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          `;
+        })
+        .join('');
+    },
+  },
+  {
+    name: 'accesorios',
+    brandSelectId: 'accesoriosBrand',
+    modelSelectId: 'accesoriosModel',
+    searchButtonId: 'accesoriosSearchBtn',
+    resultsContainerId: 'accesoriosResults',
+    emptyMessage: 'No se encontraron accesorios para esta selección.',
+    noModelsMessage: 'No hay modelos disponibles para esta marca.',
+    async fetchBrands() {
+      const categoryId = await ensureAccesoriosCategory();
+      if (!categoryId) {
+        return [];
+      }
 
-    this.attachCardInteractions();
-  }
+      const { data, error } = await supabase
+        .from('products')
+        .select('brand')
+        .eq('category_id', categoryId)
+        .eq('is_active', true)
+        .order('brand', { ascending: true });
 
-  createProductCard(product) {
-    const productName = this.resolveName(product);
-    const title = this.escapeHtml(productName);
-    const description = product?.descripcion ? this.escapeHtml(product.descripcion) : '';
-    const type = this.normalizeType(product?.tipo);
-    const imageMarkup = this.createMediaMarkup(product);
-    const featuresMarkup = this.buildFeaturesList(product);
+      if (error) {
+        throw error;
+      }
 
-    return `
-      <article class="product-card" data-type="${type}">
-        <div class="product-image">
-          ${imageMarkup}
-        </div>
-        <div class="product-info">
-          <h3>${title}</h3>
-          ${description ? `<p class="product-description">${description}</p>` : ''}
-          ${featuresMarkup}
-          <button class="contact-btn" type="button">
-            <i class="fab fa-whatsapp"></i>
-            Consultar por WhatsApp
-          </button>
-        </div>
-      </article>
-    `;
-  }
+      return extractUniqueStrings(data?.map((item) => item?.brand));
+    },
+    async fetchModels(brand) {
+      const categoryId = await ensureAccesoriosCategory();
+      if (!categoryId) {
+        return [];
+      }
 
-  createMediaMarkup(product) {
-    const imageUrl = typeof product?.imagen === 'string' ? product.imagen.trim() : '';
+      const { data, error } = await supabase
+        .from('products')
+        .select('model, title, description, image_url, price, brand')
+        .eq('category_id', categoryId)
+        .eq('is_active', true)
+        .eq('brand', brand)
+        .order('model', { ascending: true });
 
-    if (imageUrl) {
-      return `<img src="${this.escapeAttribute(imageUrl)}" alt="${this.escapeAttribute(this.resolveName(product))}" />`;
-    }
+      if (error) {
+        throw error;
+      }
 
-    return `
-      <div class="product-placeholder">
-        <i class="fas fa-image"></i>
-      </div>
-    `;
-  }
+      const grouped = new Map();
 
-  buildFeaturesList(product) {
-    const features = [];
-
-    if (product?.marca) {
-      features.push({ icon: 'fa-tag', text: `Marca: ${product.marca}` });
-    }
-
-    if (product?.modelo) {
-      features.push({ icon: 'fa-car-side', text: `Modelo: ${product.modelo}` });
-    }
-
-    if (product?.tipo) {
-      features.push({ icon: 'fa-layer-group', text: `Tipo: ${product.tipo}` });
-    }
-
-    if (product?.precio) {
-      features.push({ icon: 'fa-dollar-sign', text: `Precio: ${this.formatPrice(product.precio)}` });
-    }
-
-    if (!features.length) {
-      return '';
-    }
-
-    return `
-      <ul class="product-features">
-        ${features
-          .map(
-            (feature) => `
-              <li>
-                <i class="fas ${feature.icon}"></i>
-                <span>${this.escapeHtml(feature.text)}</span>
-              </li>
-            `,
-          )
-          .join('')}
-      </ul>
-    `;
-  }
-
-  attachCardInteractions() {
-    const buttons = this.container.querySelectorAll('.contact-btn');
-
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const productName = button
-          .closest('.product-card')
-          ?.querySelector('h3')
-          ?.textContent
-          ?.trim()
-          || 'producto Kioskeys';
-        const message = `Hola, me interesa obtener información sobre ${productName}. ¿Podrían brindarme más detalles?`;
-        const url = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodeURIComponent(message)}`;
-        window.open(url, '_blank', 'noopener');
+      data?.forEach((item = {}) => {
+        const rawModel = typeof item.model === 'string' && item.model.trim() ? item.model.trim() : 'General';
+        if (!grouped.has(rawModel)) {
+          grouped.set(rawModel, []);
+        }
+        grouped.get(rawModel).push({
+          title: item.title,
+          description: item.description,
+          image_url: item.image_url,
+          price: item.price,
+          model: rawModel,
+          brand: item.brand,
+        });
       });
+
+      return Array.from(grouped.entries()).map(([value, items]) => ({
+        value,
+        label: value,
+        items,
+      }));
+    },
+    buildResults({ brand, model, items }) {
+      return items
+        .map((item) => {
+          const title = item?.title?.trim() || `Accesorio ${brand}`;
+          const description = item?.description?.trim() || '';
+          const whatsappMessage = encodeURIComponent(
+            `Hola, me interesa obtener una cotización para el siguiente accesorio:\n\n` +
+              `Marca: ${brand || 'Sin marca'}\n` +
+              `Modelo: ${model || 'General'}\n` +
+              `Producto: ${title}\n\n` +
+              `¿Podrían brindarme información sobre el precio y disponibilidad?`
+          );
+          const whatsappUrl = escapeAttribute(
+            `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${whatsappMessage}&type=phone_number&app_absent=0`
+          );
+          const mediaMarkup = buildMediaMarkup({
+            brand,
+            model,
+            imageUrl: item?.image_url,
+            labelPrefix: title,
+          });
+          const priceLabel = formatPrice(item?.price);
+
+          return `
+            <div class="result-item">
+              ${mediaMarkup}
+              <div class="result-info">
+                <h3>${escapeHtml(title)}</h3>
+                <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                ${description ? `<p class="result-description">${escapeHtml(description)}</p>` : ''}
+                <div class="result-features">
+                  ${priceLabel ? `<span class="result-feature"><i class="fas fa-tag"></i> ${escapeHtml(priceLabel)}</span>` : ''}
+                  <span class="result-feature"><i class="fas fa-tools"></i> Accesorios oficiales</span>
+                </div>
+              </div>
+              <a href="${whatsappUrl}" target="_blank" rel="noopener" class="result-button">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          `;
+        })
+        .join('');
+    },
+  },
+];
+
+class SearchSection {
+  constructor(config) {
+    this.config = config;
+    this.brandSelect = null;
+    this.modelSelect = null;
+    this.searchButton = null;
+    this.resultsContainer = null;
+    this.modelData = new Map();
+  }
+
+  async init() {
+    this.brandSelect = document.getElementById(this.config.brandSelectId);
+    this.modelSelect = document.getElementById(this.config.modelSelectId);
+    this.searchButton = document.getElementById(this.config.searchButtonId);
+    this.resultsContainer = document.getElementById(this.config.resultsContainerId);
+
+    if (!this.brandSelect || !this.modelSelect || !this.searchButton || !this.resultsContainer) {
+      return;
+    }
+
+    this.attachListeners();
+    await this.loadBrands();
+  }
+
+  attachListeners() {
+    this.brandSelect.addEventListener('change', () => {
+      void this.handleBrandChange();
+    });
+
+    this.searchButton.addEventListener('click', () => {
+      this.handleSearch();
     });
   }
 
-  resolveName(product) {
-    if (product?.nombre) {
-      return product.nombre;
-    }
+  async loadBrands() {
+    try {
+      const brands = await this.config.fetchBrands();
 
-    const brand = product?.marca ? String(product.marca) : '';
-    const model = product?.modelo ? String(product.modelo) : '';
-    const fallback = `${brand} ${model}`.trim();
-    return fallback || 'Producto Kioskeys';
+      if (!Array.isArray(brands) || brands.length === 0) {
+        this.showMessage('No hay marcas disponibles por el momento.');
+        this.brandSelect.disabled = true;
+        this.searchButton.disabled = true;
+        return;
+      }
+
+      const optionsMarkup = brands
+        .map((brand) => `<option value="${escapeAttribute(brand)}">${escapeHtml(brand)}</option>`)
+        .join('');
+
+      this.brandSelect.insertAdjacentHTML('beforeend', optionsMarkup);
+    } catch (error) {
+      console.error(`Error al cargar marcas para ${this.config.name}:`, error);
+      this.showMessage('Error al cargar las marcas. Intenta nuevamente más tarde.');
+      this.brandSelect.disabled = true;
+      this.searchButton.disabled = true;
+    }
   }
 
-  formatPrice(value) {
-    const numeric = Number(value);
+  async handleBrandChange() {
+    const brand = (this.brandSelect.value || '').trim();
 
-    if (Number.isNaN(numeric) || numeric <= 0) {
-      return value;
+    this.modelSelect.innerHTML = '<option value="">Seleccionar modelo</option>';
+    this.modelSelect.disabled = true;
+    this.modelData.clear();
+    this.resetResults();
+
+    if (!brand) {
+      return;
+    }
+
+    this.showMessage('Cargando modelos...');
+
+    try {
+      const modelOptions = await this.config.fetchModels(brand);
+
+      if (!Array.isArray(modelOptions) || modelOptions.length === 0) {
+        this.showMessage(this.config.noModelsMessage || 'No hay modelos disponibles.');
+        return;
+      }
+
+      const optionsMarkup = modelOptions
+        .map((option) => `<option value="${escapeAttribute(option.value)}">${escapeHtml(option.label)}</option>`)
+        .join('');
+
+      this.modelSelect.insertAdjacentHTML('beforeend', optionsMarkup);
+      this.modelSelect.disabled = false;
+      this.modelData = new Map(modelOptions.map((option) => [option.value, option.items || []]));
+      this.showMessage('Seleccioná un modelo y presioná buscar para ver los resultados.');
+    } catch (error) {
+      console.error(`Error al cargar modelos para ${this.config.name}:`, error);
+      this.showMessage('Error al cargar los modelos. Intenta nuevamente.');
+    }
+  }
+
+  handleSearch() {
+    const brand = (this.brandSelect.value || '').trim();
+    const model = (this.modelSelect.value || '').trim();
+
+    if (!brand || !model) {
+      alert('Seleccioná una marca y modelo');
+      return;
+    }
+
+    const items = this.modelData.get(model) || [];
+
+    if (!items.length) {
+      this.showMessage(this.config.emptyMessage || 'No hay resultados disponibles.');
+      return;
     }
 
     try {
-      return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        maximumFractionDigits: 0,
-      }).format(numeric);
+      const resultsMarkup = this.config.buildResults({ brand, model, items });
+      this.resultsContainer.innerHTML = resultsMarkup;
+      this.resultsContainer.classList.add('active');
+      activateMediaPreview(this.resultsContainer);
     } catch (error) {
-      return `$${numeric.toLocaleString('es-AR')}`;
+      console.error(`Error al renderizar resultados para ${this.config.name}:`, error);
+      this.showMessage('Ocurrió un error al mostrar los resultados.');
     }
   }
 
-  escapeHtml(value) {
-    return String(value)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+  resetResults() {
+    this.resultsContainer.innerHTML = '';
+    this.resultsContainer.classList.remove('active');
   }
 
-  escapeAttribute(value) {
-    return this.escapeHtml(value || '');
+  showMessage(message) {
+    const safeMessage = escapeHtml(message);
+    this.resultsContainer.innerHTML = `<p class="search-message">${safeMessage}</p>`;
+    this.resultsContainer.classList.add('active');
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  new ProductsShowcase();
+function groupByModel(data = []) {
+  const grouped = new Map();
+
+  data.forEach((item = {}) => {
+    const model = typeof item.model === 'string' && item.model.trim() ? item.model.trim() : '';
+    if (!model) {
+      return;
+    }
+
+    if (!grouped.has(model)) {
+      grouped.set(model, []);
+    }
+
+    grouped.get(model).push({
+      description: item.description,
+      image_url: item.image_url,
+      video_url: item.video_url,
+    });
+  });
+
+  return Array.from(grouped.entries()).map(([value, items]) => ({
+    value,
+    label: value,
+    items,
+  }));
+}
+
+function buildMediaMarkup({ brand, model, imageUrl, videoUrl }) {
+  const cleanImage = typeof imageUrl === 'string' ? imageUrl.trim() : '';
+  const cleanVideo = typeof videoUrl === 'string' ? videoUrl.trim() : '';
+
+  if (cleanVideo) {
+    return `
+      <video class="result-logo result-video" autoplay loop muted playsinline>
+        <source src="${escapeAttribute(cleanVideo)}" type="video/mp4">
+      </video>
+    `;
+  }
+
+  if (cleanImage) {
+    const safeSrc = escapeAttribute(cleanImage);
+    const altText = `Imagen del producto ${brand || ''} ${model || ''}`.trim();
+    return `<img src="${safeSrc}" alt="${escapeAttribute(altText)}" class="result-logo" data-media-src="${safeSrc}">`;
+  }
+
+  return `
+    <div class="result-logo result-placeholder">
+      <i class="fas fa-image"></i>
+    </div>
+  `;
+}
+
+let accesoriosCategoryId = null;
+
+async function ensureAccesoriosCategory() {
+  if (accesoriosCategoryId !== null) {
+    return accesoriosCategoryId;
+  }
+
+  const { data, error } = await supabase
+    .from('product_categories')
+    .select('id')
+    .eq('slug', 'accesorios')
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error al obtener la categoría de accesorios:', error);
+    accesoriosCategoryId = null;
+    return null;
+  }
+
+  accesoriosCategoryId = data?.id ?? null;
+  return accesoriosCategoryId;
+}
+
+function extractUniqueStrings(values = []) {
+  return [...new Set(values.filter((value) => typeof value === 'string' && value.trim()))]
+    .map((value) => value.trim())
+    .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+}
+
+function escapeHtml(value = '') {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function escapeAttribute(value = '') {
+  return escapeHtml(value).replace(/`/g, '&#96;');
+}
+
+function formatPrice(value) {
+  const number = typeof value === 'number' ? value : parseFloat(value);
+  if (!Number.isFinite(number)) {
+    return '';
+  }
+
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    maximumFractionDigits: 0,
+  }).format(number);
+}
+
+function activateMediaPreview(container) {
+  const modal = document.getElementById('productMediaModal');
+  const modalImage = document.getElementById('productMediaModalImage');
+
+  if (!modal || !modalImage) {
+    return;
+  }
+
+  const images = container.querySelectorAll('.result-logo[data-media-src]');
+
+  images.forEach((image) => {
+    image.addEventListener('click', () => {
+      const source = image.getAttribute('data-media-src');
+      if (!source) {
+        return;
+      }
+
+      modalImage.src = source;
+      modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+  });
+}
+
+function setupModalDismiss() {
+  const modal = document.getElementById('productMediaModal');
+  const modalImage = document.getElementById('productMediaModalImage');
+
+  if (!modal || !modalImage) {
+    return;
+  }
+
+  modal.addEventListener('click', () => {
+    modalImage.src = '';
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupModalDismiss();
+  sections.forEach((config) => {
+    const section = new SearchSection(config);
+    void section.init();
+  });
 });
