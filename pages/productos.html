@@ -26,137 +26,101 @@
       <div class="content-container">
         <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
 
-        <div class="product-selector-grid">
-          <article class="product-search-card" id="telemandos-section">
-            <header class="product-search-card__header">
+        <div class="product-category-grid">
+          <article class="product-category-card" id="telemandos-section">
+            <header class="product-category-card__header">
               <div class="selector-icon-box">
                 <i class="fas fa-car"></i>
               </div>
-              <div class="product-search-card__title">
+              <div class="product-category-card__title">
                 <h3>Telemandos</h3>
                 <p>Controles remotos compatibles</p>
               </div>
             </header>
-            <div class="product-search-card__body">
-              <div class="search-fields">
-                <div class="search-field">
-                  <label for="telemandosBrand">Marca</label>
-                  <select id="telemandosBrand">
-                    <option value="">Seleccionar marca</option>
-                  </select>
-                </div>
-                <div class="search-field">
-                  <label for="telemandosModel">Modelo</label>
-                  <select id="telemandosModel" disabled>
-                    <option value="">Seleccionar modelo</option>
-                  </select>
-                </div>
-              </div>
-              <button id="telemandosSearchBtn" class="search-button">
-                <i class="fas fa-search"></i>
-                Buscar telemandos compatibles
-              </button>
-              <div id="telemandosResults" class="search-results"></div>
-            </div>
+            <p class="product-category-card__description">
+              Encontrá el telemando ideal buscando por marca y modelo con vista previa de cada opción disponible.
+            </p>
+            <ul class="product-category-card__features">
+              <li><i class="fas fa-table-list"></i>Catálogo completo conectado a Supabase</li>
+              <li><i class="fas fa-image"></i>Fotos y videos de cada control</li>
+              <li><i class="fas fa-comments"></i>Consulta inmediata por WhatsApp</li>
+            </ul>
+            <a href="/pages/telemandos.html" class="product-category-card__cta">
+              Ver telemandos
+              <i class="fas fa-arrow-right"></i>
+            </a>
           </article>
 
-          <article class="product-search-card" id="carcasas-section">
-            <header class="product-search-card__header">
+          <article class="product-category-card" id="carcasas-section">
+            <header class="product-category-card__header">
               <div class="selector-icon-box">
                 <i class="fas fa-shield-alt"></i>
               </div>
-              <div class="product-search-card__title">
+              <div class="product-category-card__title">
                 <h3>Carcasas</h3>
                 <p>Repuestos y cubiertas originales</p>
               </div>
             </header>
-            <div class="product-search-card__body">
-              <div class="search-fields">
-                <div class="search-field">
-                  <label for="carcasasBrand">Marca</label>
-                  <select id="carcasasBrand">
-                    <option value="">Seleccionar marca</option>
-                  </select>
-                </div>
-                <div class="search-field">
-                  <label for="carcasasModel">Modelo</label>
-                  <select id="carcasasModel" disabled>
-                    <option value="">Seleccionar modelo</option>
-                  </select>
-                </div>
-              </div>
-              <button id="carcasasSearchBtn" class="search-button">
-                <i class="fas fa-search"></i>
-                Buscar carcasas compatibles
-              </button>
-              <div id="carcasasResults" class="search-results"></div>
-            </div>
+            <p class="product-category-card__description">
+              Accedé a nuestras carcasas buscando por marca y modelo, con detalles y material de referencia.
+            </p>
+            <ul class="product-category-card__features">
+              <li><i class="fas fa-database"></i>Datos sincronizados con Supabase</li>
+              <li><i class="fas fa-camera"></i>Imágenes de alta calidad</li>
+              <li><i class="fas fa-wrench"></i>Compatibilidades y características clave</li>
+            </ul>
+            <a href="/pages/carcasas.html" class="product-category-card__cta">
+              Ver carcasas
+              <i class="fas fa-arrow-right"></i>
+            </a>
           </article>
 
-          <article class="product-search-card" id="llaves-section">
-            <header class="product-search-card__header">
+          <article class="product-category-card" id="llaves-section">
+            <header class="product-category-card__header">
               <div class="selector-icon-box">
                 <i class="fas fa-key"></i>
               </div>
-              <div class="product-search-card__title">
+              <div class="product-category-card__title">
                 <h3>Llaves</h3>
                 <p>Copias codificadas y originales</p>
               </div>
             </header>
-            <div class="product-search-card__body">
-              <div class="search-fields">
-                <div class="search-field">
-                  <label for="llavesBrand">Marca</label>
-                  <select id="llavesBrand">
-                    <option value="">Seleccionar marca</option>
-                  </select>
-                </div>
-                <div class="search-field">
-                  <label for="llavesModel">Modelo</label>
-                  <select id="llavesModel" disabled>
-                    <option value="">Seleccionar modelo</option>
-                  </select>
-                </div>
-              </div>
-              <button id="llavesSearchBtn" class="search-button">
-                <i class="fas fa-search"></i>
-                Buscar llaves compatibles
-              </button>
-              <div id="llavesResults" class="search-results"></div>
-            </div>
+            <p class="product-category-card__description">
+              Explorá las llaves disponibles filtrando por marca y modelo, con toda la información necesaria antes de comprar.
+            </p>
+            <ul class="product-category-card__features">
+              <li><i class="fas fa-code"></i>Identificación por marca y modelo</li>
+              <li><i class="fas fa-layer-group"></i>Variantes y terminaciones disponibles</li>
+              <li><i class="fas fa-headset"></i>Asesoramiento directo vía WhatsApp</li>
+            </ul>
+            <a href="/pages/llaves.html" class="product-category-card__cta">
+              Ver llaves
+              <i class="fas fa-arrow-right"></i>
+            </a>
           </article>
 
-          <article class="product-search-card" id="accesorios-section">
-            <header class="product-search-card__header">
+          <article class="product-category-card" id="accesorios-section">
+            <header class="product-category-card__header">
               <div class="selector-icon-box">
                 <i class="fas fa-tools"></i>
               </div>
-              <div class="product-search-card__title">
+              <div class="product-category-card__title">
                 <h3>Accesorios</h3>
                 <p>Baterías, llaveros y más</p>
               </div>
             </header>
-            <div class="product-search-card__body">
-              <div class="search-fields">
-                <div class="search-field">
-                  <label for="accesoriosBrand">Marca</label>
-                  <select id="accesoriosBrand">
-                    <option value="">Seleccionar marca</option>
-                  </select>
-                </div>
-                <div class="search-field">
-                  <label for="accesoriosModel">Modelo</label>
-                  <select id="accesoriosModel" disabled>
-                    <option value="">Seleccionar modelo</option>
-                  </select>
-                </div>
-              </div>
-              <button id="accesoriosSearchBtn" class="search-button">
-                <i class="fas fa-search"></i>
-                Buscar accesorios disponibles
-              </button>
-              <div id="accesoriosResults" class="search-results"></div>
-            </div>
+            <p class="product-category-card__description">
+              Descubrí accesorios compatibles buscando por marca y modelo con galerías e información técnica.
+            </p>
+            <ul class="product-category-card__features">
+              <li><i class="fas fa-plug"></i>Información completa desde Supabase</li>
+              <li><i class="fas fa-photo-film"></i>Galerías para cada producto</li>
+              <li><i class="fas fa-store"></i>Disponibilidad y contacto inmediato</li>
+            </ul>
+            <a href="/pages/accesorios.html" class="product-category-card__cta">
+              Ver accesorios
+              <i class="fas fa-arrow-right"></i>
+            </a>
           </article>
         </div>
       </div>
@@ -220,15 +184,10 @@
     </div>
   </footer>
 
-  <div id="productMediaModal" class="modal" aria-hidden="true" role="dialog">
-    <img id="productMediaModalImage" class="modal-content" alt="Vista ampliada del producto" />
-  </div>
-
   <script type="module">
     import { initNavigation } from '/src/components/navigation.js';
 
     initNavigation('productos');
   </script>
-  <script type="module" src="/src/products.js"></script>
 </body>
 </html>
