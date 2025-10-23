@@ -24,161 +24,137 @@
 
     <section class="main-content">
       <div class="content-container">
-        <div class="product-selector-section">
-          <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
+        <h2 class="selector-title">Seleccioná el producto que necesitás</h2>
 
-          <div class="product-selector-grid">
-            <a href="./llaves.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-key"></i>
-              </div>
-              <h3>Llaves</h3>
-              <p>Copias y llaves codificadas</p>
-            </a>
-
-            <a href="./carcasas.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-shield-alt"></i>
-              </div>
-              <h3>Carcasas</h3>
-              <p>Repuestos originales</p>
-            </a>
-
-            <a href="./telemandos.html" class="selector-card">
+        <div class="product-selector-grid">
+          <article class="product-search-card" id="telemandos-section">
+            <header class="product-search-card__header">
               <div class="selector-icon-box">
                 <i class="fas fa-car"></i>
               </div>
-              <h3>Telemandos</h3>
-              <p>Controles remotos</p>
-            </a>
-
-            <a href="./accesorios.html" class="selector-card">
-              <div class="selector-icon-box">
-                <i class="fas fa-tools"></i>
+              <div class="product-search-card__title">
+                <h3>Telemandos</h3>
+                <p>Controles remotos compatibles</p>
               </div>
-              <h3>Accesorios</h3>
-              <p>Baterías y más</p>
-            </a>
-          </div>
-        </div>
-
-        <div class="product-search-sections">
-          <article class="product-search-section" id="telemandos-section">
-            <div class="search-container">
-              <div class="search-box">
-                <div class="search-title">
-                  <h2>Buscador de Telemandos</h2>
-                  <p>Seleccioná tu vehículo para encontrar telemandos compatibles.</p>
+            </header>
+            <div class="product-search-card__body">
+              <div class="search-fields">
+                <div class="search-field">
+                  <label for="telemandosBrand">Marca</label>
+                  <select id="telemandosBrand">
+                    <option value="">Seleccionar marca</option>
+                  </select>
                 </div>
-                <div class="search-fields">
-                  <div class="search-field">
-                    <label for="telemandosBrand">Marca</label>
-                    <select id="telemandosBrand">
-                      <option value="">Seleccionar marca</option>
-                    </select>
-                  </div>
-                  <div class="search-field">
-                    <label for="telemandosModel">Modelo</label>
-                    <select id="telemandosModel" disabled>
-                      <option value="">Seleccionar modelo</option>
-                    </select>
-                  </div>
+                <div class="search-field">
+                  <label for="telemandosModel">Modelo</label>
+                  <select id="telemandosModel" disabled>
+                    <option value="">Seleccionar modelo</option>
+                  </select>
                 </div>
-                <button id="telemandosSearchBtn" class="search-button">
-                  <i class="fas fa-search"></i>
-                  Buscar Telemandos Compatibles
-                </button>
               </div>
+              <button id="telemandosSearchBtn" class="search-button">
+                <i class="fas fa-search"></i>
+                Buscar telemandos compatibles
+              </button>
               <div id="telemandosResults" class="search-results"></div>
             </div>
           </article>
 
-          <article class="product-search-section" id="carcasas-section">
-            <div class="search-container">
-              <div class="search-box">
-                <div class="search-title">
-                  <h2>Buscador de Carcasas</h2>
-                  <p>Seleccioná tu vehículo para encontrar carcasas compatibles.</p>
-                </div>
-                <div class="search-fields">
-                  <div class="search-field">
-                    <label for="carcasasBrand">Marca</label>
-                    <select id="carcasasBrand">
-                      <option value="">Seleccionar marca</option>
-                    </select>
-                  </div>
-                  <div class="search-field">
-                    <label for="carcasasModel">Modelo</label>
-                    <select id="carcasasModel" disabled>
-                      <option value="">Seleccionar modelo</option>
-                    </select>
-                  </div>
-                </div>
-                <button id="carcasasSearchBtn" class="search-button">
-                  <i class="fas fa-search"></i>
-                  Buscar Carcasas Compatibles
-                </button>
+          <article class="product-search-card" id="carcasas-section">
+            <header class="product-search-card__header">
+              <div class="selector-icon-box">
+                <i class="fas fa-shield-alt"></i>
               </div>
+              <div class="product-search-card__title">
+                <h3>Carcasas</h3>
+                <p>Repuestos y cubiertas originales</p>
+              </div>
+            </header>
+            <div class="product-search-card__body">
+              <div class="search-fields">
+                <div class="search-field">
+                  <label for="carcasasBrand">Marca</label>
+                  <select id="carcasasBrand">
+                    <option value="">Seleccionar marca</option>
+                  </select>
+                </div>
+                <div class="search-field">
+                  <label for="carcasasModel">Modelo</label>
+                  <select id="carcasasModel" disabled>
+                    <option value="">Seleccionar modelo</option>
+                  </select>
+                </div>
+              </div>
+              <button id="carcasasSearchBtn" class="search-button">
+                <i class="fas fa-search"></i>
+                Buscar carcasas compatibles
+              </button>
               <div id="carcasasResults" class="search-results"></div>
             </div>
           </article>
 
-          <article class="product-search-section" id="llaves-section">
-            <div class="search-container">
-              <div class="search-box">
-                <div class="search-title">
-                  <h2>Buscador de Llaves</h2>
-                  <p>Seleccioná tu vehículo para encontrar llaves compatibles.</p>
-                </div>
-                <div class="search-fields">
-                  <div class="search-field">
-                    <label for="llavesBrand">Marca</label>
-                    <select id="llavesBrand">
-                      <option value="">Seleccionar marca</option>
-                    </select>
-                  </div>
-                  <div class="search-field">
-                    <label for="llavesModel">Modelo</label>
-                    <select id="llavesModel" disabled>
-                      <option value="">Seleccionar modelo</option>
-                    </select>
-                  </div>
-                </div>
-                <button id="llavesSearchBtn" class="search-button">
-                  <i class="fas fa-search"></i>
-                  Buscar Llaves Compatibles
-                </button>
+          <article class="product-search-card" id="llaves-section">
+            <header class="product-search-card__header">
+              <div class="selector-icon-box">
+                <i class="fas fa-key"></i>
               </div>
+              <div class="product-search-card__title">
+                <h3>Llaves</h3>
+                <p>Copias codificadas y originales</p>
+              </div>
+            </header>
+            <div class="product-search-card__body">
+              <div class="search-fields">
+                <div class="search-field">
+                  <label for="llavesBrand">Marca</label>
+                  <select id="llavesBrand">
+                    <option value="">Seleccionar marca</option>
+                  </select>
+                </div>
+                <div class="search-field">
+                  <label for="llavesModel">Modelo</label>
+                  <select id="llavesModel" disabled>
+                    <option value="">Seleccionar modelo</option>
+                  </select>
+                </div>
+              </div>
+              <button id="llavesSearchBtn" class="search-button">
+                <i class="fas fa-search"></i>
+                Buscar llaves compatibles
+              </button>
               <div id="llavesResults" class="search-results"></div>
             </div>
           </article>
 
-          <article class="product-search-section" id="accesorios-section">
-            <div class="search-container">
-              <div class="search-box">
-                <div class="search-title">
-                  <h2>Buscador de Accesorios</h2>
-                  <p>Filtrá por marca y modelo para encontrar los accesorios disponibles.</p>
-                </div>
-                <div class="search-fields">
-                  <div class="search-field">
-                    <label for="accesoriosBrand">Marca</label>
-                    <select id="accesoriosBrand">
-                      <option value="">Seleccionar marca</option>
-                    </select>
-                  </div>
-                  <div class="search-field">
-                    <label for="accesoriosModel">Modelo</label>
-                    <select id="accesoriosModel" disabled>
-                      <option value="">Seleccionar modelo</option>
-                    </select>
-                  </div>
-                </div>
-                <button id="accesoriosSearchBtn" class="search-button">
-                  <i class="fas fa-search"></i>
-                  Buscar Accesorios Disponibles
-                </button>
+          <article class="product-search-card" id="accesorios-section">
+            <header class="product-search-card__header">
+              <div class="selector-icon-box">
+                <i class="fas fa-tools"></i>
               </div>
+              <div class="product-search-card__title">
+                <h3>Accesorios</h3>
+                <p>Baterías, llaveros y más</p>
+              </div>
+            </header>
+            <div class="product-search-card__body">
+              <div class="search-fields">
+                <div class="search-field">
+                  <label for="accesoriosBrand">Marca</label>
+                  <select id="accesoriosBrand">
+                    <option value="">Seleccionar marca</option>
+                  </select>
+                </div>
+                <div class="search-field">
+                  <label for="accesoriosModel">Modelo</label>
+                  <select id="accesoriosModel" disabled>
+                    <option value="">Seleccionar modelo</option>
+                  </select>
+                </div>
+              </div>
+              <button id="accesoriosSearchBtn" class="search-button">
+                <i class="fas fa-search"></i>
+                Buscar accesorios disponibles
+              </button>
               <div id="accesoriosResults" class="search-results"></div>
             </div>
           </article>

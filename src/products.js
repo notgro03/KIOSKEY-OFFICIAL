@@ -40,6 +40,7 @@ const sections = [
       return items
         .map((item) => {
           const description = item?.description?.trim() || '';
+          const title = `Telemando ${brand} ${model}`.trim();
           const whatsappMessage = encodeURIComponent(
             `Hola, me interesa obtener una cotización para el siguiente telemando:\n\n` +
               `Marca: ${brand}\n` +
@@ -61,8 +62,10 @@ const sections = [
             <div class="result-item">
               ${mediaMarkup}
               <div class="result-info">
-                <h3>Telemando ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <h3>${escapeHtml(title)}</h3>
+                <p><strong>Marca:</strong> ${escapeHtml(brand)}</p>
                 <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                ${description ? `<p class="result-description">${escapeHtml(description)}</p>` : ''}
                 <div class="result-features">
                   <span class="result-feature"><i class="fas fa-check-circle"></i> Alta compatibilidad</span>
                   <span class="result-feature"><i class="fas fa-shield-alt"></i> Garantía 1 año</span>
@@ -115,6 +118,7 @@ const sections = [
       return items
         .map((item) => {
           const description = item?.description?.trim() || '';
+          const title = `Carcasa ${brand} ${model}`.trim();
           const whatsappMessage = encodeURIComponent(
             `Hola, me interesa obtener una cotización para la siguiente carcasa:\n\n` +
               `Marca: ${brand}\n` +
@@ -137,8 +141,10 @@ const sections = [
             <div class="result-item">
               ${mediaMarkup}
               <div class="result-info">
-                <h3>Carcasa ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <h3>${escapeHtml(title)}</h3>
+                <p><strong>Marca:</strong> ${escapeHtml(brand)}</p>
                 <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                ${description ? `<p class="result-description">${escapeHtml(description)}</p>` : ''}
                 <div class="result-features">
                   <span class="result-feature"><i class="fas fa-shield-alt"></i> Protección reforzada</span>
                   <span class="result-feature"><i class="fas fa-tools"></i> Instalación profesional</span>
@@ -190,6 +196,7 @@ const sections = [
       return items
         .map((item) => {
           const description = item?.description?.trim() || '';
+          const title = `Llave ${brand} ${model}`.trim();
           const whatsappMessage = encodeURIComponent(
             `Hola, me interesa obtener una cotización para la siguiente llave:\n\n` +
               `Marca: ${brand}\n` +
@@ -212,8 +219,10 @@ const sections = [
             <div class="result-item">
               ${mediaMarkup}
               <div class="result-info">
-                <h3>Llave ${escapeHtml(brand)} ${description ? escapeHtml(description) : ''}</h3>
+                <h3>${escapeHtml(title)}</h3>
+                <p><strong>Marca:</strong> ${escapeHtml(brand)}</p>
                 <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
+                ${description ? `<p class="result-description">${escapeHtml(description)}</p>` : ''}
                 <div class="result-features">
                   <span class="result-feature"><i class="fas fa-check-circle"></i> Original de fábrica</span>
                   <span class="result-feature"><i class="fas fa-shield-alt"></i> Garantía 1 año</span>
@@ -299,11 +308,12 @@ const sections = [
     buildResults({ brand, model, items }) {
       return items
         .map((item) => {
-          const title = item?.title?.trim() || `Accesorio ${brand}`;
+          const safeBrand = brand?.trim() ? brand.trim() : 'General';
+          const title = item?.title?.trim() || `Accesorio ${safeBrand}`;
           const description = item?.description?.trim() || '';
           const whatsappMessage = encodeURIComponent(
             `Hola, me interesa obtener una cotización para el siguiente accesorio:\n\n` +
-              `Marca: ${brand || 'Sin marca'}\n` +
+              `Marca: ${safeBrand}\n` +
               `Modelo: ${model || 'General'}\n` +
               `Producto: ${title}\n\n` +
               `¿Podrían brindarme información sobre el precio y disponibilidad?`
@@ -324,6 +334,7 @@ const sections = [
               ${mediaMarkup}
               <div class="result-info">
                 <h3>${escapeHtml(title)}</h3>
+                <p><strong>Marca:</strong> ${escapeHtml(safeBrand)}</p>
                 <p><strong>Modelo:</strong> ${escapeHtml(model)}</p>
                 ${description ? `<p class="result-description">${escapeHtml(description)}</p>` : ''}
                 <div class="result-features">
