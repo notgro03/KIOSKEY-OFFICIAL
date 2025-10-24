@@ -48,24 +48,58 @@ export async function loadLlaves() {
   container.innerHTML = renderLoading('Cargando llaves...');
 
   try {
-    const { data, error } = await supabase
-      .from('llaves')
-      .select('id, brand, model, description, image_url, video_url')
-      .order('brand', { ascending: true })
-      .order('model', { ascending: true });
+    const columnCandidates = [
+      'id, brand, model, description, image_url, video_url',
+      'id, brand, model, description, image_url',
+      'id, brand, model, description',
+      '*'
+    ];
 
-    if (error) {
-      console.error('Error loading llaves:', error);
+    let rows = [];
+    let fetchError = null;
+
+    for (const columns of columnCandidates) {
+      const { data, error } = await supabase
+        .from('llaves')
+        .select(columns)
+        .order('brand', { ascending: true })
+        .order('model', { ascending: true });
+
+      if (!error) {
+        if (columns !== columnCandidates[0]) {
+          console.warn(`[loadLlaves] Using fallback columns "${columns}" to render llaves.`);
+        }
+
+        rows = Array.isArray(data) ? data : [];
+        fetchError = null;
+        break;
+      }
+
+      fetchError = error;
+      const errorMessage = error?.message || '';
+      const missingColumn = /column .* does not exist/i.test(errorMessage);
+
+      if (!missingColumn) {
+        console.error('Error loading llaves:', error);
+        container.innerHTML = renderEmpty('Error al cargar las llaves');
+        return;
+      }
+
+      console.warn(`[loadLlaves] ${errorMessage}. Retrying with fewer columns...`);
+    }
+
+    if (fetchError) {
+      console.error('Error loading llaves:', fetchError);
       container.innerHTML = renderEmpty('Error al cargar las llaves');
       return;
     }
 
-    if (!data || data.length === 0) {
+    if (!rows || rows.length === 0) {
       container.innerHTML = renderEmpty('No hay llaves disponibles');
       return;
     }
 
-    container.innerHTML = data.map(item => {
+    container.innerHTML = rows.map(item => {
       const whatsappUrl = createWhatsappUrl(item);
       return `
         <article class="catalog-card">

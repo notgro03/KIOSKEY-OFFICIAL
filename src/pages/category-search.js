@@ -104,17 +104,49 @@ export function setupCategorySearch(options) {
 
   async function loadModelsForBrand(brand) {
     try {
-      const { data, error } = await supabase
-        .from(table)
-        .select('brand, model, description, image_url, video_url')
-        .eq('brand', brand);
+      const columnCandidates = [
+        'brand, model, description, image_url, video_url',
+        'brand, model, description, image_url',
+        'brand, model, description',
+        '*'
+      ];
 
-      if (error) {
-        console.error(`[setupCategorySearch] Error loading models for ${table}:`, error.message || error);
+      let rows = [];
+      let fetchError = null;
+
+      for (const columns of columnCandidates) {
+        const { data, error } = await supabase
+          .from(table)
+          .select(columns)
+          .eq('brand', brand);
+
+        if (!error) {
+          if (columns !== columnCandidates[0]) {
+            console.warn(`[setupCategorySearch] Using fallback columns "${columns}" for ${table} brand ${brand}.`);
+          }
+
+          rows = Array.isArray(data) ? data : [];
+          fetchError = null;
+          break;
+        }
+
+        fetchError = error;
+        const errorMessage = error?.message || '';
+        const missingColumn = /column .* does not exist/i.test(errorMessage);
+
+        if (!missingColumn) {
+          console.error(`[setupCategorySearch] Error loading models for ${table}:`, error.message || error);
+          return;
+        }
+
+        console.warn(`[setupCategorySearch] ${errorMessage}. Retrying with fewer columns...`);
+      }
+
+      if (fetchError) {
+        console.error(`[setupCategorySearch] Unable to load models for ${table}:`, fetchError.message || fetchError);
         return;
       }
 
-      const rows = Array.isArray(data) ? data : [];
       const hasModelColumn = rows.some(item => Object.prototype.hasOwnProperty.call(item, 'model'));
 
       if (!hasModelColumn) {
