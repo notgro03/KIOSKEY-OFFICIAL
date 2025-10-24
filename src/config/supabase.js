@@ -1,12 +1,21 @@
 import { createClient } from '@supabase/supabase-js';
 
-function normalizeUrl(value, fallback) {
-  const raw = (value || fallback || '').trim();
+const PLACEHOLDER_VALUES = new Set(['', 'undefined', 'null', 'false']);
 
-  if (!raw) {
+function sanitizeRaw(value) {
+  if (typeof value !== 'string') {
     return '';
   }
 
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return '';
+  }
+
+  return PLACEHOLDER_VALUES.has(trimmed.toLowerCase()) ? '' : trimmed;
+}
+
+function buildNormalizedUrl(raw) {
   const withProtocol = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
 
   const cleaned = withProtocol
@@ -14,13 +23,33 @@ function normalizeUrl(value, fallback) {
     .replace(/\/rest\/v1\/?$/i, '')
     .replace(/\/+$/g, '');
 
-  try {
-    const url = new URL(cleaned);
-    return url.origin;
-  } catch (error) {
-    console.warn('[supabase] Invalid URL provided, falling back to default:', cleaned);
-    return fallback ? normalizeUrl(fallback, '') : '';
+  const url = new URL(cleaned);
+  const hostname = url.hostname.toLowerCase();
+  const isLocalhost = hostname === 'localhost' || hostname.endsWith('.localhost');
+  const hasDomain = hostname.includes('.');
+
+  if (!isLocalhost && !hasDomain) {
+    throw new Error(`placeholder host "${hostname}"`);
   }
+
+  const pathname = url.pathname.replace(/\/$/, '');
+  const basePath = pathname && pathname !== '/' ? pathname : '';
+
+  return `${url.origin}${basePath}`;
+}
+
+function normalizeUrl(value, fallback) {
+  const candidates = [sanitizeRaw(value), sanitizeRaw(fallback)].filter(Boolean);
+
+  for (const candidate of candidates) {
+    try {
+      return buildNormalizedUrl(candidate);
+    } catch (error) {
+      console.warn('[supabase] Invalid URL provided, falling back to next candidate:', candidate, error.message);
+    }
+  }
+
+  return '';
 }
 
 function normalizeKey(value, fallback) {
