@@ -103,48 +103,66 @@ export function setupCategorySearch(options) {
   }
 
   async function loadModelsForBrand(brand) {
-    const { data, error } = await supabase
-      .from(table)
-      .select('brand, model, description, image_url, video_url')
-      .eq('brand', brand)
-      .order('model', { ascending: true });
+    try {
+      const { data, error } = await supabase
+        .from(table)
+        .select('brand, model, description, image_url, video_url')
+        .eq('brand', brand);
 
-    if (error) {
-      console.error(`[setupCategorySearch] Error loading models for ${table}:`, error);
-      return;
-    }
+      if (error) {
+        console.error(`[setupCategorySearch] Error loading models for ${table}:`, error.message || error);
+        return;
+      }
 
-    cache.clear();
-    modelSelect.innerHTML = '<option value="">Seleccioná el modelo</option>';
+      const rows = Array.isArray(data) ? data : [];
+      const hasModelColumn = rows.some(item => Object.prototype.hasOwnProperty.call(item, 'model'));
 
-    const models = (data || []).reduce((acc, item) => {
-      if (!item.model) {
+      if (!hasModelColumn) {
+        console.error(`[setupCategorySearch] Missing "model" column in ${table} table response.`);
+      }
+
+      const orderedRows = hasModelColumn
+        ? [...rows].sort((a, b) => {
+          const modelA = (a.model ?? '').toString();
+          const modelB = (b.model ?? '').toString();
+          return modelA.localeCompare(modelB, 'es', { sensitivity: 'base' });
+        })
+        : rows;
+
+      cache.clear();
+      modelSelect.innerHTML = '<option value="">Seleccioná el modelo</option>';
+
+      const models = orderedRows.reduce((acc, item) => {
+        if (!item.model) {
+          return acc;
+        }
+
+        if (!acc[item.model]) {
+          acc[item.model] = [];
+        }
+
+        acc[item.model].push(item);
         return acc;
+      }, {});
+
+      const modelNames = Object.keys(models);
+
+      modelNames.forEach(model => {
+        cache.set(model, models[model]);
+        const option = document.createElement('option');
+        option.value = model;
+        option.textContent = model;
+        modelSelect.appendChild(option);
+      });
+
+      modelSelect.disabled = modelNames.length === 0;
+
+      if (!modelNames.length) {
+        resultsContainer.innerHTML = '<p class="search-message">Pronto agregaremos modelos para esta marca.</p>';
+        resultsContainer.classList.add('active');
       }
-
-      if (!acc[item.model]) {
-        acc[item.model] = [];
-      }
-
-      acc[item.model].push(item);
-      return acc;
-    }, {});
-
-    const modelNames = Object.keys(models);
-
-    modelNames.forEach(model => {
-      cache.set(model, models[model]);
-      const option = document.createElement('option');
-      option.value = model;
-      option.textContent = model;
-      modelSelect.appendChild(option);
-    });
-
-    modelSelect.disabled = modelNames.length === 0;
-
-    if (!modelNames.length) {
-      resultsContainer.innerHTML = '<p class="search-message">Pronto agregaremos modelos para esta marca.</p>';
-      resultsContainer.classList.add('active');
+    } catch (err) {
+      console.error('[setupCategorySearch] Unexpected error loading models:', err);
     }
   }
 
