@@ -72,34 +72,33 @@ export const productsAPI = {
 export const bannerAPI = {
   async getVideos() {
     const { data, error } = await supabase
-      .from('banner_videos')
-      .select('*')
-      .eq('active', true)
-      .order('order_num');
-    
+      .from('videos_gifs')
+      .select('id, video_url, order_index')
+      .order('order_index', { ascending: true });
+
     if (error) throw error;
     return data;
   },
 
   async updateVideo(id, video) {
     const { data, error } = await supabase
-      .from('banner_videos')
+      .from('videos_gifs')
       .update(video)
       .eq('id', id)
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   },
 
   async addVideo(video) {
     const { data, error } = await supabase
-      .from('banner_videos')
+      .from('videos_gifs')
       .insert([video])
       .select()
       .single();
-    
+
     if (error) throw error;
     return data;
   }

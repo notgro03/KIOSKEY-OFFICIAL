@@ -8,7 +8,7 @@ export async function initBannerVideos() {
     if (!container) return;
 
     const playableVideos = Array.isArray(videos)
-      ? videos.filter((video) => Boolean(video?.url)).slice(0, 3)
+      ? videos.filter((video) => Boolean(video?.video_url)).slice(0, 3)
       : [];
 
     container.innerHTML = playableVideos.map((video, index) => `
@@ -21,7 +21,7 @@ export async function initBannerVideos() {
             playsinline
             preload="auto"
           >
-            <source src="${video.url}" type="video/mp4">
+            <source src="${video.video_url}" type="video/mp4">
           </video>
         </div>
       </div>
