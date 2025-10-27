@@ -777,6 +777,11 @@ body::after {
 }
 
 .video-gallery-card {
+  --hover-rot-x: 0deg;
+  --hover-rot-y: 0deg;
+  --hover-translate: 0px;
+  --hover-scale: 1;
+  --hover-glow: 0.45;
   position: relative;
   flex: 0 1 320px;
   max-width: 320px;
@@ -786,7 +791,10 @@ body::after {
   overflow: hidden;
   background: linear-gradient(160deg, rgba(12, 24, 44, 0.9), rgba(26, 58, 100, 0.92));
   box-shadow: 0 28px 60px rgba(5, 12, 28, 0.55);
-  transform: rotateY(var(--tilt, -6deg)) rotateX(3deg);
+  transform: rotateY(calc(var(--tilt, -6deg) + var(--hover-rot-y)))
+             rotateX(calc(3deg + var(--hover-rot-x)))
+             translateY(var(--hover-translate))
+             scale(var(--hover-scale));
   transition: transform 0.45s ease, box-shadow 0.45s ease;
   animation: video-card-float 9s ease-in-out infinite;
   animation-delay: var(--float-delay, 0s);
@@ -799,8 +807,19 @@ body::after {
   inset: 0;
   pointer-events: none;
   background: radial-gradient(circle at top left, rgba(120, 189, 255, 0.35), transparent 60%);
-  opacity: 0.5;
+  opacity: var(--hover-glow, 0.45);
   transition: opacity 0.45s ease;
+}
+
+.video-gallery-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 65% -10%, rgba(0, 180, 255, 0.4), transparent 55%);
+  opacity: 0;
+  mix-blend-mode: screen;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
 }
 
 .video-gallery-card .video-frame {
@@ -832,14 +851,13 @@ body::after {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .video-gallery-card:hover {
+  .video-gallery-card.is-interacting {
     animation: none;
-    transform: rotateY(0deg) rotateX(0deg) translateY(-10px) scale(1.02);
-    box-shadow: 0 40px 80px rgba(5, 15, 35, 0.65);
+    box-shadow: 0 40px 80px rgba(5, 15, 35, 0.68);
   }
 
-  .video-gallery-card:hover::before {
-    opacity: 0.8;
+  .video-gallery-card.is-interacting::after {
+    opacity: 0.6;
   }
 }
 

@@ -63,6 +63,9 @@ function renderVideoCards(grid, videos) {
 
   const videoElements = [];
 
+  const shouldApplyInteractiveTilt =
+    typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
   playableVideos.forEach((video, index) => {
     const card = document.createElement('article');
     card.className = 'video-gallery-card';
@@ -87,6 +90,10 @@ function renderVideoCards(grid, videos) {
     frame.appendChild(videoEl);
     card.appendChild(frame);
     grid.appendChild(card);
+
+    if (shouldApplyInteractiveTilt) {
+      bindParallaxHover(card);
+    }
 
     videoElements.push(videoEl);
   });
@@ -124,4 +131,73 @@ export async function initBannerVideos() {
     const grid = section ? resolveGrid(section) : null;
     console.error('Error loading videos:', error);
   }
+}
+
+function bindParallaxHover(card) {
+  const smoothing = 0.15;
+  const maxRotate = 10;
+  const maxTiltX = 6;
+  let animationFrame = null;
+  let targetRotateX = 0;
+  let targetRotateY = 0;
+  let currentRotateX = 0;
+  let currentRotateY = 0;
+
+  const applyTilt = () => {
+    currentRotateX += (targetRotateX - currentRotateX) * smoothing;
+    currentRotateY += (targetRotateY - currentRotateY) * smoothing;
+
+    card.style.setProperty('--hover-rot-x', `${currentRotateX.toFixed(2)}deg`);
+    card.style.setProperty('--hover-rot-y', `${currentRotateY.toFixed(2)}deg`);
+    card.style.setProperty('--hover-translate', `${(-Math.abs(currentRotateY) - Math.abs(currentRotateX)) * 0.6}px`);
+
+    const intensity = 0.45 + Math.min(0.35, (Math.abs(currentRotateY) + Math.abs(currentRotateX)) / (maxRotate + maxTiltX));
+    card.style.setProperty('--hover-glow', intensity.toFixed(2));
+
+    if (Math.abs(currentRotateX - targetRotateX) > 0.01 || Math.abs(currentRotateY - targetRotateY) > 0.01) {
+      animationFrame = requestAnimationFrame(applyTilt);
+    } else {
+      animationFrame = null;
+    }
+  };
+
+  const updateTarget = (event) => {
+    const rect = card.getBoundingClientRect();
+    const percentX = (event.clientX - rect.left) / rect.width;
+    const percentY = (event.clientY - rect.top) / rect.height;
+
+    targetRotateY = (percentX - 0.5) * (maxRotate * 2);
+    targetRotateX = (0.5 - percentY) * (maxTiltX * 2);
+
+    if (!animationFrame) {
+      animationFrame = requestAnimationFrame(applyTilt);
+    }
+  };
+
+  const resetTilt = () => {
+    targetRotateX = 0;
+    targetRotateY = 0;
+    if (!animationFrame) {
+      animationFrame = requestAnimationFrame(applyTilt);
+    }
+  };
+
+  const handlePointerEnter = () => {
+    card.classList.add('is-interacting');
+    card.style.setProperty('--hover-scale', '1.03');
+  };
+
+  const handlePointerLeave = () => {
+    card.classList.remove('is-interacting');
+    card.style.setProperty('--hover-scale', '1');
+    resetTilt();
+  };
+
+  card.addEventListener('pointermove', updateTarget);
+  card.addEventListener('pointerenter', handlePointerEnter);
+  card.addEventListener('pointerleave', handlePointerLeave);
+
+  card.addEventListener('touchstart', handlePointerEnter, { passive: true });
+  card.addEventListener('touchend', handlePointerLeave, { passive: true });
+  card.addEventListener('touchcancel', handlePointerLeave, { passive: true });
 }
