@@ -1,12 +1,6 @@
 import { bannerAPI } from '../db.js';
 
 const MOBILE_BREAKPOINT = 768;
-const PLACEHOLDER_COUNT = 3;
-const PLACEHOLDER_TITLES = [
-  'Video próximamente',
-  'Contenido en preparación',
-  'Galería en actualización'
-];
 
 function escapeHtml(value) {
   return String(value)
@@ -48,50 +42,37 @@ function ensureAutoplay(videoEl) {
   }
 }
 
-function createPlaceholderCard(index) {
-  const title = PLACEHOLDER_TITLES[index % PLACEHOLDER_TITLES.length];
-
-  return `
-    <article class="video-gallery-card video-placeholder" data-placeholder-index="${index}">
-      <div class="video-placeholder-media" aria-hidden="true"></div>
-      <p class="video-caption">${escapeHtml(title)}</p>
-    </article>
-  `;
-}
-
-function renderPlaceholders(container, count = PLACEHOLDER_COUNT) {
-  container.innerHTML = Array.from({ length: count }, (_, index) => createPlaceholderCard(index)).join('');
-}
-
 function renderVideoCards(container, videos) {
-  const cards = videos.map((video) => {
+  const cards = videos.map((video, index) => {
     const rawTitle = typeof video.title === 'string' || typeof video.title === 'number'
       ? String(video.title)
       : '';
     const safeTitle = rawTitle
       ? escapeHtml(rawTitle)
       : 'Video de KiosKeys';
+    const tilt = index % 3 === 1 ? 0 : (index % 2 === 0 ? -8 : 8);
+    const delay = Math.min(index * 0.12, 0.48).toFixed(2);
+    const source = typeof video.video_url === 'string'
+      ? escapeHtml(video.video_url)
+      : '';
 
     return `
-      <article class="video-gallery-card" data-video-id="${video.id}">
-        <video
-          src="${video.video_url}"
-          autoplay
-          loop
-          muted
-          playsinline
-          preload="auto"
-          title="${safeTitle}"
-        ></video>
+      <article class="video-gallery-card" data-video-id="${video.id}" style="--tilt:${tilt}deg; --caption-delay:${delay}s;">
+        <div class="video-frame">
+          <video
+            src="${source}"
+            autoplay
+            loop
+            muted
+            playsinline
+            preload="auto"
+            title="${safeTitle}"
+          ></video>
+        </div>
         <p class="video-caption">${safeTitle}</p>
       </article>
     `;
   });
-
-  const placeholdersNeeded = Math.max(PLACEHOLDER_COUNT - cards.length, 0);
-  for (let i = 0; i < placeholdersNeeded; i += 1) {
-    cards.push(createPlaceholderCard(cards.length + i));
-  }
 
   container.innerHTML = cards.join('');
 }
@@ -106,7 +87,6 @@ export async function initBannerVideos() {
     }
 
     section.classList.remove('is-hidden');
-    renderPlaceholders(container);
 
     if (!container.hasAttribute('data-carousel-bound')) {
       applyMobileCarousel(container);
@@ -115,22 +95,22 @@ export async function initBannerVideos() {
 
     const videos = await bannerAPI.getVideos();
     const playableVideos = Array.isArray(videos)
-      ? videos.filter((video) => Boolean(video?.video_url))
+      ? videos.filter((video) => typeof video?.video_url === 'string' && video.video_url.trim().length > 0)
       : [];
 
     if (!playableVideos.length) {
-      renderPlaceholders(container);
+      container.innerHTML = '';
       return;
     }
 
     renderVideoCards(container, playableVideos);
 
-    const videosEls = Array.from(container.querySelectorAll('article:not(.video-placeholder) video'));
+    const videosEls = Array.from(container.querySelectorAll('article video'));
     videosEls.forEach(ensureAutoplay);
   } catch (error) {
     const container = document.querySelector('.videos-grid');
     if (container) {
-      renderPlaceholders(container);
+      container.innerHTML = '';
     }
     console.error('Error loading videos:', error);
   }

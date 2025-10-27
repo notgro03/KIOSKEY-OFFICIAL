@@ -746,6 +746,7 @@ body::after {
 /* Home - Galería de videos */
 .video-gallery-section {
   padding: 64px 24px 72px;
+  perspective: 1200px;
 }
 
 .video-gallery-section.is-hidden {
@@ -763,89 +764,98 @@ body::after {
   text-align: center;
   margin-bottom: 32px;
   color: #d8ecff;
+  text-shadow: 0 8px 24px rgba(3, 15, 30, 0.6);
 }
 
 .video-gallery-section .videos-grid {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 24px;
+  gap: 32px;
+  transform-style: preserve-3d;
+  flex-wrap: wrap;
 }
 
 .video-gallery-card {
-  flex: 0 1 calc(33.333% - 24px);
-  max-width: 360px;
+  position: relative;
+  flex: 0 1 calc(33.333% - 32px);
+  max-width: 340px;
   min-width: 260px;
-  border-radius: 20px;
+  border-radius: 24px;
+  padding: 18px 18px 28px;
+  background: linear-gradient(160deg, rgba(12, 24, 44, 0.92), rgba(18, 52, 92, 0.92));
+  border: 1px solid rgba(115, 196, 255, 0.28);
+  box-shadow: 0 28px 60px rgba(5, 10, 25, 0.55);
+  transform: rotateY(var(--tilt, -6deg)) rotateX(4deg);
+  transition: transform 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease;
   overflow: hidden;
-  background: linear-gradient(145deg, rgba(15, 24, 36, 0.9), rgba(19, 36, 58, 0.9));
-  border: 1px solid rgba(120, 189, 255, 0.25);
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
-  display: flex;
-  flex-direction: column;
 }
 
-.video-gallery-card.video-placeholder {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 28px 24px;
+.video-gallery-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at top left, rgba(120, 189, 255, 0.35), transparent 55%);
+  opacity: 0.6;
+  transition: opacity 0.45s ease;
+}
+
+.video-gallery-card .video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 18px;
+  box-shadow: inset 0 0 28px rgba(5, 10, 25, 0.55);
 }
 
 .video-gallery-card video {
-  display: block;
   width: 100%;
   height: 100%;
-  aspect-ratio: 16 / 9;
+  display: block;
   object-fit: cover;
-}
-
-.video-placeholder-media {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 16px;
-  border: 1px dashed rgba(216, 236, 255, 0.28);
-  background: rgba(216, 236, 255, 0.08);
-  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.25);
-  margin-bottom: 18px;
-  animation: video-placeholder-pulse 2.8s ease-in-out infinite;
-}
-
-@keyframes video-placeholder-pulse {
-  0%,
-  100% {
-    opacity: 0.65;
-  }
-  50% {
-    opacity: 1;
-  }
+  border-radius: 18px;
+  filter: saturate(1.1) contrast(1.05);
 }
 
 .video-gallery-card .video-caption {
-  padding: 16px 18px 20px;
+  position: relative;
+  margin-top: 20px;
   font-size: 15px;
   line-height: 1.4;
-  color: rgba(216, 236, 255, 0.75);
-  opacity: 0.75;
-  transition: opacity 0.3s ease, color 0.3s ease;
+  color: rgba(216, 236, 255, 0.78);
+  opacity: 0;
+  transform: translateY(14px);
+  animation: video-caption-fade 0.6s ease forwards;
+  animation-delay: var(--caption-delay, 0.12s);
+}
+
+@keyframes video-caption-fade {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
   .video-gallery-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+    transform: rotateY(0deg) rotateX(0deg) translateY(-10px) scale(1.02);
+    box-shadow: 0 40px 80px rgba(5, 15, 35, 0.65);
+    border-color: rgba(144, 210, 255, 0.5);
   }
 
-  .video-gallery-card:hover .video-caption {
-    opacity: 1;
-    color: #ffffff;
+  .video-gallery-card:hover::before {
+    opacity: 0.85;
   }
 }
 
 @media (max-width: 1024px) {
   .video-gallery-card {
-    flex: 0 1 calc(50% - 24px);
+    flex: 0 1 calc(50% - 32px);
   }
 }
 
@@ -859,12 +869,12 @@ body::after {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
-    gap: 18px;
+    gap: 20px;
     padding: 0 24px 8px;
   }
 
   .video-gallery-card {
-    flex: 0 0 82%;
+    flex: 0 0 80%;
     max-width: none;
     scroll-snap-align: center;
   }
