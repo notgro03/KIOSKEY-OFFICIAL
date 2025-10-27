@@ -1,6 +1,7 @@
 import { bannerAPI } from '../db.js';
 
 const MOBILE_BREAKPOINT = 768;
+const PLACEHOLDER_COUNT = 3;
 
 function escapeHtml(value) {
   return String(value)
@@ -42,22 +43,38 @@ function ensureAutoplay(videoEl) {
   }
 }
 
-function renderVideoCards(container, videos) {
-  const cards = videos.map((video, index) => {
+function resolveGrid(section) {
+  const content = section.querySelector('.content-container');
+  if (!content) {
+    return null;
+  }
+
+  let grid = content.querySelector('.videos-grid');
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.className = 'videos-grid';
+    content.appendChild(grid);
+  }
+
+  return grid;
+}
+
+function buildVideoCardMarkup(video, index) {
+  const floatDelay = Math.min(index * 0.35, 1.05).toFixed(2);
+  const tilt = index % 3 === 1 ? 0 : (index % 2 === 0 ? -8 : 8);
+
+  if (video && typeof video.video_url === 'string' && video.video_url.trim().length > 0) {
     const rawTitle = typeof video.title === 'string' || typeof video.title === 'number'
       ? String(video.title)
       : '';
     const safeTitle = rawTitle
       ? escapeHtml(rawTitle)
       : 'Video de KiosKeys';
-    const tilt = index % 3 === 1 ? 0 : (index % 2 === 0 ? -8 : 8);
-    const delay = Math.min(index * 0.12, 0.48).toFixed(2);
-    const source = typeof video.video_url === 'string'
-      ? escapeHtml(video.video_url)
-      : '';
+    const source = escapeHtml(video.video_url.trim());
+    const captionDelay = Math.min(index * 0.12, 0.48).toFixed(2);
 
     return `
-      <article class="video-gallery-card" data-video-id="${video.id}" style="--tilt:${tilt}deg; --caption-delay:${delay}s;">
+      <article class="video-gallery-card" data-video-id="${video.id}" style="--tilt:${tilt}deg; --caption-delay:${captionDelay}s; --float-delay:${floatDelay}s;">
         <div class="video-frame">
           <video
             src="${source}"
@@ -72,45 +89,69 @@ function renderVideoCards(container, videos) {
         <p class="video-caption">${safeTitle}</p>
       </article>
     `;
-  });
+  }
 
-  container.innerHTML = cards.join('');
+  const safePlaceholderTitle = escapeHtml('Próximamente');
+  return `
+    <article class="video-gallery-card is-placeholder" style="--tilt:0deg; --caption-delay:0.2s; --float-delay:${floatDelay}s;">
+      <div class="video-frame">
+        <div class="video-placeholder" aria-hidden="true"></div>
+      </div>
+      <p class="video-caption">${safePlaceholderTitle}</p>
+    </article>
+  `;
+}
+
+function renderVideoCards(grid, videos) {
+  const items = (Array.isArray(videos) && videos.length > 0
+    ? videos
+    : Array.from({ length: PLACEHOLDER_COUNT }, () => null)
+  );
+
+  const markup = items
+    .slice(0, PLACEHOLDER_COUNT)
+    .map((video, index) => buildVideoCardMarkup(video, index))
+    .join('');
+
+  grid.innerHTML = markup;
 }
 
 export async function initBannerVideos() {
   try {
     const section = document.querySelector('.video-gallery-section');
-    const container = document.querySelector('.videos-grid');
 
-    if (!section || !container) {
+    if (!section) {
+      return;
+    }
+
+    const grid = resolveGrid(section);
+
+    if (!grid) {
       return;
     }
 
     section.classList.remove('is-hidden');
 
-    if (!container.hasAttribute('data-carousel-bound')) {
-      applyMobileCarousel(container);
-      container.setAttribute('data-carousel-bound', 'true');
+    if (!grid.hasAttribute('data-carousel-bound')) {
+      applyMobileCarousel(grid);
+      grid.setAttribute('data-carousel-bound', 'true');
     }
 
     const videos = await bannerAPI.getVideos();
     const playableVideos = Array.isArray(videos)
       ? videos.filter((video) => typeof video?.video_url === 'string' && video.video_url.trim().length > 0)
+        .slice(0, PLACEHOLDER_COUNT)
       : [];
 
-    if (!playableVideos.length) {
-      container.innerHTML = '';
-      return;
-    }
+    renderVideoCards(grid, playableVideos);
 
-    renderVideoCards(container, playableVideos);
-
-    const videosEls = Array.from(container.querySelectorAll('article video'));
+    const videosEls = Array.from(grid.querySelectorAll('article video'));
     videosEls.forEach(ensureAutoplay);
   } catch (error) {
-    const container = document.querySelector('.videos-grid');
-    if (container) {
-      container.innerHTML = '';
+    const section = document.querySelector('.video-gallery-section');
+    const grid = section ? resolveGrid(section) : null;
+    if (grid) {
+      renderVideoCards(grid, []);
     }
     console.error('Error loading videos:', error);
   }
