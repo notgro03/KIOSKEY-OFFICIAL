@@ -1,6 +1,12 @@
 import { bannerAPI } from '../db.js';
 
 const MOBILE_BREAKPOINT = 768;
+const PLACEHOLDER_COUNT = 3;
+const PLACEHOLDER_TITLES = [
+  'Video próximamente',
+  'Contenido en preparación',
+  'Galería en actualización'
+];
 
 function escapeHtml(value) {
   return String(value)
@@ -42,37 +48,31 @@ function ensureAutoplay(videoEl) {
   }
 }
 
-export async function initBannerVideos() {
-  try {
-    const section = document.querySelector('.video-gallery-section');
-    const container = document.querySelector('.videos-grid');
+function createPlaceholderCard(index) {
+  const title = PLACEHOLDER_TITLES[index % PLACEHOLDER_TITLES.length];
 
-    if (!section || !container) {
-      return;
-    }
+  return `
+    <article class="video-gallery-card video-placeholder" data-placeholder-index="${index}">
+      <div class="video-placeholder-media" aria-hidden="true"></div>
+      <p class="video-caption">${escapeHtml(title)}</p>
+    </article>
+  `;
+}
 
-    const videos = await bannerAPI.getVideos();
-    const playableVideos = Array.isArray(videos)
-      ? videos.filter((video) => Boolean(video?.video_url))
-      : [];
+function renderPlaceholders(container, count = PLACEHOLDER_COUNT) {
+  container.innerHTML = Array.from({ length: count }, (_, index) => createPlaceholderCard(index)).join('');
+}
 
-    if (!playableVideos.length) {
-      section.classList.add('is-hidden');
-      container.innerHTML = '';
-      return;
-    }
+function renderVideoCards(container, videos) {
+  const cards = videos.map((video) => {
+    const rawTitle = typeof video.title === 'string' || typeof video.title === 'number'
+      ? String(video.title)
+      : '';
+    const safeTitle = rawTitle
+      ? escapeHtml(rawTitle)
+      : 'Video de KiosKeys';
 
-    section.classList.remove('is-hidden');
-
-    container.innerHTML = playableVideos.map((video) => {
-      const rawTitle = typeof video.title === 'string' || typeof video.title === 'number'
-        ? String(video.title)
-        : '';
-      const safeTitle = rawTitle
-        ? escapeHtml(rawTitle)
-        : 'Video de KiosKeys';
-
-      return `
+    return `
       <article class="video-gallery-card" data-video-id="${video.id}">
         <video
           src="${video.video_url}"
@@ -86,15 +86,52 @@ export async function initBannerVideos() {
         <p class="video-caption">${safeTitle}</p>
       </article>
     `;
-    }).join('');
+  });
 
-    const videosEls = Array.from(container.querySelectorAll('video'));
-    videosEls.forEach(ensureAutoplay);
+  const placeholdersNeeded = Math.max(PLACEHOLDER_COUNT - cards.length, 0);
+  for (let i = 0; i < placeholdersNeeded; i += 1) {
+    cards.push(createPlaceholderCard(cards.length + i));
+  }
 
-    if (videosEls.length > 1) {
-      applyMobileCarousel(container);
+  container.innerHTML = cards.join('');
+}
+
+export async function initBannerVideos() {
+  try {
+    const section = document.querySelector('.video-gallery-section');
+    const container = document.querySelector('.videos-grid');
+
+    if (!section || !container) {
+      return;
     }
+
+    section.classList.remove('is-hidden');
+    renderPlaceholders(container);
+
+    if (!container.hasAttribute('data-carousel-bound')) {
+      applyMobileCarousel(container);
+      container.setAttribute('data-carousel-bound', 'true');
+    }
+
+    const videos = await bannerAPI.getVideos();
+    const playableVideos = Array.isArray(videos)
+      ? videos.filter((video) => Boolean(video?.video_url))
+      : [];
+
+    if (!playableVideos.length) {
+      renderPlaceholders(container);
+      return;
+    }
+
+    renderVideoCards(container, playableVideos);
+
+    const videosEls = Array.from(container.querySelectorAll('article:not(.video-placeholder) video'));
+    videosEls.forEach(ensureAutoplay);
   } catch (error) {
-    console.error('Error loading banner videos:', error);
+    const container = document.querySelector('.videos-grid');
+    if (container) {
+      renderPlaceholders(container);
+    }
+    console.error('Error loading videos:', error);
   }
 }
