@@ -2,6 +2,15 @@ import { bannerAPI } from '../db.js';
 
 const MOBILE_BREAKPOINT = 768;
 
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function applyMobileCarousel(container) {
   const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
 
@@ -60,7 +69,7 @@ export async function initBannerVideos() {
         ? String(video.title)
         : '';
       const safeTitle = rawTitle
-        ? rawTitle.replace(/"/g, '&quot;')
+        ? escapeHtml(rawTitle)
         : 'Video de KiosKeys';
 
       return `
@@ -74,6 +83,7 @@ export async function initBannerVideos() {
           preload="auto"
           title="${safeTitle}"
         ></video>
+        <p class="video-caption">${safeTitle}</p>
       </article>
     `;
     }).join('');

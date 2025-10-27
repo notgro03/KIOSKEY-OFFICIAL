@@ -782,6 +782,8 @@ body::after {
   border: 1px solid rgba(120, 189, 255, 0.25);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .video-gallery-card video {
@@ -792,10 +794,24 @@ body::after {
   object-fit: cover;
 }
 
+.video-gallery-card .video-caption {
+  padding: 16px 18px 20px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(216, 236, 255, 0.75);
+  opacity: 0.75;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .video-gallery-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+  }
+
+  .video-gallery-card:hover .video-caption {
+    opacity: 1;
+    color: #ffffff;
   }
 }
 
