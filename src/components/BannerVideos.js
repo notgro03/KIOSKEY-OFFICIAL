@@ -1,4 +1,4 @@
-import { bannerAPI } from '../db.js';
+import { supabase } from '../lib/supabaseClient.js';
 
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;
@@ -222,8 +222,16 @@ export async function initBannerVideos() {
   initialVideos.forEach(ensureAutoplay);
 
   try {
-    const videos = await bannerAPI.getVideos();
-    const remoteQueue = buildVideoQueue(videos);
+    const { data, error } = await supabase
+      .from('videos_gifs')
+      .select('video_url, order_index')
+      .order('order_index', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    const remoteQueue = buildVideoQueue(data);
     const hasPlayableSource = remoteQueue.some((video) => video.isPlayable);
 
     if (hasPlayableSource) {
@@ -231,7 +239,7 @@ export async function initBannerVideos() {
       remoteVideoEls.forEach(ensureAutoplay);
     }
   } catch (error) {
-    console.error('Error loading videos:', error);
+    console.error('Error conectando con Supabase:', error);
   }
 }
 
