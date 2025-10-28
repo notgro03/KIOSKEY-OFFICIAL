@@ -3,6 +3,24 @@ import { bannerAPI } from '../db.js';
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;
 
+const FALLBACK_VIDEOS = [
+  {
+    id: 'fallback-demo-1',
+    video_url: '/videos/demo1.mp4',
+    order_index: 1
+  },
+  {
+    id: 'fallback-demo-2',
+    video_url: '/videos/demo2.mp4',
+    order_index: 2
+  },
+  {
+    id: 'fallback-demo-3',
+    video_url: '/videos/demo3.mp4',
+    order_index: 3
+  }
+];
+
 function applyMobileCarousel(container) {
   const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
 
@@ -50,17 +68,68 @@ function resolveGrid(section) {
   return grid;
 }
 
-function renderVideoCards(grid, videos) {
-  grid.innerHTML = '';
-
+function normalizeVideoList(videos) {
   if (!Array.isArray(videos)) {
     return [];
   }
 
-  const playableVideos = videos
-    .filter((video) => typeof video?.video_url === 'string' && video.video_url.trim().length > 0)
-    .slice(0, VIDEO_LIMIT);
+  return videos
+    .map((video, index) => {
+      if (typeof video?.video_url !== 'string') {
+        return null;
+      }
 
+      const trimmedUrl = video.video_url.trim();
+      if (!trimmedUrl) {
+        return null;
+      }
+
+      return {
+        id: video.id ?? `video-${index}`,
+        video_url: trimmedUrl,
+        order_index: typeof video.order_index === 'number' ? video.order_index : index
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.order_index - b.order_index);
+}
+
+function buildVideoQueue(remoteVideos) {
+  const normalizedRemote = normalizeVideoList(remoteVideos).map((video) => ({
+    ...video,
+    __fallback: false
+  }));
+
+  const queue = normalizedRemote.slice(0, VIDEO_LIMIT);
+
+  const usedUrls = new Set(queue.map((video) => video.video_url));
+  const fallbackList = normalizeVideoList(FALLBACK_VIDEOS).map((video) => ({
+    ...video,
+    __fallback: true
+  }));
+
+  fallbackList.forEach((fallback) => {
+    if (queue.length >= VIDEO_LIMIT) {
+      return;
+    }
+
+    if (!usedUrls.has(fallback.video_url)) {
+      queue.push(fallback);
+      usedUrls.add(fallback.video_url);
+    }
+  });
+
+  if (queue.length === 0) {
+    return fallbackList.slice(0, VIDEO_LIMIT);
+  }
+
+  return queue.slice(0, VIDEO_LIMIT);
+}
+
+function renderVideoCards(grid, videos) {
+  grid.innerHTML = '';
+
+  const playableVideos = Array.isArray(videos) ? videos.slice(0, VIDEO_LIMIT) : [];
   const videoElements = [];
 
   const shouldApplyInteractiveTilt =
@@ -69,23 +138,31 @@ function renderVideoCards(grid, videos) {
   playableVideos.forEach((video, index) => {
     const card = document.createElement('article');
     card.className = 'video-gallery-card';
+    card.dataset.source = video.__fallback ? 'fallback' : 'remote';
 
-    const tilt = index % 3 === 1 ? 0 : (index % 2 === 0 ? -6 : 6);
+    const tilt = index % 3 === 1 ? 0 : index % 2 === 0 ? -6 : 6;
     const floatDelay = Math.min(index * 0.35, 1).toFixed(2);
 
     card.style.setProperty('--tilt', `${tilt}deg`);
     card.style.setProperty('--float-delay', `${floatDelay}s`);
+    card.style.setProperty('--hover-scale', '1');
+    card.style.setProperty('--hover-glow', '0.45');
+    card.style.setProperty('--hover-rot-x', '0deg');
+    card.style.setProperty('--hover-rot-y', '0deg');
+    card.style.setProperty('--hover-translate', '0px');
 
     const frame = document.createElement('div');
     frame.className = 'video-frame';
 
     const videoEl = document.createElement('video');
-    videoEl.src = video.video_url.trim();
+    videoEl.src = video.video_url;
     videoEl.autoplay = true;
     videoEl.loop = true;
     videoEl.muted = true;
     videoEl.playsInline = true;
     videoEl.preload = 'auto';
+    videoEl.setAttribute('muted', '');
+    videoEl.setAttribute('playsinline', '');
 
     frame.appendChild(videoEl);
     card.appendChild(frame);
@@ -102,33 +179,39 @@ function renderVideoCards(grid, videos) {
 }
 
 export async function initBannerVideos() {
+  const section = document.querySelector('.video-gallery-section');
+
+  if (!section) {
+    return;
+  }
+
+  const grid = resolveGrid(section);
+
+  if (!grid) {
+    return;
+  }
+
+  section.classList.remove('is-hidden');
+
+  if (!grid.hasAttribute('data-carousel-bound')) {
+    applyMobileCarousel(grid);
+    grid.setAttribute('data-carousel-bound', 'true');
+  }
+
+  const fallbackQueue = buildVideoQueue();
+  const initialVideos = renderVideoCards(grid, fallbackQueue);
+  initialVideos.forEach(ensureAutoplay);
+
   try {
-    const section = document.querySelector('.video-gallery-section');
-
-    if (!section) {
-      return;
-    }
-
-    const grid = resolveGrid(section);
-
-    if (!grid) {
-      return;
-    }
-
-    section.classList.remove('is-hidden');
-
-    if (!grid.hasAttribute('data-carousel-bound')) {
-      applyMobileCarousel(grid);
-      grid.setAttribute('data-carousel-bound', 'true');
-    }
-
     const videos = await bannerAPI.getVideos();
-    const videoEls = renderVideoCards(grid, videos);
+    const remoteQueue = buildVideoQueue(videos);
+    const hasRemoteSource = remoteQueue.some((video) => !video.__fallback);
 
-    videoEls.forEach(ensureAutoplay);
+    if (hasRemoteSource) {
+      const remoteVideoEls = renderVideoCards(grid, remoteQueue);
+      remoteVideoEls.forEach(ensureAutoplay);
+    }
   } catch (error) {
-    const section = document.querySelector('.video-gallery-section');
-    const grid = section ? resolveGrid(section) : null;
     console.error('Error loading videos:', error);
   }
 }
