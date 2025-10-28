@@ -2,24 +2,7 @@ import { bannerAPI } from '../db.js';
 
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;
-
-const FALLBACK_VIDEOS = [
-  {
-    id: 'fallback-demo-1',
-    video_url: '/videos/demo1.mp4',
-    order_index: 1
-  },
-  {
-    id: 'fallback-demo-2',
-    video_url: '/videos/demo2.mp4',
-    order_index: 2
-  },
-  {
-    id: 'fallback-demo-3',
-    video_url: '/videos/demo3.mp4',
-    order_index: 3
-  }
-];
+const PLACEHOLDER_CARD_COUNT = 3;
 
 function applyMobileCarousel(container) {
   const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
@@ -68,6 +51,29 @@ function resolveGrid(section) {
   return grid;
 }
 
+function isValidVideoUrl(url) {
+  if (typeof url !== 'string') {
+    return false;
+  }
+
+  const trimmed = url.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+    return true;
+  }
+
+  try {
+    const base = typeof window !== 'undefined' ? window.location.origin : 'https://placeholder.local';
+    const resolved = new URL(trimmed, base);
+    return resolved.protocol === 'http:' || resolved.protocol === 'https:';
+  } catch (error) {
+    return false;
+  }
+}
+
 function normalizeVideoList(videos) {
   if (!Array.isArray(videos)) {
     return [];
@@ -75,70 +81,65 @@ function normalizeVideoList(videos) {
 
   return videos
     .map((video, index) => {
-      if (typeof video?.video_url !== 'string') {
-        return null;
-      }
-
-      const trimmedUrl = video.video_url.trim();
-      if (!trimmedUrl) {
-        return null;
-      }
+      const hasUrl = isValidVideoUrl(video?.video_url);
 
       return {
-        id: video.id ?? `video-${index}`,
-        video_url: trimmedUrl,
-        order_index: typeof video.order_index === 'number' ? video.order_index : index
+        id: video?.id ?? `video-${index}`,
+        video_url: hasUrl ? video.video_url.trim() : null,
+        order_index: typeof video?.order_index === 'number' ? video.order_index : index,
+        isPlayable: hasUrl,
+        title: typeof video?.title === 'string' ? video.title.trim() : ''
       };
     })
-    .filter(Boolean)
     .sort((a, b) => a.order_index - b.order_index);
 }
 
 function buildVideoQueue(remoteVideos) {
-  const normalizedRemote = normalizeVideoList(remoteVideos).map((video) => ({
-    ...video,
-    __fallback: false
-  }));
+  const normalizedRemote = normalizeVideoList(remoteVideos || []);
+  const queue = [];
 
-  const queue = normalizedRemote.slice(0, VIDEO_LIMIT);
+  for (let index = 0; index < PLACEHOLDER_CARD_COUNT; index += 1) {
+    const item = normalizedRemote[index];
 
-  const usedUrls = new Set(queue.map((video) => video.video_url));
-  const fallbackList = normalizeVideoList(FALLBACK_VIDEOS).map((video) => ({
-    ...video,
-    __fallback: true
-  }));
-
-  fallbackList.forEach((fallback) => {
-    if (queue.length >= VIDEO_LIMIT) {
-      return;
+    if (item) {
+      queue.push({
+        ...item,
+        isPlaceholder: !item.isPlayable
+      });
+    } else {
+      queue.push({
+        id: `placeholder-${index}`,
+        video_url: null,
+        order_index: index,
+        isPlayable: false,
+        isPlaceholder: true
+      });
     }
-
-    if (!usedUrls.has(fallback.video_url)) {
-      queue.push(fallback);
-      usedUrls.add(fallback.video_url);
-    }
-  });
-
-  if (queue.length === 0) {
-    return fallbackList.slice(0, VIDEO_LIMIT);
   }
 
   return queue.slice(0, VIDEO_LIMIT);
 }
 
+function createPlaceholderFrame() {
+  const fallback = document.createElement('div');
+  fallback.className = 'video-fallback';
+  fallback.setAttribute('aria-hidden', 'true');
+  return fallback;
+}
+
 function renderVideoCards(grid, videos) {
   grid.innerHTML = '';
 
-  const playableVideos = Array.isArray(videos) ? videos.slice(0, VIDEO_LIMIT) : [];
+  const items = Array.isArray(videos) ? videos.slice(0, VIDEO_LIMIT) : [];
   const videoElements = [];
 
   const shouldApplyInteractiveTilt =
     typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  playableVideos.forEach((video, index) => {
+  items.forEach((video, index) => {
     const card = document.createElement('article');
     card.className = 'video-gallery-card';
-    card.dataset.source = video.__fallback ? 'fallback' : 'remote';
+    card.dataset.role = video.isPlaceholder ? 'placeholder' : 'video';
 
     const tilt = index % 3 === 1 ? 0 : index % 2 === 0 ? -6 : 6;
     const floatDelay = Math.min(index * 0.35, 1).toFixed(2);
@@ -154,25 +155,43 @@ function renderVideoCards(grid, videos) {
     const frame = document.createElement('div');
     frame.className = 'video-frame';
 
-    const videoEl = document.createElement('video');
-    videoEl.src = video.video_url;
-    videoEl.autoplay = true;
-    videoEl.loop = true;
-    videoEl.muted = true;
-    videoEl.playsInline = true;
-    videoEl.preload = 'auto';
-    videoEl.setAttribute('muted', '');
-    videoEl.setAttribute('playsinline', '');
+    if (video.isPlaceholder) {
+      frame.classList.add('is-placeholder');
+      frame.appendChild(createPlaceholderFrame());
+    } else {
+      const videoEl = document.createElement('video');
+      videoEl.src = video.video_url;
+      videoEl.autoplay = true;
+      videoEl.loop = true;
+      videoEl.muted = true;
+      videoEl.playsInline = true;
+      videoEl.preload = 'auto';
+      videoEl.setAttribute('muted', '');
+      videoEl.setAttribute('playsinline', '');
 
-    frame.appendChild(videoEl);
+      const handlePlaybackError = () => {
+        if (video.video_url) {
+          console.warn('Replacing unavailable video with placeholder:', video.video_url);
+        }
+        frame.innerHTML = '';
+        frame.classList.add('is-placeholder');
+        frame.appendChild(createPlaceholderFrame());
+        card.dataset.role = 'placeholder';
+      };
+
+      videoEl.addEventListener('error', handlePlaybackError);
+      videoEl.addEventListener('stalled', handlePlaybackError);
+
+      frame.appendChild(videoEl);
+      videoElements.push(videoEl);
+    }
+
     card.appendChild(frame);
     grid.appendChild(card);
 
     if (shouldApplyInteractiveTilt) {
       bindParallaxHover(card);
     }
-
-    videoElements.push(videoEl);
   });
 
   return videoElements;
@@ -198,16 +217,16 @@ export async function initBannerVideos() {
     grid.setAttribute('data-carousel-bound', 'true');
   }
 
-  const fallbackQueue = buildVideoQueue();
-  const initialVideos = renderVideoCards(grid, fallbackQueue);
+  const placeholderQueue = buildVideoQueue();
+  const initialVideos = renderVideoCards(grid, placeholderQueue);
   initialVideos.forEach(ensureAutoplay);
 
   try {
     const videos = await bannerAPI.getVideos();
     const remoteQueue = buildVideoQueue(videos);
-    const hasRemoteSource = remoteQueue.some((video) => !video.__fallback);
+    const hasPlayableSource = remoteQueue.some((video) => video.isPlayable);
 
-    if (hasRemoteSource) {
+    if (hasPlayableSource) {
       const remoteVideoEls = renderVideoCards(grid, remoteQueue);
       remoteVideoEls.forEach(ensureAutoplay);
     }

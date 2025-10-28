@@ -832,6 +832,29 @@ body::after {
   backdrop-filter: blur(12px);
 }
 
+.video-gallery-card .video-frame.is-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-gallery-card .video-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(160deg, rgba(15, 35, 65, 0.75), rgba(40, 90, 150, 0.55));
+  backdrop-filter: blur(18px);
+  box-shadow: inset 0 0 0 1px rgba(120, 189, 255, 0.18), inset 0 0 40px rgba(10, 30, 60, 0.35);
+}
+
+.video-gallery-card[data-role='placeholder']::before {
+  opacity: 0.28;
+}
+
+.video-gallery-card[data-role='placeholder']::after {
+  opacity: 0;
+}
+
 .video-gallery-card video {
   width: 100%;
   height: 100%;

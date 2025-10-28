@@ -1,4 +1,4 @@
-import { supabase } from './config/supabase.js';
+import { supabase } from './lib/supabaseClient.js';
 
 // Products API
 export const productsAPI = {
@@ -73,7 +73,7 @@ export const bannerAPI = {
   async getVideos() {
     const { data, error } = await supabase
       .from('videos_gifs')
-      .select('id, video_url, order_index')
+      .select('id, title, video_url, order_index')
       .order('order_index', { ascending: true });
 
     if (error) throw error;
