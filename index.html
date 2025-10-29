@@ -26,35 +26,69 @@
     }
 
     .video-gallery-grid {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(260px, 1fr));
+      gap: 24px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
       padding: 40px 0;
+      overflow: hidden;
     }
 
     .video-card {
       position: relative;
       border-radius: 20px;
       overflow: hidden;
-      width: 85%;
-      max-width: 400px;
       box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
       border: 1px solid rgba(0, 150, 255, 0.4);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background: rgba(0, 10, 20, 0.8);
+      background: rgba(0, 10, 20, 0.85);
+      height: 100%;
     }
 
     .video-card:hover {
-      transform: scale(1.05);
+      transform: translateY(-6px);
       box-shadow: 0 0 40px rgba(0, 150, 255, 0.6);
     }
 
-    .video-card video {
+    .video-card-content {
+      position: relative;
       width: 100%;
-      height: auto;
+      padding-top: 56.25%;
+    }
+
+    .video-card video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       display: block;
-      border-radius: 20px;
+    }
+
+    @media (max-width: 1024px) {
+      .video-gallery-grid {
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        padding: 32px 24px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .video-gallery-grid {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding: 24px 16px 32px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .video-card {
+        flex: 0 0 85%;
+        min-width: 260px;
+        scroll-snap-align: center;
+      }
     }
 
     nav {
@@ -104,7 +138,8 @@
     <!-- 📹 Sección de videos dinámica -->
     <section class="video-gallery-section">
       <div class="content-container">
-        <div class="video-gallery-grid"></div>
+        <h2 class="video-gallery-title shiny-text">Conocé KiosKeys en acción</h2>
+        <div class="videos-grid" aria-live="polite"></div>
       </div>
     </section>
 
@@ -158,6 +193,57 @@
   </main>
 
   <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4 class="shiny-text">Empresa</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/sobre-nosotros.html" class="shiny-text">Sobre Nosotros</a></li>
+          <li><a href="/pages/red-servicios.html" class="shiny-text">Red de Servicios</a></li>
+          <li><a href="/pages/trabaja-con-nosotros.html" class="shiny-text">Trabaja con Nosotros</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Servicios</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/productos.html" class="shiny-text">Productos</a></li>
+          <li><a href="/pages/telemandos.html" class="shiny-text">Telemandos</a></li>
+          <li><a href="/pages/planes.html" class="shiny-text">Planes</a></li>
+          <li><a href="/pages/cerrajeria.html" class="shiny-text">Cerrajería</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Soporte</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/contacto.html" class="shiny-text">Contacto</a></li>
+          <li><a href="/pages/faq.html" class="shiny-text">FAQ</a></li>
+          <li><a href="/pages/tutoriales.html" class="shiny-text">Tutoriales</a></li>
+          <li><a href="/pages/ayuda.html" class="shiny-text">Centro de Ayuda</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Legal</h4>
+        <ul class="footer-links">
+          <li><a href="/pages/privacidad.html" class="shiny-text">Política de Privacidad</a></li>
+          <li><a href="/pages/terminos.html" class="shiny-text">Términos y Condiciones</a></li>
+          <li><a href="/pages/cookies.html" class="shiny-text">Política de Cookies</a></li>
+          <li><a href="/pages/legal.html" class="shiny-text">Aviso Legal</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h4 class="shiny-text">Síguenos</h4>
+        <div class="footer-social">
+          <a href="https://facebook.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-facebook"></i></a>
+          <a href="https://twitter.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-instagram"></i></a>
+          <a href="https://linkedin.com/company/kioskeys" target="_blank" rel="noopener" class="shiny-button"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
     <div class="footer-bottom">
       <p class="shiny-text">&copy; 2025 Kioskeys. Todos los derechos reservados.</p>
     </div>
