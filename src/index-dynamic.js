@@ -1,56 +1,43 @@
 import { supabase } from './config/supabase.js';
 
-async function loadHomeProducts() {
+async function loadBannerVideos() {
   try {
-    console.log('Iniciando carga de productos...');
-
-    const { data: products, error } = await supabase
-      .from('products')
+    const { data: videos, error } = await supabase
+      .from('banner_gifs')
       .select('*')
       .eq('active', true)
       .order('order_position')
-      .limit(4);
-
-    console.log('Respuesta de Supabase:', { products, error });
+      .limit(3);
 
     if (error) {
-      console.error('Error loading products:', error);
+      console.error('Error loading banner videos:', error);
       return;
     }
 
-    if (!products || products.length === 0) {
-      console.log('No products found, keeping static content');
+    if (!videos || videos.length === 0) {
+      console.log('No videos found in database');
       return;
     }
 
-    const container = document.querySelector('.features-grid');
-    if (!container) {
-      console.error('Container .features-grid not found');
-      return;
-    }
+    const container = document.getElementById('bannerVideos');
+    if (!container) return;
 
-    console.log(`Renderizando ${products.length} productos...`);
-
-    container.innerHTML = products.map(product => {
+    container.innerHTML = videos.map(video => {
       return `
-        <a href="${product.link_url}" class="feature-card shiny-button">
-          <div>
-            <i class="fas ${product.icon} feature-icon"></i>
-            <h3 class="shiny-text">${product.title}</h3>
-            <p>${product.description}</p>
-          </div>
-        </a>
+        <div class="video-item">
+          <img src="${video.url}" alt="${video.alt_text}" class="banner-gif">
+        </div>
       `;
     }).join('');
 
-    console.log('Productos cargados exitosamente');
+    console.log(`Loaded ${videos.length} videos successfully`);
   } catch (err) {
-    console.error('Error in loadHomeProducts:', err);
+    console.error('Error loading banner videos:', err);
   }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', loadHomeProducts);
+  document.addEventListener('DOMContentLoaded', loadBannerVideos);
 } else {
-  loadHomeProducts();
+  loadBannerVideos();
 }
