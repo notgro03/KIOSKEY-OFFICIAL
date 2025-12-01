@@ -45,7 +45,7 @@ export async function loadAccesorios() {
   try {
     const { data: category } = await supabase
       .from('product_categories')
-      .select('id')
+      .select('*')
       .eq('slug', 'accesorios')
       .maybeSingle();
 

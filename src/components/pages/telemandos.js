@@ -47,8 +47,7 @@ async function loadInitialData(elements) {
   try {
     const { data: brands, error } = await supabase
       .from('telemandos')
-      .select('brand')
-      .eq('active', true)
+      .select('*')
       .order('brand');
 
     if (error) throw error;
@@ -94,9 +93,8 @@ async function handleBrandChange(elements) {
   try {
     const { data: models, error } = await supabase
       .from('telemandos')
-      .select('model')
+      .select('*')
       .eq('brand', selectedBrand)
-      .eq('active', true)
       .order('model');
 
     if (error) throw error;
@@ -125,8 +123,7 @@ async function handleSearch(elements) {
       .from('telemandos')
       .select('*')
       .eq('brand', brand)
-      .eq('model', model)
-      .eq('active', true);
+      .eq('model', model);
 
     if (error) throw error;
     displayResults(telemandos, brand, model, resultsContainer);

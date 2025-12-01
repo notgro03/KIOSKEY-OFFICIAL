@@ -73,7 +73,7 @@ export const bannerAPI = {
   async getVideos() {
     const { data, error } = await supabase
       .from('videos_gifs')
-      .select('id, title, video_url, order_index')
+      .select('*')
       .order('order_index', { ascending: true });
 
     if (error) throw error;

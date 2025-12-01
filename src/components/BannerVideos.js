@@ -224,7 +224,7 @@ export async function initBannerVideos() {
   try {
     const { data, error } = await supabase
       .from('videos_gifs')
-      .select('video_url, order_index')
+      .select('*')
       .order('order_index', { ascending: true });
 
     if (error) {

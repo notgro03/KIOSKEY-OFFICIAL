@@ -50,7 +50,7 @@ export async function loadTelemandos() {
   try {
     const { data, error } = await supabase
       .from('telemandos')
-      .select('id, brand, model, description, image_url, video_url')
+      .select('*')
       .order('brand', { ascending: true })
       .order('model', { ascending: true });
 

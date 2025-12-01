@@ -82,7 +82,7 @@ export function setupCategorySearch(options) {
   async function loadBrands() {
     const { data, error } = await supabase
       .from(table)
-      .select('brand')
+      .select('*')
       .order('brand', { ascending: true });
 
     if (error) {
@@ -104,62 +104,31 @@ export function setupCategorySearch(options) {
 
   async function loadModelsForBrand(brand) {
     try {
-      const columnCandidates = [
-        'brand, model, description, image_url, video_url',
-        'brand, model, description, image_url',
-        'brand, model, description',
-        '*'
-      ];
+      const { data: rows, error } = await supabase
+        .from(table)
+        .select('*')
+        .eq('brand', brand)
+        .order('model', { ascending: true });
 
-      let rows = [];
-      let fetchError = null;
-
-      for (const columns of columnCandidates) {
-        const { data, error } = await supabase
-          .from(table)
-          .select(columns)
-          .eq('brand', brand);
-
-        if (!error) {
-          if (columns !== columnCandidates[0]) {
-            console.warn(`[setupCategorySearch] Using fallback columns "${columns}" for ${table} brand ${brand}.`);
-          }
-
-          rows = Array.isArray(data) ? data : [];
-          fetchError = null;
-          break;
-        }
-
-        fetchError = error;
-        const errorMessage = error?.message || '';
-        const missingColumn = /column .* does not exist/i.test(errorMessage);
-
-        if (!missingColumn) {
-          console.error(`[setupCategorySearch] Error loading models for ${table}:`, error.message || error);
-          return;
-        }
-
-        console.warn(`[setupCategorySearch] ${errorMessage}. Retrying with fewer columns...`);
-      }
-
-      if (fetchError) {
-        console.error(`[setupCategorySearch] Unable to load models for ${table}:`, fetchError.message || fetchError);
+      if (error) {
+        console.error(`[setupCategorySearch] Error loading models for ${table}:`, error.message || error);
         return;
       }
 
-      const hasModelColumn = rows.some(item => Object.prototype.hasOwnProperty.call(item, 'model'));
+      const dataset = Array.isArray(rows) ? rows : [];
+      const hasModelColumn = dataset.some(item => Object.prototype.hasOwnProperty.call(item, 'model'));
 
       if (!hasModelColumn) {
         console.error(`[setupCategorySearch] Missing "model" column in ${table} table response.`);
       }
 
       const orderedRows = hasModelColumn
-        ? [...rows].sort((a, b) => {
+        ? [...dataset].sort((a, b) => {
           const modelA = (a.model ?? '').toString();
           const modelB = (b.model ?? '').toString();
           return modelA.localeCompare(modelB, 'es', { sensitivity: 'base' });
         })
-        : rows;
+        : dataset;
 
       cache.clear();
       modelSelect.innerHTML = '<option value="">Seleccioná el modelo</option>';

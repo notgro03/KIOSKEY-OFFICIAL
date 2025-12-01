@@ -48,48 +48,14 @@ export async function loadLlaves() {
   container.innerHTML = renderLoading('Cargando llaves...');
 
   try {
-    const columnCandidates = [
-      'id, brand, model, description, image_url, video_url',
-      'id, brand, model, description, image_url',
-      'id, brand, model, description',
-      '*'
-    ];
+    const { data: rows, error } = await supabase
+      .from('llaves')
+      .select('*')
+      .order('brand', { ascending: true })
+      .order('model', { ascending: true });
 
-    let rows = [];
-    let fetchError = null;
-
-    for (const columns of columnCandidates) {
-      const { data, error } = await supabase
-        .from('llaves')
-        .select(columns)
-        .order('brand', { ascending: true })
-        .order('model', { ascending: true });
-
-      if (!error) {
-        if (columns !== columnCandidates[0]) {
-          console.warn(`[loadLlaves] Using fallback columns "${columns}" to render llaves.`);
-        }
-
-        rows = Array.isArray(data) ? data : [];
-        fetchError = null;
-        break;
-      }
-
-      fetchError = error;
-      const errorMessage = error?.message || '';
-      const missingColumn = /column .* does not exist/i.test(errorMessage);
-
-      if (!missingColumn) {
-        console.error('Error loading llaves:', error);
-        container.innerHTML = renderEmpty('Error al cargar las llaves');
-        return;
-      }
-
-      console.warn(`[loadLlaves] ${errorMessage}. Retrying with fewer columns...`);
-    }
-
-    if (fetchError) {
-      console.error('Error loading llaves:', fetchError);
+    if (error) {
+      console.error('Error loading llaves:', error);
       container.innerHTML = renderEmpty('Error al cargar las llaves');
       return;
     }
