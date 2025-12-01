@@ -6,6 +6,7 @@ const DEFAULT_SUPABASE_ANON_KEY =
 
 const PLACEHOLDER_VALUES = new Set(['', 'undefined', 'null', 'false', '0']);
 const INVALID_HOSTNAME_PATTERN = /(?:^|\.|-)(?:undefined|null|false)(?:\.|-|$)/i;
+const SUPABASE_HOST_PATTERN = /\.supabase\.co$/i;
 
 function sanitizeEnvValue(value) {
   if (typeof value !== 'string') {
@@ -80,7 +81,11 @@ function normalizeSupabaseUrl(value) {
   try {
     const url = new URL(sanitized);
 
-    if (!url.hostname || INVALID_HOSTNAME_PATTERN.test(url.hostname)) {
+    if (
+      !url.hostname ||
+      INVALID_HOSTNAME_PATTERN.test(url.hostname) ||
+      !SUPABASE_HOST_PATTERN.test(url.hostname)
+    ) {
       return null;
     }
 
