@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient.js';
+import { supabase } from '../config/supabase.js';
 
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;

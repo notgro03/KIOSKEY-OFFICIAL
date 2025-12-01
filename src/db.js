@@ -1,4 +1,4 @@
-import { supabase } from './lib/supabaseClient.js';
+import { supabase } from './config/supabase.js';
 
 // Products API
 export const productsAPI = {
