@@ -1,33 +1,9 @@
 import { supabase } from './config/supabase.js';
 
-// Cargar productos para la página principal
-async function loadHomeProducts() {
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*')
-    .eq('active', true)
-    .order('order_position')
-    .limit(4);
-
-  if (error) {
-    console.error('Error loading products:', error);
-    return;
-  }
-
-  const container = document.querySelector('.features-grid');
-  if (!container) return;
-
-  container.innerHTML = products.map(product => {
-    return `
-      <a href="${product.link_url}" class="feature-card shiny-button">
-        <div>
-          <i class="fas ${product.icon} feature-icon"></i>
-          <h3 class="shiny-text">${product.title}</h3>
-          <p>${product.description}</p>
-        </div>
-      </a>
-    `;
-  }).join('');
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadBannerVideos);
+} else {
+  loadBannerVideos();
 }
 
 // Inicializar cuando el DOM esté listo

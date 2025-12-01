@@ -30,10 +30,10 @@
       box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
     }
 
-    footer {
-      background: #000814;
-      border-top: 1px solid rgba(0, 150, 255, 0.2);
-      color: #b0cfff;
+    @media (max-width: 768px) {
+      .banner-videos {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -124,7 +124,6 @@
     </div>
   </footer>
 
-  <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
 </body>
