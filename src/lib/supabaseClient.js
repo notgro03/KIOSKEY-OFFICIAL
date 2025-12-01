@@ -21,33 +21,54 @@ function sanitizeEnvValue(value) {
 }
 
 function readFromProcess(key) {
-  return typeof process !== 'undefined' ? sanitizeEnvValue(process.env?.[key]) : null;
+  if (typeof process === 'undefined') {
+    return { raw: null, value: null };
+  }
+
+  const raw = process.env?.[key];
+  return { raw, value: sanitizeEnvValue(raw) };
 }
 
 function readFromImportMeta(key) {
   try {
-    return typeof import.meta !== 'undefined' ? sanitizeEnvValue(import.meta.env?.[key]) : null;
+    if (typeof import.meta === 'undefined') {
+      return { raw: null, value: null };
+    }
+
+    const raw = import.meta.env?.[key];
+    return { raw, value: sanitizeEnvValue(raw) };
   } catch (error) {
-    return null;
+    return { raw: null, value: null };
   }
 }
 
 function readFromWindow(key) {
-  return typeof window !== 'undefined' ? sanitizeEnvValue(window.__ENV__?.[key]) : null;
+  if (typeof window === 'undefined') {
+    return { raw: null, value: null };
+  }
+
+  const raw = window.__ENV__?.[key];
+  return { raw, value: sanitizeEnvValue(raw) };
 }
 
 function getEnvEntry(keys) {
+  let fallback = { key: null, raw: null, value: null };
+
   for (const key of keys) {
     const candidates = [readFromProcess(key), readFromImportMeta(key), readFromWindow(key)];
 
     for (const candidate of candidates) {
-      if (candidate) {
-        return { key, value: candidate };
+      if (candidate.value) {
+        return { key, ...candidate };
+      }
+
+      if (candidate.raw !== undefined && candidate.raw !== null && fallback.raw === null) {
+        fallback = { key, ...candidate };
       }
     }
   }
 
-  return { key: null, value: null };
+  return fallback;
 }
 
 function normalizeSupabaseUrl(value) {
@@ -90,9 +111,16 @@ const normalizedUrl = normalizeSupabaseUrl(urlEntry.value);
 const resolvedSupabaseUrl = normalizedUrl || DEFAULT_SUPABASE_URL;
 
 if (!urlEntry.value) {
-  logEnvWarning(
-    '[supabase] Environment variables NEXT_PUBLIC_SUPABASE_URL / VITE_SUPABASE_URL are not defined. Falling back to the default project URL.'
-  );
+  if (urlEntry.raw) {
+    const sourceKey = urlEntry.key || 'NEXT_PUBLIC_SUPABASE_URL';
+    logEnvWarning(
+      `[supabase] The configured Supabase URL from ${sourceKey} is invalid (value: "${urlEntry.raw}"). Falling back to the default project URL.`
+    );
+  } else {
+    logEnvWarning(
+      '[supabase] Environment variables NEXT_PUBLIC_SUPABASE_URL / VITE_SUPABASE_URL are not defined. Falling back to the default project URL.'
+    );
+  }
 } else if (!normalizedUrl) {
   const sourceKey = urlEntry.key || 'NEXT_PUBLIC_SUPABASE_URL';
   logEnvWarning(
@@ -103,9 +131,16 @@ if (!urlEntry.value) {
 const resolvedSupabaseAnonKey = anonKeyEntry.value || DEFAULT_SUPABASE_ANON_KEY;
 
 if (!anonKeyEntry.value) {
-  logEnvWarning(
-    '[supabase] Environment variables NEXT_PUBLIC_SUPABASE_ANON_KEY / VITE_SUPABASE_ANON_KEY are not defined. Falling back to the default anon key.'
-  );
+  if (anonKeyEntry.raw) {
+    const sourceKey = anonKeyEntry.key || 'NEXT_PUBLIC_SUPABASE_ANON_KEY';
+    logEnvWarning(
+      `[supabase] The configured Supabase anon key from ${sourceKey} is invalid (value: "${anonKeyEntry.raw}"). Falling back to the default anon key.`
+    );
+  } else {
+    logEnvWarning(
+      '[supabase] Environment variables NEXT_PUBLIC_SUPABASE_ANON_KEY / VITE_SUPABASE_ANON_KEY are not defined. Falling back to the default anon key.'
+    );
+  }
 }
 
 export const supabase = createClient(resolvedSupabaseUrl, resolvedSupabaseAnonKey);
