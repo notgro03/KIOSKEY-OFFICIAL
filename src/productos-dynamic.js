@@ -140,9 +140,9 @@ async function loadProducts() {
     console.log('Iniciando carga de productos...');
     // Cargar todos los tipos de productos
     const [llaves, telemandos, carcasas] = await Promise.all([
-      supabase.from('llaves').select('*').eq('active', true).order('brand'),
-      supabase.from('telemandos').select('*').eq('active', true).order('brand'),
-      supabase.from('carcasas').select('*').eq('active', true).order('brand')
+      supabase.from('llaves').select('*').order('brand'),
+      supabase.from('telemandos').select('*').order('brand'),
+      supabase.from('carcasas').select('*').order('brand')
     ]);
     
     console.log('Respuestas de Supabase:', { llaves, telemandos, carcasas });

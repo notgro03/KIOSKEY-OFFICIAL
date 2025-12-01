@@ -6,7 +6,7 @@ export const productsAPI = {
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('active', true)
+      .eq('is_active', true)
       .order('created_at', { ascending: false });
     
     if (error) throw error;
@@ -18,7 +18,7 @@ export const productsAPI = {
       .from('products')
       .select('*')
       .eq('type', type)
-      .eq('active', true);
+      .eq('is_active', true);
     
     if (error) throw error;
     return data;
@@ -29,7 +29,7 @@ export const productsAPI = {
       .from('products')
       .select('*')
       .eq('brand_id', brandId)
-      .eq('active', true);
+      .eq('is_active', true);
     
     if (error) throw error;
     return data;
@@ -61,7 +61,7 @@ export const productsAPI = {
   async delete(id) {
     const { error } = await supabase
       .from('products')
-      .update({ active: false })
+      .update({ is_active: false })
       .eq('id', id);
     
     if (error) throw error;

@@ -30,7 +30,7 @@ async function loadHomeProducts() {
   const { data: products, error } = await supabase
     .from('products')
     .select('*')
-    .eq('active', true)
+    .eq('is_active', true)
     .order('order_position')
     .limit(4);
 
