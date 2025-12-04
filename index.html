@@ -25,36 +25,10 @@
       overflow-x: hidden;
     }
 
-    .video-gallery-grid {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 25px;
-      padding: 40px 0;
-    }
-
-    .video-card {
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      width: 85%;
-      max-width: 400px;
-      box-shadow: 0 0 25px rgba(0, 150, 255, 0.3);
-      border: 1px solid rgba(0, 150, 255, 0.4);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      background: rgba(0, 10, 20, 0.8);
-    }
-
-    .video-card:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 40px rgba(0, 150, 255, 0.6);
-    }
-
-    .video-card video {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 20px;
+    .section-title {
+      text-align: center;
+      margin: 0 0 24px;
+      font-size: 32px;
     }
 
     nav {
@@ -101,10 +75,17 @@
       </div>
     </section>
 
-    <!-- 📹 Sección de videos dinámica -->
     <section class="video-gallery-section">
       <div class="content-container">
+        <h2 class="section-title shiny-text">Tutoriales en video</h2>
         <div class="video-gallery-grid"></div>
+      </div>
+    </section>
+
+    <section class="gif-gallery-section">
+      <div class="content-container">
+        <h2 class="section-title shiny-text">Ejemplos rápidos</h2>
+        <div class="gif-gallery-grid"></div>
       </div>
     </section>
 
@@ -166,6 +147,5 @@
   <script type="module" src="/env.js"></script>
   <script type="module" src="/src/main.js"></script>
   <script type="module" src="/src/index-dynamic.js"></script>
-  <script type="module" src="/src/pages/videos-loader.js"></script>
 </body>
 </html>

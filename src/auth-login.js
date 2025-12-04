@@ -1,10 +1,10 @@
 import { supabase } from './config/supabase.js';
 
-// Resolve env for edge functions base URL and anon key
+// Resolve env for edge functions base URL and publishable key
 const viteEnv = (typeof import.meta !== 'undefined' && import.meta.env) ? import.meta.env : {};
 const browserEnv = (typeof window !== 'undefined' && window.__ENV__) ? window.__ENV__ : {};
 const SUPABASE_URL = viteEnv.VITE_SUPABASE_URL || browserEnv.SUPABASE_URL || '';
-const SUPABASE_ANON_KEY = viteEnv.VITE_SUPABASE_ANON_KEY || browserEnv.SUPABASE_ANON_KEY || '';
+const SUPABASE_PUBLISHABLE_KEY = viteEnv.VITE_SUPABASE_PUBLISHABLE_KEY || browserEnv.SUPABASE_PUBLISHABLE_KEY || '';
 
 let currentPhone = '';
 let timerInterval = null;
@@ -70,7 +70,7 @@ phoneForm.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({ phone: currentPhone }),
     });
@@ -126,7 +126,7 @@ otpForm.addEventListener('submit', async (e) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({
         phone: currentPhone,
@@ -204,7 +204,7 @@ resendLink.addEventListener('click', async () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
       },
       body: JSON.stringify({ phone: currentPhone }),
     });
