@@ -1,5 +1,35 @@
 import { supabase } from './config/supabase.js';
 
+const fallbackBannerGifs = [
+  {
+    url: '/assets/gifs/kioskeys-key-cutting.svg',
+    alt_text: 'Animacion de KiosKeys duplicando una llave de auto',
+  },
+  {
+    url: '/assets/gifs/kioskeys-car-unlock.svg',
+    alt_text: 'Animacion de KiosKeys abriendo un auto con telemando',
+  },
+  {
+    url: '/assets/gifs/kioskeys-tow-support.svg',
+    alt_text: 'Animacion de asistencia KiosKeys con grua transportando un auto',
+  },
+];
+
+function renderGifCards(container, gifs) {
+  container.innerHTML = gifs
+    .slice(0, 3)
+    .map(
+      (gif, index) => `
+        <div class="gif-card gif-card-${index + 1}" data-aos="fade-up" data-aos-delay="${index * 100}">
+          <div class="gif-card-content">
+            <img src="${gif.url}" alt="${gif.alt_text || 'GIF destacado de KiosKeys'}" loading="lazy">
+          </div>
+        </div>
+      `
+    )
+    .join('');
+}
+
 async function loadBannerGifs() {
   const container = document.querySelector('.gif-gallery-grid');
   if (!container) return;
@@ -13,25 +43,10 @@ async function loadBannerGifs() {
 
     if (error) throw error;
 
-    if (!gifs?.length) {
-      container.innerHTML = '<p class="empty-state">No hay GIFs disponibles por el momento.</p>';
-      return;
-    }
-
-    container.innerHTML = gifs
-      .map(
-        (gif, index) => `
-        <div class="gif-card gif-card-${index + 1}" data-aos="fade-up" data-aos-delay="${index * 100}">
-          <div class="gif-card-content">
-            <img src="${gif.url}" alt="${gif.alt_text || 'GIF destacado'}" loading="lazy">
-          </div>
-        </div>
-      `
-      )
-      .join('');
+    renderGifCards(container, gifs?.length ? gifs : fallbackBannerGifs);
   } catch (err) {
     console.error('Error loading banner GIFs:', err);
-    container.innerHTML = '<p class="empty-state">No pudimos cargar los GIFs. Intenta nuevamente más tarde.</p>';
+    renderGifCards(container, fallbackBannerGifs);
   }
 }
 
