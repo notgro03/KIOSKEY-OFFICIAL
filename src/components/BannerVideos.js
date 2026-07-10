@@ -3,6 +3,29 @@ import { supabase } from '../config/supabase.js';
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;
 const PLACEHOLDER_CARD_COUNT = 3;
+const fallbackActionMedia = [
+  {
+    id: 'kioskeys-key-cutting',
+    image_url: '/assets/gifs/kioskeys-key-cutting.svg',
+    title: 'Duplicado de llave de auto',
+    order_index: 0,
+    isImage: true,
+  },
+  {
+    id: 'kioskeys-car-unlock',
+    image_url: '/assets/gifs/kioskeys-car-unlock.svg',
+    title: 'Apertura y telemandos',
+    order_index: 1,
+    isImage: true,
+  },
+  {
+    id: 'kioskeys-tow-support',
+    image_url: '/assets/gifs/kioskeys-tow-support.svg',
+    title: 'Asistencia con grua',
+    order_index: 2,
+    isImage: true,
+  },
+];
 
 function applyMobileCarousel(container) {
   const mq = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`);
@@ -88,7 +111,8 @@ function normalizeVideoList(videos) {
         video_url: hasUrl ? video.video_url.trim() : null,
         order_index: typeof video?.order_index === 'number' ? video.order_index : index,
         isPlayable: hasUrl,
-        title: typeof video?.title === 'string' ? video.title.trim() : ''
+        title: typeof video?.title === 'string' ? video.title.trim() : '',
+        isImage: false,
       };
     })
     .sort((a, b) => a.order_index - b.order_index);
@@ -101,19 +125,10 @@ function buildVideoQueue(remoteVideos) {
   for (let index = 0; index < PLACEHOLDER_CARD_COUNT; index += 1) {
     const item = normalizedRemote[index];
 
-    if (item) {
-      queue.push({
-        ...item,
-        isPlaceholder: !item.isPlayable
-      });
+    if (item?.isPlayable) {
+      queue.push(item);
     } else {
-      queue.push({
-        id: `placeholder-${index}`,
-        video_url: null,
-        order_index: index,
-        isPlayable: false,
-        isPlaceholder: true
-      });
+      queue.push(fallbackActionMedia[index]);
     }
   }
 
@@ -125,6 +140,16 @@ function createPlaceholderFrame() {
   fallback.className = 'video-fallback';
   fallback.setAttribute('aria-hidden', 'true');
   return fallback;
+}
+
+function renderImageFrame(frame, media) {
+  const imageEl = document.createElement('img');
+  imageEl.src = media.image_url;
+  imageEl.alt = media.title || 'KiosKeys en accion';
+  imageEl.loading = 'lazy';
+  imageEl.decoding = 'async';
+  imageEl.className = 'video-action-image';
+  frame.appendChild(imageEl);
 }
 
 function renderVideoCards(grid, videos) {
@@ -139,7 +164,7 @@ function renderVideoCards(grid, videos) {
   items.forEach((video, index) => {
     const card = document.createElement('article');
     card.className = 'video-gallery-card';
-    card.dataset.role = video.isPlaceholder ? 'placeholder' : 'video';
+    card.dataset.role = video.isImage ? 'image' : video.isPlaceholder ? 'placeholder' : 'video';
 
     const tilt = index % 3 === 1 ? 0 : index % 2 === 0 ? -6 : 6;
     const floatDelay = Math.min(index * 0.35, 1).toFixed(2);
@@ -155,7 +180,9 @@ function renderVideoCards(grid, videos) {
     const frame = document.createElement('div');
     frame.className = 'video-frame';
 
-    if (video.isPlaceholder) {
+    if (video.isImage) {
+      renderImageFrame(frame, video);
+    } else if (video.isPlaceholder) {
       frame.classList.add('is-placeholder');
       frame.appendChild(createPlaceholderFrame());
     } else {
@@ -171,12 +198,11 @@ function renderVideoCards(grid, videos) {
 
       const handlePlaybackError = () => {
         if (video.video_url) {
-          console.warn('Replacing unavailable video with placeholder:', video.video_url);
+          console.warn('Replacing unavailable video with fallback:', video.video_url);
         }
         frame.innerHTML = '';
-        frame.classList.add('is-placeholder');
-        frame.appendChild(createPlaceholderFrame());
-        card.dataset.role = 'placeholder';
+        renderImageFrame(frame, fallbackActionMedia[index]);
+        card.dataset.role = 'image';
       };
 
       videoEl.addEventListener('error', handlePlaybackError);
@@ -217,9 +243,8 @@ export async function initBannerVideos() {
     grid.setAttribute('data-carousel-bound', 'true');
   }
 
-  const placeholderQueue = buildVideoQueue();
-  const initialVideos = renderVideoCards(grid, placeholderQueue);
-  initialVideos.forEach(ensureAutoplay);
+  const fallbackVideos = renderVideoCards(grid, buildVideoQueue());
+  fallbackVideos.forEach(ensureAutoplay);
 
   try {
     const { data, error } = await supabase
@@ -232,12 +257,8 @@ export async function initBannerVideos() {
     }
 
     const remoteQueue = buildVideoQueue(data);
-    const hasPlayableSource = remoteQueue.some((video) => video.isPlayable);
-
-    if (hasPlayableSource) {
-      const remoteVideoEls = renderVideoCards(grid, remoteQueue);
-      remoteVideoEls.forEach(ensureAutoplay);
-    }
+    const remoteVideoEls = renderVideoCards(grid, remoteQueue);
+    remoteVideoEls.forEach(ensureAutoplay);
   } catch (error) {
     console.error('Error conectando con Supabase:', error);
   }
