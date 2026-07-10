@@ -5,25 +5,25 @@ const VIDEO_LIMIT = 3;
 const PLACEHOLDER_CARD_COUNT = 3;
 const fallbackActionMedia = [
   {
-    id: 'kioskeys-key-cutting',
-    image_url: '/assets/gifs/kioskeys-key-cutting.svg',
-    title: 'Duplicado de llave de auto',
+    id: 'kioskeys-key-service',
+    video_url: 'https://cdn.pixabay.com/video/2022/09/20/131988-751915297_large.mp4',
+    image_url: 'https://cdn.pixabay.com/video/2022/09/20/131988-751915297_tiny.jpg',
+    title: 'Servicio de llaves de auto',
     order_index: 0,
-    isImage: true,
   },
   {
-    id: 'kioskeys-car-unlock',
-    image_url: '/assets/gifs/kioskeys-car-unlock.svg',
+    id: 'kioskeys-car-key',
+    video_url: 'https://cdn.pixabay.com/video/2026/04/03/344210_large.mp4',
+    image_url: 'https://cdn.pixabay.com/video/2026/04/03/344210_tiny.jpg',
     title: 'Apertura y telemandos',
     order_index: 1,
-    isImage: true,
   },
   {
     id: 'kioskeys-tow-support',
-    image_url: '/assets/gifs/kioskeys-tow-support.svg',
+    video_url: 'https://cdn.pixabay.com/video/2017/06/11/9781-221163251_large.mp4',
+    image_url: 'https://cdn.pixabay.com/video/2017/06/11/9781-221163251_tiny.jpg',
     title: 'Asistencia con grua',
     order_index: 2,
-    isImage: true,
   },
 ];
 
@@ -109,6 +109,7 @@ function normalizeVideoList(videos) {
       return {
         id: video?.id ?? `video-${index}`,
         video_url: hasUrl ? video.video_url.trim() : null,
+        image_url: typeof video?.image_url === 'string' ? video.image_url.trim() : '',
         order_index: typeof video?.order_index === 'number' ? video.order_index : index,
         isPlayable: hasUrl,
         title: typeof video?.title === 'string' ? video.title.trim() : '',
@@ -200,12 +201,20 @@ function renderVideoCards(grid, videos) {
       videoEl.setAttribute('muted', '');
       videoEl.setAttribute('playsinline', '');
 
+      if (video.image_url) {
+        videoEl.poster = video.image_url;
+      }
+
       const handlePlaybackError = () => {
         if (video.video_url) {
           console.warn('Replacing unavailable video with fallback:', video.video_url);
         }
         frame.innerHTML = '';
-        renderImageFrame(frame, fallbackActionMedia[index]);
+        if (video.image_url) {
+          renderImageFrame(frame, video);
+        } else {
+          renderImageFrame(frame, fallbackActionMedia[index]);
+        }
         card.dataset.role = 'image';
       };
 
