@@ -1,28 +1,23 @@
-import { supabase } from '../config/supabase.js';
-
 const MOBILE_BREAKPOINT = 768;
 const VIDEO_LIMIT = 3;
 const PLACEHOLDER_CARD_COUNT = 3;
 const fallbackActionMedia = [
   {
-    id: 'kioskeys-key-service',
-    video_url: 'https://cdn.pixabay.com/video/2022/09/20/131988-751915297_large.mp4',
-    image_url: 'https://cdn.pixabay.com/video/2022/09/20/131988-751915297_tiny.jpg',
-    title: 'Servicio de llaves de auto',
+    id: 'kioskeys-auto-start',
+    video_url: 'https://files.catbox.moe/j8kr5j.mp4',
+    title: 'Llave y encendido de auto',
     order_index: 0,
   },
   {
-    id: 'kioskeys-car-key',
-    video_url: 'https://cdn.pixabay.com/video/2026/04/03/344210_large.mp4',
-    image_url: 'https://cdn.pixabay.com/video/2026/04/03/344210_tiny.jpg',
-    title: 'Apertura y telemandos',
+    id: 'kioskeys-auto-remote',
+    video_url: 'https://files.catbox.moe/pr1ctf.mp4',
+    title: 'Telemando de automovil',
     order_index: 1,
   },
   {
-    id: 'kioskeys-tow-support',
-    video_url: 'https://cdn.pixabay.com/video/2017/06/11/9781-221163251_large.mp4',
-    image_url: 'https://cdn.pixabay.com/video/2017/06/11/9781-221163251_tiny.jpg',
-    title: 'Asistencia con grua',
+    id: 'kioskeys-roadside-assistance',
+    video_url: 'https://files.catbox.moe/csy1m8.mp4',
+    title: 'Asistencia para automovil',
     order_index: 2,
   },
 ];
@@ -119,21 +114,8 @@ function normalizeVideoList(videos) {
     .sort((a, b) => a.order_index - b.order_index);
 }
 
-function buildVideoQueue(remoteVideos) {
-  const normalizedRemote = normalizeVideoList(remoteVideos || []);
-  const queue = [];
-
-  for (let index = 0; index < PLACEHOLDER_CARD_COUNT; index += 1) {
-    const item = normalizedRemote[index];
-
-    if (item?.isPlayable) {
-      queue.push(item);
-    } else {
-      queue.push(fallbackActionMedia[index]);
-    }
-  }
-
-  return queue.slice(0, VIDEO_LIMIT);
+function buildVideoQueue() {
+  return fallbackActionMedia.slice(0, VIDEO_LIMIT);
 }
 
 function createPlaceholderFrame() {
@@ -256,25 +238,8 @@ export async function initBannerVideos() {
     grid.setAttribute('data-carousel-bound', 'true');
   }
 
-  const fallbackVideos = renderVideoCards(grid, buildVideoQueue());
-  fallbackVideos.forEach(ensureAutoplay);
-
-  try {
-    const { data, error } = await supabase
-      .from('videos_gifs')
-      .select('*')
-      .order('order_index', { ascending: true });
-
-    if (error) {
-      throw error;
-    }
-
-    const remoteQueue = buildVideoQueue(data);
-    const remoteVideoEls = renderVideoCards(grid, remoteQueue);
-    remoteVideoEls.forEach(ensureAutoplay);
-  } catch (error) {
-    console.error('Error conectando con Supabase:', error);
-  }
+  const actionVideos = renderVideoCards(grid, buildVideoQueue());
+  actionVideos.forEach(ensureAutoplay);
 }
 
 function bindParallaxHover(card) {
