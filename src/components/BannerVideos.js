@@ -149,6 +149,10 @@ function renderImageFrame(frame, media) {
   imageEl.loading = 'lazy';
   imageEl.decoding = 'async';
   imageEl.className = 'video-action-image';
+  imageEl.style.width = '100%';
+  imageEl.style.height = '100%';
+  imageEl.style.objectFit = 'cover';
+  imageEl.style.display = 'block';
   frame.appendChild(imageEl);
 }
 
